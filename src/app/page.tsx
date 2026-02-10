@@ -1,65 +1,340 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Trophy, Route, ChevronRight } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { daysUntilTrip, dayOfTrip, formatDate } from "@/lib/dates";
+import { db } from "@/lib/db";
+import {
+  matches,
+  stops,
+  packingItems,
+  logistics,
+} from "@/lib/schema";
+import { asc, sql } from "drizzle-orm";
+import { getCityIdentity } from "@/lib/constants";
+import { MatchCard } from "@/components/match-card";
+import { MilestonesCard } from "@/components/milestones-card";
 
-export default function Home() {
+// ---------------------------------------------------------------------------
+// SVG progress ring (36x36, radius 15.9, strokeWidth 3)
+// ---------------------------------------------------------------------------
+const RING_R = 15.9;
+const RING_C = 2 * Math.PI * RING_R; // ~99.9
+
+function ProgressRing({
+  pct,
+  colorClass,
+}: {
+  pct: number;
+  colorClass: string;
+}) {
+  const offset = RING_C * (1 - pct / 100);
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <svg viewBox="0 0 36 36" className="size-9 shrink-0" aria-hidden>
+      {/* background track */}
+      <circle
+        cx="18"
+        cy="18"
+        r={RING_R}
+        fill="none"
+        className="stroke-muted"
+        strokeWidth={3}
+      />
+      {/* filled arc */}
+      <circle
+        cx="18"
+        cy="18"
+        r={RING_R}
+        fill="none"
+        className={colorClass}
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeDasharray={RING_C}
+        strokeDashoffset={offset}
+        transform="rotate(-90 18 18)"
+      />
+      {/* centered percentage */}
+      <text
+        x="18"
+        y="18"
+        textAnchor="middle"
+        dominantBaseline="central"
+        className="fill-foreground text-[9px] font-semibold"
+      >
+        {pct}%
+      </text>
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Journey node for the horizontal route line
+// ---------------------------------------------------------------------------
+function JourneyNode({
+  city,
+  isActive,
+  isFirst,
+  isLast,
+}: {
+  city: string;
+  isActive: boolean;
+  isFirst: boolean;
+  isLast: boolean;
+}) {
+  const identity = getCityIdentity(city);
+  return (
+    <div
+      className="flex flex-col items-center gap-1.5"
+      style={{
+        // first and last nodes sit at the edges; others are centered
+        alignItems: isFirst ? "flex-start" : isLast ? "flex-end" : "center",
+      }}
+    >
+      <div
+        className={`size-3 rounded-full border-2 ${
+          isActive
+            ? `${identity.bg} ${identity.border}`
+            : "bg-muted border-border"
+        }`}
+      />
+      <span
+        className={`text-[10px] leading-none ${
+          isActive ? identity.color : "text-muted-foreground"
+        }`}
+      >
+        {city}
+      </span>
+    </div>
+  );
+}
+
+// ===========================================================================
+// Page
+// ===========================================================================
+export default function HomePage() {
+  const remaining = daysUntilTrip();
+  const currentDay = dayOfTrip();
+  const isDuringTrip = currentDay !== null;
+
+  // Pull real data
+  const allMatches = db.select().from(matches).all();
+  const allStops = db
+    .select()
+    .from(stops)
+    .orderBy(asc(stops.sortOrder))
+    .all();
+  const packingStats = db
+    .select({
+      total: sql<number>`count(*)`,
+      packed: sql<number>`sum(case when checked = 1 then 1 else 0 end)`,
+    })
+    .from(packingItems)
+    .get()!;
+  const logisticsStats = db
+    .select({
+      total: sql<number>`count(*)`,
+      done: sql<number>`sum(case when status = 'done' then 1 else 0 end)`,
+    })
+    .from(logistics)
+    .get()!;
+
+  // Next match (closest future match)
+  const today = new Date().toISOString().slice(0, 10);
+  const upcomingMatches = allMatches
+    .filter((m) => m.matchDate >= today)
+    .sort((a, b) => a.matchDate.localeCompare(b.matchDate));
+  const nextMatch = upcomingMatches[0] ?? null;
+
+  // Route summary
+  let totalMiles = 0;
+  for (const stop of allStops) {
+    if (stop.driveFromPrev) {
+      try {
+        const drive = JSON.parse(stop.driveFromPrev) as {
+          miles: number;
+          hours: number;
+          minutes: number;
+        };
+        totalMiles += drive.miles;
+      } catch {}
+    }
+  }
+
+  const attendingCount = allMatches.filter((m) => m.attending).length;
+  const purchasedCount = allMatches.filter(
+    (m) => m.ticketStatus === "purchased"
+  ).length;
+  const packingPct =
+    packingStats.total > 0
+      ? Math.round(((packingStats.packed ?? 0) / packingStats.total) * 100)
+      : 0;
+  const logisticsPct =
+    logisticsStats.total > 0
+      ? Math.round(
+          ((logisticsStats.done ?? 0) / logisticsStats.total) * 100
+        )
+      : 0;
+
+  // Determine which stops are "reached" during the trip (for the journey line)
+  // During the trip, a stop is active if today >= its arrival date
+  const currentStopIndex = isDuringTrip
+    ? allStops.findIndex((s) => today < s.arriveDate) - 1
+    : -1; // before trip: nothing active
+
+  return (
+    <div className="mx-auto max-w-2xl space-y-6 pb-8">
+      {/* ── Hero / Countdown ─────────────────────────────────────────── */}
+      <section className="flex flex-col items-center text-center pt-8 md:pt-12">
+        <p className="text-7xl md:text-9xl font-bold tabular-nums bg-gradient-to-b from-wc-gold to-wc-coral bg-clip-text text-transparent">
+          {isDuringTrip ? currentDay : remaining}
+        </p>
+        <p className="text-lg text-muted-foreground mt-2">
+          {isDuringTrip ? `Day ${currentDay} of the trip` : "days to go"}
+        </p>
+        <p className="text-sm text-muted-foreground/70 mt-1">
+          {attendingCount} matches &middot; {allStops.length} cities &middot;{" "}
+          {Math.round(totalMiles)} miles
+        </p>
+
+        <h2 className="text-2xl md:text-3xl font-semibold mt-6">
+          World Cup 2026
+        </h2>
+        <p className="text-muted-foreground mt-1">Boston to Miami</p>
+        <p className="text-sm text-muted-foreground/80 mt-0.5">
+          Jun 11 &ndash; Jun 26
+        </p>
+      </section>
+
+      {/* ── Quick stats grid ─────────────────────────────────────────── */}
+      <section className="grid grid-cols-2 gap-3">
+        {/* Matches */}
+        <Link href="/matches">
+          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+            <CardContent className="flex items-center gap-3">
+              <div className="rounded-lg bg-muted p-2.5 text-wc-teal">
+                <Trophy className="size-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium">Matches</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {allMatches.length} tracked
+                  {purchasedCount > 0 && ` · ${purchasedCount} tickets`}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        {/* Route */}
+        <Link href="/route">
+          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+            <CardContent className="flex items-center gap-3">
+              <div className="rounded-lg bg-muted p-2.5 text-wc-blue">
+                <Route className="size-5" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-medium">Route</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {allStops.length} stops · {Math.round(totalMiles)} mi
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        {/* Checklist — with progress ring */}
+        <Link href="/checklist">
+          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+            <CardContent className="flex items-center gap-3">
+              <ProgressRing pct={logisticsPct} colorClass="stroke-wc-coral" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium">Checklist</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {logisticsStats.done ?? 0}/{logisticsStats.total} done
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+
+        {/* Packing — with progress ring */}
+        <Link href="/packing">
+          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+            <CardContent className="flex items-center gap-3">
+              <ProgressRing pct={packingPct} colorClass="stroke-wc-gold" />
+              <div className="min-w-0">
+                <p className="text-sm font-medium">Packing</p>
+                <p className="text-xs text-muted-foreground truncate">
+                  {packingStats.packed ?? 0}/{packingStats.total} packed
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </Link>
+      </section>
+
+      {/* ── Milestones ──────────────────────────────────────────────── */}
+      <MilestonesCard />
+
+      {/* ── Next Match ───────────────────────────────────────────────── */}
+      {nextMatch && (
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              Next Match
+            </h3>
+            <Link
+              href="/matches"
+              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-0.5"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+              All matches <ChevronRight className="size-3" />
+            </Link>
+          </div>
+          <MatchCard match={nextMatch} />
+        </section>
+      )}
+
+      {/* ── Journey progress line ────────────────────────────────────── */}
+      <section>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+            The Route
+          </h3>
+          <Link
+            href="/route"
+            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-0.5"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Full breakdown <ChevronRight className="size-3" />
+          </Link>
         </div>
-      </main>
+        <Card className="py-4">
+          <CardContent>
+            <div className="relative px-1.5">
+              {/* Horizontal track */}
+              <div className="absolute top-1.5 left-1.5 right-1.5 h-0.5 bg-border" />
+
+              {/* City nodes */}
+              <div className="relative flex justify-between">
+                {allStops.map((stop, i) => (
+                  <JourneyNode
+                    key={stop.id}
+                    city={stop.city}
+                    isActive={isDuringTrip && i <= currentStopIndex}
+                    isFirst={i === 0}
+                    isLast={i === allStops.length - 1}
+                  />
+                ))}
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground mt-4 text-center">
+              {Math.round(totalMiles)} miles &middot;{" "}
+              {allStops[0]?.arriveDate && formatDate(allStops[0].arriveDate)}{" "}
+              &ndash;{" "}
+              {allStops[allStops.length - 1]?.departDate &&
+                formatDate(allStops[allStops.length - 1].departDate)}
+            </p>
+          </CardContent>
+        </Card>
+      </section>
     </div>
   );
 }
