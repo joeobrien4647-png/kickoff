@@ -22,6 +22,17 @@ function now() {
   return new Date().toISOString();
 }
 
+// ============ CHECK IF ALREADY SEEDED ============
+try {
+  const existing = sqlite.prepare("SELECT count(*) as count FROM trip_settings").get() as { count: number };
+  if (existing.count > 0 && !process.argv.includes("--force")) {
+    console.log("Database already seeded — skipping. Run with --force to reseed.");
+    process.exit(0);
+  }
+} catch {
+  // Table doesn't exist yet — will be created by drizzle-kit push, continue seeding
+}
+
 // ============ WIPE EXISTING DATA ============
 console.log("Wiping existing data...");
 // Delete in reverse-dependency order to respect foreign keys
