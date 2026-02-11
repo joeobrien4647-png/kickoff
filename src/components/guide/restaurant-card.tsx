@@ -2,6 +2,7 @@
 
 import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { Restaurant } from "@/lib/city-profiles";
 
 // Cuisine colors — subtle backgrounds for visual variety
@@ -29,14 +30,21 @@ const DEFAULT_CUISINE_COLOR =
   "bg-gray-50 text-gray-700 dark:bg-gray-900 dark:text-gray-300";
 
 interface RestaurantCardProps {
-  restaurant: Restaurant;
+  restaurant: Restaurant & { images?: string[] };
 }
 
 export function RestaurantCard({ restaurant }: RestaurantCardProps) {
   const cuisineColor = CUISINE_COLORS[restaurant.cuisine] ?? DEFAULT_CUISINE_COLOR;
+  const hasImages = restaurant.images && restaurant.images.length > 0;
 
   return (
-    <div className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col gap-2.5">
+    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-4"} flex flex-col gap-0`}>
+      {/* Image carousel */}
+      {hasImages && (
+        <ImageCarousel images={restaurant.images!} alt={restaurant.name} />
+      )}
+
+      <div className={`flex flex-col gap-2.5 ${hasImages ? "p-4" : ""}`}>
       {/* Header: name + match day indicator */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-sm leading-snug">
@@ -76,6 +84,7 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
           <span className="font-medium text-wc-coral">Must order:</span>{" "}
           <span className="text-muted-foreground">{restaurant.mustOrder}</span>
         </p>
+      </div>
       </div>
     </div>
   );

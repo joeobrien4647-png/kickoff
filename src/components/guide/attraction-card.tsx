@@ -2,6 +2,7 @@
 
 import { Clock, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { Attraction } from "@/lib/city-profiles";
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -23,15 +24,22 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 interface AttractionCardProps {
-  attraction: Attraction;
+  attraction: Attraction & { images?: string[] };
 }
 
 export function AttractionCard({ attraction }: AttractionCardProps) {
   const categoryColor = CATEGORY_COLORS[attraction.category] ?? "";
   const categoryLabel = CATEGORY_LABELS[attraction.category] ?? attraction.category;
+  const hasImages = attraction.images && attraction.images.length > 0;
 
   return (
-    <div className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col gap-2.5">
+    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-4"} flex flex-col gap-0`}>
+      {/* Image carousel */}
+      {hasImages && (
+        <ImageCarousel images={attraction.images!} alt={attraction.name} />
+      )}
+
+      <div className={`flex flex-col gap-2.5 ${hasImages ? "p-4" : ""}`}>
       {/* Name */}
       <h3 className="font-semibold text-sm leading-snug">
         {attraction.name}
@@ -72,6 +80,7 @@ export function AttractionCard({ attraction }: AttractionCardProps) {
           </p>
         </div>
       )}
+      </div>
     </div>
   );
 }

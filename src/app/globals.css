@@ -164,6 +164,43 @@
   color: var(--muted-foreground) !important;
 }
 
+/* Who's Paying spinner animations */
+.whos-paying-winner-emoji {
+  animation: whos-paying-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.whos-paying-winner-name {
+  animation: whos-paying-slide-up 0.4s ease-out forwards;
+}
+.whos-paying-shuffle {
+  animation: whos-paying-jiggle 0.12s ease-in-out infinite;
+}
+.whos-paying-confetti {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  top: 50%;
+  animation: whos-paying-burst 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes whos-paying-pop {
+  0% { transform: scale(0.5); opacity: 0.5; }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes whos-paying-slide-up {
+  0% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes whos-paying-jiggle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+@keyframes whos-paying-burst {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-60px) scale(0); opacity: 0; }
+}
+
 /* Print styles */
 @media print {
   body {

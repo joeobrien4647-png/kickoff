@@ -2,6 +2,7 @@
 
 import { MapPin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { NightlifeSpot } from "@/lib/city-profiles";
 
 const TYPE_COLORS: Record<string, string> = {
@@ -25,15 +26,22 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 interface NightlifeCardProps {
-  spot: NightlifeSpot;
+  spot: NightlifeSpot & { images?: string[] };
 }
 
 export function NightlifeCard({ spot }: NightlifeCardProps) {
   const typeColor = TYPE_COLORS[spot.type] ?? "";
   const typeLabel = TYPE_LABELS[spot.type] ?? spot.type;
+  const hasImages = spot.images && spot.images.length > 0;
 
   return (
-    <div className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col gap-2.5">
+    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-4"} flex flex-col gap-0`}>
+      {/* Image carousel */}
+      {hasImages && (
+        <ImageCarousel images={spot.images!} alt={spot.name} />
+      )}
+
+      <div className={`flex flex-col gap-2.5 ${hasImages ? "p-4" : ""}`}>
       {/* Name + price */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-sm leading-snug">{spot.name}</h3>
@@ -57,6 +65,7 @@ export function NightlifeCard({ spot }: NightlifeCardProps) {
       <p className="text-xs text-muted-foreground leading-relaxed">
         {spot.oneLiner}
       </p>
+      </div>
     </div>
   );
 }

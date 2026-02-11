@@ -8,6 +8,9 @@ import {
   stops,
   packingItems,
   logistics,
+  travelers,
+  expenses,
+  ideas,
 } from "@/lib/schema";
 import { asc, sql } from "drizzle-orm";
 import { getCityIdentity, ROUTE_STOPS } from "@/lib/constants";
@@ -15,6 +18,8 @@ import { MatchCard } from "@/components/match-card";
 import { MilestonesCard } from "@/components/milestones-card";
 import { WeatherWidget } from "@/components/weather-widget";
 import { ActivityFeed } from "@/components/activity-feed";
+import { WhosPaying } from "@/components/whos-paying";
+import { TripStats } from "@/components/trip-stats";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -137,6 +142,21 @@ export default function HomePage() {
       done: sql<number>`sum(case when status = 'done' then 1 else 0 end)`,
     })
     .from(logistics)
+    .get()!;
+
+  // Travelers for the "Who's Paying?" spinner
+  const allTravelers = db.select().from(travelers).all();
+
+  // Expense total for trip stats
+  const expenseTotal = db
+    .select({ total: sql<number>`coalesce(sum(amount), 0)` })
+    .from(expenses)
+    .get()!;
+
+  // Ideas count for trip stats
+  const ideasCount = db
+    .select({ total: sql<number>`count(*)` })
+    .from(ideas)
     .get()!;
 
   // Next match (closest future match)
@@ -376,6 +396,29 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </section>
+
+          {/* Who's Paying? spinner */}
+          {allTravelers.length > 1 && (
+            <WhosPaying
+              travelers={allTravelers.map((t) => ({
+                name: t.name,
+                emoji: t.emoji,
+                color: t.color,
+              }))}
+            />
+          )}
+
+          {/* Trip Stats */}
+          <TripStats
+            totalMiles={totalMiles}
+            totalStops={allStops.length}
+            totalMatches={allMatches.length}
+            attendingMatches={attendingCount}
+            totalExpenses={expenseTotal.total}
+            totalIdeas={ideasCount.total}
+            packingProgress={packingPct}
+            daysUntil={remaining}
+          />
         </aside>
       </div>
     </div>

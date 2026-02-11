@@ -10,6 +10,7 @@ export type Restaurant = {
   oneLiner: string;
   mustOrder: string;
   matchDayFriendly: boolean;
+  images?: string[];
 };
 
 export type Attraction = {
@@ -19,6 +20,7 @@ export type Attraction = {
   duration: string;
   cost: "free" | "$" | "$$" | "$$$";
   tip: string;
+  images?: string[];
 };
 
 export type NightlifeSpot = {
@@ -34,12 +36,14 @@ export type NightlifeSpot = {
   neighborhood: string;
   oneLiner: string;
   priceRange: "$" | "$$" | "$$$";
+  images?: string[];
 };
 
 export type ShoppingArea = {
   name: string;
   type: string;
   description: string;
+  images?: string[];
 };
 
 export type Neighborhood = {
