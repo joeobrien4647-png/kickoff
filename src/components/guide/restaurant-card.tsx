@@ -1,9 +1,12 @@
 "use client";
 
-import { MapPin, ExternalLink } from "lucide-react";
+import { MapPin, ExternalLink, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { Restaurant } from "@/lib/city-profiles";
+
+function googleMapsUrl(name: string, city: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
+}
 
 function tripAdvisorUrl(name: string, city: string) {
   return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(name + " " + city)}`;
@@ -34,22 +37,16 @@ const DEFAULT_CUISINE_COLOR =
   "bg-gray-50 text-gray-700 dark:bg-gray-900 dark:text-gray-300";
 
 interface RestaurantCardProps {
-  restaurant: Restaurant & { images?: string[] };
+  restaurant: Restaurant;
   city?: string;
 }
 
 export function RestaurantCard({ restaurant, city }: RestaurantCardProps) {
   const cuisineColor = CUISINE_COLORS[restaurant.cuisine] ?? DEFAULT_CUISINE_COLOR;
-  const hasImages = restaurant.images && restaurant.images.length > 0;
 
   return (
-    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-4"} flex flex-col gap-0`}>
-      {/* Image carousel */}
-      {hasImages && (
-        <ImageCarousel images={restaurant.images!} alt={restaurant.name} />
-      )}
-
-      <div className={`flex flex-col gap-2.5 ${hasImages ? "p-4" : ""}`}>
+    <div className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col gap-0">
+      <div className="flex flex-col gap-2.5">
       {/* Header: name + match day indicator */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-sm leading-snug">
@@ -83,23 +80,33 @@ export function RestaurantCard({ restaurant, city }: RestaurantCardProps) {
         {restaurant.oneLiner}
       </p>
 
-      {/* Must order + TripAdvisor link */}
-      <div className="mt-auto pt-2 border-t border-border flex items-end justify-between gap-2">
-        <p className="text-xs">
-          <span className="font-medium text-wc-coral">Must order:</span>{" "}
-          <span className="text-muted-foreground">{restaurant.mustOrder}</span>
-        </p>
-        {city && (
+      {/* Must order */}
+      <p className="text-xs">
+        <span className="font-medium text-wc-coral">Must order:</span>{" "}
+        <span className="text-muted-foreground">{restaurant.mustOrder}</span>
+      </p>
+
+      {/* Links */}
+      {city && (
+        <div className="mt-auto pt-2 border-t border-border flex items-center gap-3">
+          <a
+            href={googleMapsUrl(restaurant.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[10px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <Map className="size-2.5" /> Google Maps
+          </a>
           <a
             href={tripAdvisorUrl(restaurant.name, city)}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+            className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
           >
-            TripAdvisor <ExternalLink className="size-2.5" />
+            <ExternalLink className="size-2.5" /> TripAdvisor
           </a>
-        )}
-      </div>
+        </div>
+      )}
       </div>
     </div>
   );

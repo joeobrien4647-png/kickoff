@@ -1,9 +1,12 @@
 "use client";
 
-import { MapPin, ExternalLink } from "lucide-react";
+import { MapPin, ExternalLink, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { NightlifeSpot } from "@/lib/city-profiles";
+
+function googleMapsUrl(name: string, city: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
+}
 
 function tripAdvisorUrl(name: string, city: string) {
   return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(name + " " + city)}`;
@@ -30,23 +33,17 @@ const TYPE_LABELS: Record<string, string> = {
 };
 
 interface NightlifeCardProps {
-  spot: NightlifeSpot & { images?: string[] };
+  spot: NightlifeSpot;
   city?: string;
 }
 
 export function NightlifeCard({ spot, city }: NightlifeCardProps) {
   const typeColor = TYPE_COLORS[spot.type] ?? "";
   const typeLabel = TYPE_LABELS[spot.type] ?? spot.type;
-  const hasImages = spot.images && spot.images.length > 0;
 
   return (
-    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-4"} flex flex-col gap-0`}>
-      {/* Image carousel */}
-      {hasImages && (
-        <ImageCarousel images={spot.images!} alt={spot.name} />
-      )}
-
-      <div className={`flex flex-col gap-2.5 ${hasImages ? "p-4" : ""}`}>
+    <div className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col gap-0">
+      <div className="flex flex-col gap-2.5">
       {/* Name + price */}
       <div className="flex items-start justify-between gap-2">
         <h3 className="font-semibold text-sm leading-snug">{spot.name}</h3>
@@ -71,16 +68,24 @@ export function NightlifeCard({ spot, city }: NightlifeCardProps) {
         {spot.oneLiner}
       </p>
 
-      {/* TripAdvisor link */}
+      {/* Links */}
       {city && (
-        <div className="mt-auto pt-2 border-t border-border">
+        <div className="mt-auto pt-2 border-t border-border flex items-center gap-3">
+          <a
+            href={googleMapsUrl(spot.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[10px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <Map className="size-2.5" /> Google Maps
+          </a>
           <a
             href={tripAdvisorUrl(spot.name, city)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
           >
-            TripAdvisor <ExternalLink className="size-2.5" />
+            <ExternalLink className="size-2.5" /> TripAdvisor
           </a>
         </div>
       )}

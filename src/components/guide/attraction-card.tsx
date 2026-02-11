@@ -1,9 +1,12 @@
 "use client";
 
-import { Clock, DollarSign, ExternalLink } from "lucide-react";
+import { Clock, DollarSign, ExternalLink, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { Attraction } from "@/lib/city-profiles";
+
+function googleMapsUrl(name: string, city: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
+}
 
 function tripAdvisorUrl(name: string, city: string) {
   return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(name + " " + city)}`;
@@ -28,23 +31,17 @@ const CATEGORY_LABELS: Record<string, string> = {
 };
 
 interface AttractionCardProps {
-  attraction: Attraction & { images?: string[] };
+  attraction: Attraction;
   city?: string;
 }
 
 export function AttractionCard({ attraction, city }: AttractionCardProps) {
   const categoryColor = CATEGORY_COLORS[attraction.category] ?? "";
   const categoryLabel = CATEGORY_LABELS[attraction.category] ?? attraction.category;
-  const hasImages = attraction.images && attraction.images.length > 0;
 
   return (
-    <div className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-4"} flex flex-col gap-0`}>
-      {/* Image carousel */}
-      {hasImages && (
-        <ImageCarousel images={attraction.images!} alt={attraction.name} />
-      )}
-
-      <div className={`flex flex-col gap-2.5 ${hasImages ? "p-4" : ""}`}>
+    <div className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-4 flex flex-col gap-0">
+      <div className="flex flex-col gap-2.5">
       {/* Name */}
       <h3 className="font-semibold text-sm leading-snug">
         {attraction.name}
@@ -76,25 +73,35 @@ export function AttractionCard({ attraction, city }: AttractionCardProps) {
         {attraction.description}
       </p>
 
-      {/* Tip + TripAdvisor link */}
-      <div className="mt-auto pt-2 border-t border-border flex items-end justify-between gap-2">
-        {attraction.tip ? (
-          <p className="text-xs">
-            <span className="font-medium text-wc-teal">Tip:</span>{" "}
-            <span className="text-muted-foreground">{attraction.tip}</span>
-          </p>
-        ) : <span />}
-        {city && (
+      {/* Tip */}
+      {attraction.tip && (
+        <p className="text-xs">
+          <span className="font-medium text-wc-teal">Tip:</span>{" "}
+          <span className="text-muted-foreground">{attraction.tip}</span>
+        </p>
+      )}
+
+      {/* Links */}
+      {city && (
+        <div className="mt-auto pt-2 border-t border-border flex items-center gap-3">
+          <a
+            href={googleMapsUrl(attraction.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[10px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+          >
+            <Map className="size-2.5" /> Google Maps
+          </a>
           <a
             href={tripAdvisorUrl(attraction.name, city)}
             target="_blank"
             rel="noopener noreferrer"
-            className="shrink-0 flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+            className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
           >
-            TripAdvisor <ExternalLink className="size-2.5" />
+            <ExternalLink className="size-2.5" /> TripAdvisor
           </a>
-        )}
-      </div>
+        </div>
+      )}
       </div>
     </div>
   );
