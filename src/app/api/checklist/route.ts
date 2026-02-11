@@ -4,6 +4,7 @@ import { eq, and } from "drizzle-orm";
 import { generateId } from "@/lib/ulid";
 import { now } from "@/lib/dates";
 import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -62,6 +63,8 @@ export async function POST(request: NextRequest) {
     };
 
     db.insert(logistics).values(newItem).run();
+
+    logActivity("created", "checklist", newItem.id, `${session?.travelerName || "Unknown"} added checklist item: ${title}`, session?.travelerName || "Unknown");
 
     return NextResponse.json(newItem, { status: 201 });
   } catch (error) {

@@ -94,6 +94,7 @@ export function RouteOverview({
         {routeStops.map((rs, index) => {
           const drive = parseDrive(rs.stop.driveFromPrev);
           const isLast = index === routeStops.length - 1;
+          const prev = index > 0 ? routeStops[index - 1] : null;
 
           return (
             <div key={rs.stop.id}>
@@ -117,7 +118,11 @@ export function RouteOverview({
                   );
                 })()}
 
-                <StopCard routeStop={rs} />
+                <StopCard
+                  routeStop={rs}
+                  prevCity={prev?.stop.city}
+                  prevDepartDate={prev?.stop.departDate}
+                />
               </div>
             </div>
           );

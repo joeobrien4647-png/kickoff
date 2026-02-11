@@ -33,6 +33,8 @@ export async function PATCH(
       "ticketNotes",
       "fanZone",
       "notes",
+      "actualHomeScore",
+      "actualAwayScore",
     ] as const;
 
     const updates: Record<string, unknown> = { updatedAt: now() };

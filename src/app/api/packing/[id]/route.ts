@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { packingItems } from "@/lib/schema";
 import { eq } from "drizzle-orm";
+import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -34,6 +36,14 @@ export async function PATCH(
 
     db.update(packingItems).set(updates).where(eq(packingItems.id, id)).run();
 
+    const session = await getSession();
+    const actorName = session?.travelerName || "Unknown";
+    if (body.checked !== undefined) {
+      logActivity("updated", "packing", id, `${actorName} checked off a packing item`, actorName);
+    } else {
+      logActivity("updated", "packing", id, `${actorName} updated a packing item`, actorName);
+    }
+
     const updated = db.select().from(packingItems).where(eq(packingItems.id, id)).get();
     return NextResponse.json(updated);
   } catch (error) {
@@ -58,6 +68,9 @@ export async function DELETE(
     }
 
     db.delete(packingItems).where(eq(packingItems.id, id)).run();
+
+    const session = await getSession();
+    logActivity("deleted", "packing", id, `${session?.travelerName || "Unknown"} removed a packing item`, session?.travelerName || "Unknown");
 
     return NextResponse.json({ success: true });
   } catch (error) {

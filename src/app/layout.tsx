@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { AppShell } from "@/components/layout/app-shell";
 import "./globals.css";
@@ -25,23 +26,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <AppShell>{children}</AppShell>
-        <Toaster
-          theme="light"
-          position="bottom-right"
-          style={
-            {
-              "--normal-bg": "var(--popover)",
-              "--normal-text": "var(--popover-foreground)",
-              "--normal-border": "var(--border)",
-              "--border-radius": "var(--radius)",
-            } as React.CSSProperties
-          }
-        />
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+          <AppShell>{children}</AppShell>
+          <Toaster
+            theme="system"
+            position="bottom-right"
+            style={
+              {
+                "--normal-bg": "var(--popover)",
+                "--normal-text": "var(--popover-foreground)",
+                "--normal-border": "var(--border)",
+                "--border-radius": "var(--radius)",
+              } as React.CSSProperties
+            }
+          />
+        </ThemeProvider>
       </body>
     </html>
   );

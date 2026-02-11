@@ -2,6 +2,8 @@ import { db } from "@/lib/db";
 import { logistics } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { now } from "@/lib/dates";
+import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -39,6 +41,9 @@ export async function PATCH(
 
     db.update(logistics).set(updates).where(eq(logistics.id, id)).run();
 
+    const session = await getSession();
+    logActivity("updated", "checklist", id, `${session?.travelerName || "Unknown"} updated a checklist item`, session?.travelerName || "Unknown");
+
     const updated = db.select().from(logistics).where(eq(logistics.id, id)).get();
     return NextResponse.json(updated);
   } catch (error) {
@@ -63,6 +68,9 @@ export async function DELETE(
     }
 
     db.delete(logistics).where(eq(logistics.id, id)).run();
+
+    const session = await getSession();
+    logActivity("deleted", "checklist", id, `${session?.travelerName || "Unknown"} removed a checklist item`, session?.travelerName || "Unknown");
 
     return NextResponse.json({ success: true });
   } catch (error) {

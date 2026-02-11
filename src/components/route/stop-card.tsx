@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/dates";
 import { TICKET_STATUS, getCityIdentity, countryFlag } from "@/lib/constants";
+import { TransportLinks } from "@/components/route/transport-links";
 import type { RouteStop } from "@/app/route/page";
 
 /** Map city identity icon strings to actual Lucide components */
@@ -32,12 +33,29 @@ const CITY_ICON_MAP: Record<string, LucideIcon> = {
 
 interface StopCardProps {
   routeStop: RouteStop;
+  /** Previous stop city — when provided, transport links are shown */
+  prevCity?: string;
+  /** Previous stop depart date (YYYY-MM-DD) — used for transport link searches */
+  prevDepartDate?: string;
 }
 
 function nightCount(arrive: string, depart: string): number {
   const a = new Date(arrive + "T12:00:00");
   const d = new Date(depart + "T12:00:00");
   return Math.round((d.getTime() - a.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+/** Map city name to a URL slug for the city guide page */
+function cityToSlug(city: string): string | null {
+  const map: Record<string, string> = {
+    "boston": "boston",
+    "new york": "nyc", "new york city": "nyc", "nyc": "nyc",
+    "philadelphia": "philadelphia", "philly": "philadelphia",
+    "washington": "washington-dc", "washington dc": "washington-dc", "washington, d.c.": "washington-dc",
+    "atlanta": "atlanta",
+    "miami": "miami",
+  };
+  return map[city.toLowerCase()] || null;
 }
 
 /** Accommodation type displayed as a short label */
@@ -49,8 +67,9 @@ const ACC_TYPE_LABELS: Record<string, string> = {
   other: "Other",
 };
 
-export function StopCard({ routeStop }: StopCardProps) {
+export function StopCard({ routeStop, prevCity, prevDepartDate }: StopCardProps) {
   const { stop, accommodation, matches, ideaCount } = routeStop;
+  const hasTransport = prevCity && prevDepartDate;
   const nights = nightCount(stop.arriveDate, stop.departDate);
   const confirmed = accommodation?.confirmed ?? false;
 
@@ -150,13 +169,32 @@ export function StopCard({ routeStop }: StopCardProps) {
           </div>
         )}
 
-        {/* Link to first day of this stop */}
-        <Link
-          href={`/days/${stop.arriveDate}`}
-          className="inline-block text-xs text-wc-teal hover:underline mt-1"
-        >
-          View days &rarr;
-        </Link>
+        {/* Transport links (from previous stop) */}
+        {hasTransport && (
+          <TransportLinks
+            fromCity={prevCity}
+            toCity={stop.city}
+            departDate={prevDepartDate}
+          />
+        )}
+
+        {/* Links */}
+        <div className="flex items-center gap-3 mt-1">
+          <Link
+            href={`/days/${stop.arriveDate}`}
+            className="text-xs text-wc-teal hover:underline"
+          >
+            View days &rarr;
+          </Link>
+          {cityToSlug(stop.city) && (
+            <Link
+              href={`/guide/${cityToSlug(stop.city)}`}
+              className="text-xs text-muted-foreground hover:text-foreground hover:underline"
+            >
+              City Guide &rarr;
+            </Link>
+          )}
+        </div>
       </CardContent>
     </Card>
   );

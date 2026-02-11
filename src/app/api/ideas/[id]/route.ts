@@ -3,6 +3,7 @@ import { ideas } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { now } from "@/lib/dates";
 import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -42,6 +43,8 @@ export async function PATCH(
         .set({ votes: JSON.stringify(currentVotes), updatedAt: now() })
         .where(eq(ideas.id, id))
         .run();
+
+      logActivity("voted", "idea", id, `${voterName} voted on: ${existing.title}`, voterName);
 
       const updated = db.select().from(ideas).where(eq(ideas.id, id)).get();
       return NextResponse.json(updated);
@@ -87,6 +90,8 @@ export async function PATCH(
         .where(eq(ideas.id, id))
         .run();
 
+      logActivity("voted", "idea", id, `${voterName} voted on poll: ${existing.title}`, voterName);
+
       const updated = db.select().from(ideas).where(eq(ideas.id, id)).get();
       return NextResponse.json(updated);
     }
@@ -97,6 +102,8 @@ export async function PATCH(
         .set({ status: body.status, updatedAt: now() })
         .where(eq(ideas.id, id))
         .run();
+
+      logActivity("updated", "idea", id, `${session?.travelerName || "Unknown"} updated idea status to ${body.status}`, session?.travelerName || "Unknown");
 
       const updated = db.select().from(ideas).where(eq(ideas.id, id)).get();
       return NextResponse.json(updated);
@@ -123,6 +130,8 @@ export async function PATCH(
 
     db.update(ideas).set(updates).where(eq(ideas.id, id)).run();
 
+    logActivity("updated", "idea", id, `${session?.travelerName || "Unknown"} updated idea: ${existing.title}`, session?.travelerName || "Unknown");
+
     const updated = db.select().from(ideas).where(eq(ideas.id, id)).get();
     return NextResponse.json(updated);
   } catch (error) {
@@ -147,6 +156,9 @@ export async function DELETE(
     }
 
     db.delete(ideas).where(eq(ideas.id, id)).run();
+
+    const session = await getSession();
+    logActivity("deleted", "idea", id, `${session?.travelerName || "Unknown"} deleted an idea`, session?.travelerName || "Unknown");
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -198,7 +198,32 @@ sqlite.exec(`
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS predictions (
+    id TEXT PRIMARY KEY,
+    match_id TEXT NOT NULL REFERENCES matches(id) ON DELETE CASCADE,
+    traveler_name TEXT NOT NULL,
+    home_score INTEGER NOT NULL,
+    away_score INTEGER NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(match_id, traveler_name)
+  );
+
+  CREATE TABLE IF NOT EXISTS activity_log (
+    id TEXT PRIMARY KEY,
+    action TEXT NOT NULL,
+    entity_type TEXT NOT NULL,
+    entity_id TEXT,
+    description TEXT NOT NULL,
+    actor TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
 `);
+
+// Add actual score columns to matches (may already exist)
+try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_home_score INTEGER"); } catch {}
+try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_away_score INTEGER"); } catch {}
 
 console.log("  Tables ready.\n");
 

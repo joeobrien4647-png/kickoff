@@ -3,6 +3,8 @@ import { expenses, expenseSplits } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { generateId } from "@/lib/ulid";
 import { now } from "@/lib/dates";
+import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
@@ -66,6 +68,9 @@ export async function PATCH(
       .where(eq(expenseSplits.expenseId, id))
       .all();
 
+    const session = await getSession();
+    logActivity("updated", "expense", id, `${session?.travelerName || "Unknown"} updated an expense`, session?.travelerName || "Unknown");
+
     return NextResponse.json({ ...updated, splits: updatedSplits });
   } catch (error) {
     console.error("[API] PATCH /api/expenses/[id] error:", error);
@@ -90,6 +95,9 @@ export async function DELETE(
 
     // Splits cascade via FK onDelete
     db.delete(expenses).where(eq(expenses.id, id)).run();
+
+    const session = await getSession();
+    logActivity("deleted", "expense", id, `${session?.travelerName || "Unknown"} deleted an expense`, session?.travelerName || "Unknown");
 
     return NextResponse.json({ success: true });
   } catch (error) {

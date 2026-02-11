@@ -17,6 +17,8 @@ import {
   Printer,
   Menu,
   ChevronDown,
+  Compass,
+  Target,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -45,6 +47,7 @@ const DIRECT_LINKS = [
   { href: "/days", label: "Days", icon: Calendar },
   { href: "/matches", label: "Matches", icon: Trophy },
   { href: "/route", label: "Route", icon: Route },
+  { href: "/guide", label: "Guide", icon: Compass },
 ] as const;
 
 const PLANNING_ITEMS = [
@@ -52,6 +55,7 @@ const PLANNING_ITEMS = [
   { href: "/ideas", label: "Ideas", icon: Lightbulb },
   { href: "/checklist", label: "Checklist", icon: ClipboardCheck },
   { href: "/packing", label: "Packing", icon: Backpack },
+  { href: "/predictions", label: "Predictions", icon: Target },
 ] as const;
 
 const MORE_ITEMS = [

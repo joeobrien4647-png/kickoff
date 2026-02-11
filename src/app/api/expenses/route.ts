@@ -3,6 +3,8 @@ import { expenses, expenseSplits } from "@/lib/schema";
 import { eq } from "drizzle-orm";
 import { generateId } from "@/lib/ulid";
 import { now } from "@/lib/dates";
+import { getSession } from "@/lib/auth";
+import { logActivity } from "@/lib/activity";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -81,6 +83,9 @@ export async function POST(request: NextRequest) {
       .from(expenseSplits)
       .where(eq(expenseSplits.expenseId, expenseId))
       .all();
+
+    const session = await getSession();
+    logActivity("created", "expense", expenseId, `${session?.travelerName || paidBy} added expense: ${description}`, session?.travelerName || paidBy);
 
     return NextResponse.json({ ...newExpense, splits: createdSplits }, { status: 201 });
   } catch (error) {

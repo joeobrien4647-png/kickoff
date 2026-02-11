@@ -10,9 +10,11 @@ import {
   logistics,
 } from "@/lib/schema";
 import { asc, sql } from "drizzle-orm";
-import { getCityIdentity } from "@/lib/constants";
+import { getCityIdentity, ROUTE_STOPS } from "@/lib/constants";
 import { MatchCard } from "@/components/match-card";
 import { MilestonesCard } from "@/components/milestones-card";
+import { WeatherWidget } from "@/components/weather-widget";
+import { ActivityFeed } from "@/components/activity-feed";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -180,8 +182,19 @@ export default function HomePage() {
     ? allStops.findIndex((s) => today < s.arriveDate) - 1
     : -1; // before trip: nothing active
 
+  // Next upcoming stop for weather widget:
+  // During trip — current stop; before trip — first stop
+  const nextStop = isDuringTrip
+    ? allStops[Math.max(0, currentStopIndex)]
+    : allStops[0];
+
+  // Look up lat/lng from constants (stops table may have nulls)
+  const weatherCoords = nextStop
+    ? ROUTE_STOPS.find((rs) => rs.name === nextStop.city) ?? null
+    : null;
+
   return (
-    <div className="mx-auto max-w-2xl space-y-6 pb-8">
+    <div className="mx-auto max-w-5xl pb-8">
       {/* ── Hero / Countdown ─────────────────────────────────────────── */}
       <section className="flex flex-col items-center text-center pt-8 md:pt-12">
         <p className="text-7xl md:text-9xl font-bold tabular-nums bg-gradient-to-b from-wc-gold to-wc-coral bg-clip-text text-transparent">
@@ -204,137 +217,167 @@ export default function HomePage() {
         </p>
       </section>
 
-      {/* ── Quick stats grid ─────────────────────────────────────────── */}
-      <section className="grid grid-cols-2 gap-3">
-        {/* Matches */}
-        <Link href="/matches">
-          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
-            <CardContent className="flex items-center gap-3">
-              <div className="rounded-lg bg-muted p-2.5 text-wc-teal">
-                <Trophy className="size-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium">Matches</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {allMatches.length} tracked
-                  {purchasedCount > 0 && ` · ${purchasedCount} tickets`}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Route */}
-        <Link href="/route">
-          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
-            <CardContent className="flex items-center gap-3">
-              <div className="rounded-lg bg-muted p-2.5 text-wc-blue">
-                <Route className="size-5" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-medium">Route</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {allStops.length} stops · {Math.round(totalMiles)} mi
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Checklist — with progress ring */}
-        <Link href="/checklist">
-          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
-            <CardContent className="flex items-center gap-3">
-              <ProgressRing pct={logisticsPct} colorClass="stroke-wc-coral" />
-              <div className="min-w-0">
-                <p className="text-sm font-medium">Checklist</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {logisticsStats.done ?? 0}/{logisticsStats.total} done
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-
-        {/* Packing — with progress ring */}
-        <Link href="/packing">
-          <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
-            <CardContent className="flex items-center gap-3">
-              <ProgressRing pct={packingPct} colorClass="stroke-wc-gold" />
-              <div className="min-w-0">
-                <p className="text-sm font-medium">Packing</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {packingStats.packed ?? 0}/{packingStats.total} packed
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Link>
-      </section>
-
-      {/* ── Milestones ──────────────────────────────────────────────── */}
-      <MilestonesCard />
-
-      {/* ── Next Match ───────────────────────────────────────────────── */}
-      {nextMatch && (
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Next Match
-            </h3>
-            <Link
-              href="/matches"
-              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-            >
-              All matches <ChevronRight className="size-3" />
+      {/* ── Two-column layout: main + sidebar ─────────────────────────── */}
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+        {/* ── Main column ───────────────────────────────────────────── */}
+        <div className="space-y-6">
+          {/* ── Quick stats grid ──────────────────────────────────────── */}
+          <section className="grid grid-cols-2 gap-3">
+            {/* Matches */}
+            <Link href="/matches">
+              <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+                <CardContent className="flex items-center gap-3">
+                  <div className="rounded-lg bg-muted p-2.5 text-wc-teal">
+                    <Trophy className="size-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">Matches</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {allMatches.length} tracked
+                      {purchasedCount > 0 && ` · ${purchasedCount} tickets`}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             </Link>
-          </div>
-          <MatchCard match={nextMatch} />
-        </section>
-      )}
 
-      {/* ── Journey progress line ────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-            The Route
-          </h3>
-          <Link
-            href="/route"
-            className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-0.5"
-          >
-            Full breakdown <ChevronRight className="size-3" />
-          </Link>
-        </div>
-        <Card className="py-4">
-          <CardContent>
-            <div className="relative px-1.5">
-              {/* Horizontal track */}
-              <div className="absolute top-1.5 left-1.5 right-1.5 h-0.5 bg-border" />
+            {/* Route */}
+            <Link href="/route">
+              <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+                <CardContent className="flex items-center gap-3">
+                  <div className="rounded-lg bg-muted p-2.5 text-wc-blue">
+                    <Route className="size-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">Route</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {allStops.length} stops · {Math.round(totalMiles)} mi
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
 
-              {/* City nodes */}
-              <div className="relative flex justify-between">
-                {allStops.map((stop, i) => (
-                  <JourneyNode
-                    key={stop.id}
-                    city={stop.city}
-                    isActive={isDuringTrip && i <= currentStopIndex}
-                    isFirst={i === 0}
-                    isLast={i === allStops.length - 1}
-                  />
-                ))}
+            {/* Checklist — with progress ring */}
+            <Link href="/checklist">
+              <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+                <CardContent className="flex items-center gap-3">
+                  <ProgressRing pct={logisticsPct} colorClass="stroke-wc-coral" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">Checklist</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {logisticsStats.done ?? 0}/{logisticsStats.total} done
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+
+            {/* Packing — with progress ring */}
+            <Link href="/packing">
+              <Card className="py-4 hover:bg-accent/50 transition-colors cursor-pointer">
+                <CardContent className="flex items-center gap-3">
+                  <ProgressRing pct={packingPct} colorClass="stroke-wc-gold" />
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium">Packing</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {packingStats.packed ?? 0}/{packingStats.total} packed
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </section>
+
+          {/* ── Milestones ────────────────────────────────────────────── */}
+          <MilestonesCard />
+
+          {/* ── Next Match ─────────────────────────────────────────────── */}
+          {nextMatch && (
+            <section>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                  Next Match
+                </h3>
+                <Link
+                  href="/matches"
+                  className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-0.5"
+                >
+                  All matches <ChevronRight className="size-3" />
+                </Link>
               </div>
+              <MatchCard match={nextMatch} />
+            </section>
+          )}
+
+          {/* ── Journey progress line ──────────────────────────────────── */}
+          <section>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+                The Route
+              </h3>
+              <Link
+                href="/route"
+                className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-0.5"
+              >
+                Full breakdown <ChevronRight className="size-3" />
+              </Link>
             </div>
-            <p className="text-xs text-muted-foreground mt-4 text-center">
-              {Math.round(totalMiles)} miles &middot;{" "}
-              {allStops[0]?.arriveDate && formatDate(allStops[0].arriveDate)}{" "}
-              &ndash;{" "}
-              {allStops[allStops.length - 1]?.departDate &&
-                formatDate(allStops[allStops.length - 1].departDate)}
-            </p>
-          </CardContent>
-        </Card>
-      </section>
+            <Card className="py-4">
+              <CardContent>
+                <div className="relative px-1.5">
+                  {/* Horizontal track */}
+                  <div className="absolute top-1.5 left-1.5 right-1.5 h-0.5 bg-border" />
+
+                  {/* City nodes */}
+                  <div className="relative flex justify-between">
+                    {allStops.map((stop, i) => (
+                      <JourneyNode
+                        key={stop.id}
+                        city={stop.city}
+                        isActive={isDuringTrip && i <= currentStopIndex}
+                        isFirst={i === 0}
+                        isLast={i === allStops.length - 1}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4 text-center">
+                  {Math.round(totalMiles)} miles &middot;{" "}
+                  {allStops[0]?.arriveDate && formatDate(allStops[0].arriveDate)}{" "}
+                  &ndash;{" "}
+                  {allStops[allStops.length - 1]?.departDate &&
+                    formatDate(allStops[allStops.length - 1].departDate)}
+                </p>
+              </CardContent>
+            </Card>
+          </section>
+        </div>
+
+        {/* ── Sidebar ───────────────────────────────────────────────── */}
+        <aside className="space-y-6">
+          {/* Weather widget for next stop */}
+          {nextStop && weatherCoords && (
+            <WeatherWidget
+              city={nextStop.city}
+              lat={weatherCoords.lat}
+              lng={weatherCoords.lng}
+            />
+          )}
+
+          {/* Activity feed */}
+          <section>
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+              Recent Activity
+            </h3>
+            <Card className="py-4">
+              <CardContent>
+                <ActivityFeed limit={15} />
+              </CardContent>
+            </Card>
+          </section>
+        </aside>
+      </div>
     </div>
   );
 }

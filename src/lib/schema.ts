@@ -83,6 +83,8 @@ export const matches = sqliteTable("matches", {
   attending: integer("attending", { mode: "boolean" }).notNull().default(false),
   priority: integer("priority").notNull().default(0), // 0-3
   notes: text("notes"),
+  actualHomeScore: integer("actual_home_score"),
+  actualAwayScore: integer("actual_away_score"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
 });
@@ -255,6 +257,30 @@ export const notes = sqliteTable("notes", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// ============ PREDICTIONS ============
+export const predictions = sqliteTable("predictions", {
+  id: text("id").primaryKey(),
+  matchId: text("match_id")
+    .notNull()
+    .references(() => matches.id, { onDelete: "cascade" }),
+  travelerName: text("traveler_name").notNull(),
+  homeScore: integer("home_score").notNull(),
+  awayScore: integer("away_score").notNull(),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ ACTIVITY LOG ============
+export const activityLog = sqliteTable("activity_log", {
+  id: text("id").primaryKey(),
+  action: text("action").notNull(),
+  entityType: text("entity_type").notNull(),
+  entityId: text("entity_id"),
+  description: text("description").notNull(),
+  actor: text("actor").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
 // ============ TYPE EXPORTS ============
 export type TripSettings = typeof tripSettings.$inferSelect;
 export type Traveler = typeof travelers.$inferSelect;
@@ -268,3 +294,5 @@ export type PackingItem = typeof packingItems.$inferSelect;
 export type Idea = typeof ideas.$inferSelect;
 export type Logistics = typeof logistics.$inferSelect;
 export type Note = typeof notes.$inferSelect;
+export type Prediction = typeof predictions.$inferSelect;
+export type ActivityLogEntry = typeof activityLog.$inferSelect;
