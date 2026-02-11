@@ -216,7 +216,7 @@ export function CityProfileView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredRestaurants.map((r) => (
-                <RestaurantCard key={r.name} restaurant={r} />
+                <RestaurantCard key={r.name} restaurant={r} city={cityName} />
               ))}
             </div>
           )}
@@ -244,7 +244,7 @@ export function CityProfileView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredAttractions.map((a) => (
-                <AttractionCard key={a.name} attraction={a} />
+                <AttractionCard key={a.name} attraction={a} city={cityName} />
               ))}
             </div>
           )}
@@ -271,7 +271,7 @@ export function CityProfileView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredNightlife.map((n) => (
-                <NightlifeCard key={n.name} spot={n} />
+                <NightlifeCard key={n.name} spot={n} city={cityName} />
               ))}
             </div>
           )}

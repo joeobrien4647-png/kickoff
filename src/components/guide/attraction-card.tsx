@@ -1,9 +1,13 @@
 "use client";
 
-import { Clock, DollarSign } from "lucide-react";
+import { Clock, DollarSign, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { Attraction } from "@/lib/city-profiles";
+
+function tripAdvisorUrl(name: string, city: string) {
+  return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(name + " " + city)}`;
+}
 
 const CATEGORY_COLORS: Record<string, string> = {
   landmark: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
@@ -25,9 +29,10 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 interface AttractionCardProps {
   attraction: Attraction & { images?: string[] };
+  city?: string;
 }
 
-export function AttractionCard({ attraction }: AttractionCardProps) {
+export function AttractionCard({ attraction, city }: AttractionCardProps) {
   const categoryColor = CATEGORY_COLORS[attraction.category] ?? "";
   const categoryLabel = CATEGORY_LABELS[attraction.category] ?? attraction.category;
   const hasImages = attraction.images && attraction.images.length > 0;
@@ -71,15 +76,25 @@ export function AttractionCard({ attraction }: AttractionCardProps) {
         {attraction.description}
       </p>
 
-      {/* Tip */}
-      {attraction.tip && (
-        <div className="mt-auto pt-2 border-t border-border">
+      {/* Tip + TripAdvisor link */}
+      <div className="mt-auto pt-2 border-t border-border flex items-end justify-between gap-2">
+        {attraction.tip ? (
           <p className="text-xs">
             <span className="font-medium text-wc-teal">Tip:</span>{" "}
             <span className="text-muted-foreground">{attraction.tip}</span>
           </p>
-        </div>
-      )}
+        ) : <span />}
+        {city && (
+          <a
+            href={tripAdvisorUrl(attraction.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+          >
+            TripAdvisor <ExternalLink className="size-2.5" />
+          </a>
+        )}
+      </div>
       </div>
     </div>
   );

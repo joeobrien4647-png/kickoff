@@ -1,9 +1,13 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { MapPin, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { NightlifeSpot } from "@/lib/city-profiles";
+
+function tripAdvisorUrl(name: string, city: string) {
+  return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(name + " " + city)}`;
+}
 
 const TYPE_COLORS: Record<string, string> = {
   bar: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300",
@@ -27,9 +31,10 @@ const TYPE_LABELS: Record<string, string> = {
 
 interface NightlifeCardProps {
   spot: NightlifeSpot & { images?: string[] };
+  city?: string;
 }
 
-export function NightlifeCard({ spot }: NightlifeCardProps) {
+export function NightlifeCard({ spot, city }: NightlifeCardProps) {
   const typeColor = TYPE_COLORS[spot.type] ?? "";
   const typeLabel = TYPE_LABELS[spot.type] ?? spot.type;
   const hasImages = spot.images && spot.images.length > 0;
@@ -65,6 +70,20 @@ export function NightlifeCard({ spot }: NightlifeCardProps) {
       <p className="text-xs text-muted-foreground leading-relaxed">
         {spot.oneLiner}
       </p>
+
+      {/* TripAdvisor link */}
+      {city && (
+        <div className="mt-auto pt-2 border-t border-border">
+          <a
+            href={tripAdvisorUrl(spot.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+          >
+            TripAdvisor <ExternalLink className="size-2.5" />
+          </a>
+        </div>
+      )}
       </div>
     </div>
   );

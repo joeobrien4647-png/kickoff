@@ -36,14 +36,14 @@ export function TrumpHologram({ compact = false }: { compact?: boolean }) {
         </h3>
       )}
       <div
-        className="relative overflow-hidden rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-4"
+        className="relative overflow-hidden rounded-xl border border-cyan-400/30 bg-[oklch(0.15_0.02_220)] p-4"
         style={{
           animation: "hologram-flicker 4s ease-in-out infinite, hologram-glow 3s ease-in-out infinite",
         }}
       >
         {/* Scan line overlay */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
           style={{
             backgroundImage:
               "repeating-linear-gradient(0deg, transparent, transparent 2px, oklch(0.8 0.15 200 / 0.5) 2px, oklch(0.8 0.15 200 / 0.5) 4px)",
@@ -58,7 +58,7 @@ export function TrumpHologram({ compact = false }: { compact?: boolean }) {
             <span className="text-3xl" role="img" aria-label="Trump">
               {"👨‍💼"}
             </span>
-            <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-cyan-300/60">
+            <span className="mt-1 text-[9px] font-bold uppercase tracking-wider text-cyan-400">
               POTUS
             </span>
           </div>
@@ -66,7 +66,7 @@ export function TrumpHologram({ compact = false }: { compact?: boolean }) {
           {/* Quote bubble */}
           <div className="min-w-0 flex-1">
             <p
-              className={`text-sm leading-relaxed text-cyan-100/80 transition-opacity duration-300 ${
+              className={`text-sm leading-relaxed text-cyan-200 transition-opacity duration-300 ${
                 isFading ? "opacity-0" : "opacity-100"
               }`}
             >

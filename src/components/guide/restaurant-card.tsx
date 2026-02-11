@@ -1,9 +1,13 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { MapPin, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ImageCarousel } from "@/components/guide/image-carousel";
 import type { Restaurant } from "@/lib/city-profiles";
+
+function tripAdvisorUrl(name: string, city: string) {
+  return `https://www.tripadvisor.com/Search?q=${encodeURIComponent(name + " " + city)}`;
+}
 
 // Cuisine colors — subtle backgrounds for visual variety
 const CUISINE_COLORS: Record<string, string> = {
@@ -31,9 +35,10 @@ const DEFAULT_CUISINE_COLOR =
 
 interface RestaurantCardProps {
   restaurant: Restaurant & { images?: string[] };
+  city?: string;
 }
 
-export function RestaurantCard({ restaurant }: RestaurantCardProps) {
+export function RestaurantCard({ restaurant, city }: RestaurantCardProps) {
   const cuisineColor = CUISINE_COLORS[restaurant.cuisine] ?? DEFAULT_CUISINE_COLOR;
   const hasImages = restaurant.images && restaurant.images.length > 0;
 
@@ -78,12 +83,22 @@ export function RestaurantCard({ restaurant }: RestaurantCardProps) {
         {restaurant.oneLiner}
       </p>
 
-      {/* Must order */}
-      <div className="mt-auto pt-2 border-t border-border">
+      {/* Must order + TripAdvisor link */}
+      <div className="mt-auto pt-2 border-t border-border flex items-end justify-between gap-2">
         <p className="text-xs">
           <span className="font-medium text-wc-coral">Must order:</span>{" "}
           <span className="text-muted-foreground">{restaurant.mustOrder}</span>
         </p>
+        {city && (
+          <a
+            href={tripAdvisorUrl(restaurant.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 flex items-center gap-1 text-[10px] font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
+          >
+            TripAdvisor <ExternalLink className="size-2.5" />
+          </a>
+        )}
       </div>
       </div>
     </div>
