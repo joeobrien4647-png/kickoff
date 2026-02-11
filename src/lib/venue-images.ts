@@ -256,14 +256,14 @@ const IMAGES: Record<string, string[]> = {
 
   // BOSTON — Attractions
   "Freedom Trail": [
-    u("1569974498991-d3c12a504f95"), // Boston historic
-    u("1558618666-fcd25c85f82e"), // cobblestone street
-    u("1560518883-ce09059eeffa"), // historic buildings
+    u("1694475184263-3e03f11c7ff8"), // Freedom Trail Boston
+    u("1726347921598-8da9d212030e"), // Freedom Trail marker
+    u("1561084817-331b51e4f2d3"), // Freedom Trail path
   ],
   "Fenway Park": [
-    u("1563911302-8b4db47ae0b3"), // baseball stadium
-    u("1570304816-ef967a386bc4"), // Fenway
-    u("1574629810360-7efbbe195018"), // sports venue
+    u("1641780918579-44386d863a6b"), // Fenway Park stadium
+    u("1681351605771-a07893306fda"), // Fenway Park game
+    u("1499019994040-051a7b3135f2"), // Fenway Park field
   ],
   "Museum of Fine Arts": [
     u("1564399580075-5dfe19c205f0"), // museum gallery
@@ -271,9 +271,9 @@ const IMAGES: Record<string, string[]> = {
     u("1518998053901-5348d7dc4ca6"), // museum hall
   ],
   "Boston Public Garden": [
-    u("1558618666-fcd25c85f82e"), // garden
-    u("1585320806297-9794b3e4eeae"), // park bridge
-    u("1560518883-ce09059eeffa"), // public garden
+    u("1694475182039-f41a22ce9be3"), // Boston Public Garden
+    u("1726347921807-8551a19aefaf"), // Public Garden lagoon
+    u("1558279209-19753befb32b"), // Public Garden bridge
   ],
   "New England Aquarium": [
     u("1544551763-46a013bb70d5"), // aquarium
@@ -291,9 +291,9 @@ const IMAGES: Record<string, string[]> = {
     u("1518998053901-5348d7dc4ca6"), // palace interior
   ],
   "Harvard Yard": [
-    u("1558618666-fcd25c85f82e"), // ivy campus
-    u("1560518883-ce09059eeffa"), // university
-    u("1569974498991-d3c12a504f95"), // historic Cambridge
+    u("1672045599447-09703f5e6553"), // Harvard Yard
+    u("1673712234801-5df38a267604"), // Harvard campus
+    u("1680674428972-3e40c64c730c"), // Harvard buildings
   ],
   "Boston Harbor Islands": [
     u("1507525428034-b723cf961d3e"), // harbor islands
@@ -330,7 +330,11 @@ const IMAGES: Record<string, string[]> = {
     u("1533089860892-a7c6f0a88666"), // bagels brunch
     u("1495214783159-3503fd1f003e"), // classic deli
   ],
-  "Katz's Delicatessen": DELI,
+  "Katz's Delicatessen": [
+    u("1640290982696-758e885f1859"), // Katz's Deli
+    u("1748341394265-c8bc50b1bd58"), // Katz's interior
+    u("1748341385913-093d12ca4d16"), // Katz's pastrami
+  ],
   "Xi'an Famous Foods": [
     u("1553621042-f6e147245754"), // noodles
     u("1583623025817-d180a2221d0a"), // Chinese food
@@ -352,39 +356,39 @@ const IMAGES: Record<string, string[]> = {
 
   // NEW YORK — Attractions
   "Statue of Liberty & Ellis Island": [
-    u("1503572699868-cc1e2b0cd52b"), // Statue of Liberty
-    u("1534430480872-3498386e7856"), // Liberty Island
-    u("1570630706809-3d8ccbb1fce6"), // NYC harbor
+    u("1681803531285-75db948035d3"), // Statue of Liberty
+    u("1588384153148-ebd739ac430c"), // Liberty Island
+    u("1503572327579-b5c6afe5c5c5"), // NYC harbor statue
   ],
   "Central Park": [
-    u("1568515387631-8b650e7f4bdb"), // Central Park
-    u("1534430480872-3498386e7856"), // park autumn
+    u("1568515387631-8b650bbcdb90"), // Central Park aerial
+    u("1569974498991-d3c12a504f95"), // Central Park lake
     u("1585320806297-9794b3e4eeae"), // Bethesda fountain
   ],
   "9/11 Memorial & Museum": [
-    u("1570630706809-3d8ccbb1fce6"), // NYC memorial
-    u("1503572699868-cc1e2b0cd52b"), // Lower Manhattan
-    u("1534430480872-3498386e7856"), // memorial pools
+    u("1694475386078-af18b0f90223"), // 9/11 Memorial pools
+    u("1694709233547-d975e613033b"), // 9/11 Museum
+    u("1694467666983-3fa4a29e7ecf"), // memorial tribute
   ],
   "Brooklyn Bridge": [
-    u("1534430480872-3498386e7856"), // Brooklyn Bridge
-    u("1503572699868-cc1e2b0cd52b"), // bridge walkway
-    u("1570630706809-3d8ccbb1fce6"), // bridge at sunset
+    u("1576653742613-c05fac617721"), // Brooklyn Bridge
+    u("1641262037759-04c0489af7f8"), // bridge walkway
+    u("1642654767430-6dab6b9e32e9"), // bridge at sunset
   ],
   "The High Line": [
-    u("1585320806297-9794b3e4eeae"), // elevated park
-    u("1568515387631-8b650e7f4bdb"), // urban garden
-    u("1534430480872-3498386e7856"), // NYC park
+    u("1656477716212-237ba33b529c"), // High Line park
+    u("1565476460054-3f0b79f901e3"), // High Line walkway
+    u("1712924936258-e91d196f2428"), // elevated garden
   ],
   "Top of the Rock": [
-    u("1534430480872-3498386e7856"), // NYC skyline
-    u("1503572699868-cc1e2b0cd52b"), // observation deck view
-    u("1570630706809-3d8ccbb1fce6"), // Manhattan panorama
+    u("1712152626883-af0730dc65f2"), // Top of the Rock view
+    u("1573507677100-4a10fa287519"), // NYC skyline from top
+    u("1585753021570-cb9f23c4dc68"), // Manhattan panorama
   ],
   "The Metropolitan Museum of Art": [
-    u("1564399580075-5dfe19c205f0"), // art museum
-    u("1554907984-15263bfd63bd"), // museum interior
-    u("1518998053901-5348d7dc4ca6"), // grand museum hall
+    u("1664392235934-502f6c74818c"), // Met Museum
+    u("1591631523881-08ec202acc40"), // Met Museum interior
+    u("1590700928582-5389e4ded3cb"), // Met Museum gallery
   ],
   "DUMBO, Brooklyn": [
     u("1534430480872-3498386e7856"), // DUMBO bridge view
@@ -424,7 +428,11 @@ const IMAGES: Record<string, string[]> = {
   "Pat's King of Steaks": CHEESESTEAK,
   "John's Roast Pork": CHEESESTEAK,
   "Zahav": MIDDLE_EASTERN,
-  "Reading Terminal Market": FOOD_HALL,
+  "Reading Terminal Market": [
+    u("1626276549957-c8a3a692ba6d"), // Reading Terminal Market
+    u("1538620003849-6dab1af498a8"), // market stalls
+    u("1615040757977-09b7e573f977"), // market food
+  ],
   "Federal Donuts": [
     u("1509440159596-0249088772ff"), // donuts
     u("1626645738196-c2a98082c326"), // fried chicken
@@ -452,25 +460,25 @@ const IMAGES: Record<string, string[]> = {
 
   // PHILADELPHIA — Attractions
   "Independence Hall": [
-    u("1569974498991-d3c12a504f95"), // historic building
-    u("1558618666-fcd25c85f82e"), // colonial architecture
-    u("1560518883-ce09059eeffa"), // Philadelphia historic
+    u("1742457698755-18882af7d8cc"), // Independence Hall
+    u("1735659398576-27bb7558f2ed"), // Independence Hall facade
+    u("1614946403309-cc9d1f9b6164"), // Independence Hall Philly
   ],
   "Liberty Bell Center": [
-    u("1569974498991-d3c12a504f95"), // American landmark
-    u("1558618666-fcd25c85f82e"), // historic Philadelphia
-    u("1560518883-ce09059eeffa"), // liberty monument
+    u("1580872395943-57f73db1d9aa"), // Liberty Bell
+    u("1619697939470-4fe22576cc0c"), // Liberty Bell close-up
+    u("1683553238308-9e33dcda0986"), // Liberty Bell exhibit
   ],
   "Philadelphia Museum of Art": [
-    u("1564399580075-5dfe19c205f0"), // art museum
-    u("1554907984-15263bfd63bd"), // museum steps
-    u("1518998053901-5348d7dc4ca6"), // museum interior
+    u("1655387952054-af61e143f4a2"), // Philly Museum of Art
+    u("1643925263111-c44b0fa434a5"), // Rocky Steps
+    u("1718034453615-77c2ab986329"), // museum exterior
   ],
   // "Reading Terminal Market" already mapped above
   "Eastern State Penitentiary": [
-    u("1569974498991-d3c12a504f95"), // historic building
-    u("1558618666-fcd25c85f82e"), // old architecture
-    u("1560518883-ce09059eeffa"), // atmospheric ruins
+    u("1632360384065-62b21f100ee6"), // Eastern State Penitentiary
+    u("1468934047141-60c4fecdcc00"), // penitentiary corridor
+    u("1582559013237-d6b9b7571981"), // prison ruins
   ],
   "Spruce Street Harbor Park": [
     u("1585320806297-9794b3e4eeae"), // waterfront park
@@ -548,9 +556,9 @@ const IMAGES: Record<string, string[]> = {
 
   // WASHINGTON DC — Attractions
   "National Mall": [
-    u("1558618666-fcd25c85f82e"), // monuments
-    u("1569974498991-d3c12a504f95"), // Washington DC
-    u("1560518883-ce09059eeffa"), // national mall
+    u("1647390796652-7654521e51c6"), // National Mall DC
+    u("1694788847591-c9da90e41662"), // National Mall monuments
+    u("1694788847650-ef24cba80517"), // Washington Monument
   ],
   "Smithsonian National Air and Space Museum": [
     u("1564399580075-5dfe19c205f0"), // museum
@@ -563,9 +571,9 @@ const IMAGES: Record<string, string[]> = {
     u("1518998053901-5348d7dc4ca6"), // exhibits
   ],
   "Lincoln Memorial": [
-    u("1558618666-fcd25c85f82e"), // memorial
-    u("1569974498991-d3c12a504f95"), // DC landmark
-    u("1560518883-ce09059eeffa"), // reflecting pool
+    u("1694475167895-fc828dd7100b"), // Lincoln Memorial
+    u("1674480658851-75e8c7ba54ff"), // Lincoln statue
+    u("1588565267250-236955d3f8d7"), // memorial steps
   ],
   "Georgetown Waterfront": [
     u("1585320806297-9794b3e4eeae"), // waterfront
@@ -573,9 +581,9 @@ const IMAGES: Record<string, string[]> = {
     u("1476673160081-cf065ac3b5f5"), // riverside
   ],
   "Library of Congress": [
-    u("1564399580075-5dfe19c205f0"), // grand library
-    u("1554907984-15263bfd63bd"), // reading room
-    u("1518998053901-5348d7dc4ca6"), // ornate interior
+    u("1668378367927-daade47e48ee"), // Library of Congress
+    u("1668378102756-ae38db61937d"), // reading room
+    u("1597132687570-0e3d020119e2"), // ornate interior
   ],
   "National Gallery of Art": [
     u("1564399580075-5dfe19c205f0"), // art gallery
@@ -654,19 +662,19 @@ const IMAGES: Record<string, string[]> = {
     u("1476673160081-cf065ac3b5f5"), // paved trail
   ],
   "Georgia Aquarium": [
-    u("1544551763-46a013bb70d5"), // aquarium
-    u("1559591937-2b5f8a9a6ed1"), // whale shark
-    u("1518837695005-2083093ee35b"), // underwater
+    u("1679928114130-d437b8bc7023"), // Georgia Aquarium
+    u("1679928114068-0aa8ec2e7630"), // aquarium interior
+    u("1684166494251-1357c6da9fe0"), // whale shark tank
   ],
   "World of Coca-Cola": [
-    u("1564399580075-5dfe19c205f0"), // museum
-    u("1554907984-15263bfd63bd"), // interactive exhibit
-    u("1569974498991-d3c12a504f95"), // Atlanta landmark
+    u("1714253256395-a86187d83e6f"), // World of Coca-Cola
+    u("1669181533013-94e185454bb6"), // Coca-Cola exhibit
+    u("1694056033362-8e34f224e65c"), // Atlanta landmark
   ],
   "Piedmont Park": [
-    u("1585320806297-9794b3e4eeae"), // urban park
-    u("1476673160081-cf065ac3b5f5"), // green space
-    u("1507525428034-b723cf961d3e"), // park skyline
+    u("1733306598042-61022ae91155"), // Piedmont Park Atlanta
+    u("1736512642636-423ec6799e76"), // Piedmont Park skyline
+    u("1665791077858-b6ea053b6bce"), // park green space
   ],
   "High Museum of Art": [
     u("1564399580075-5dfe19c205f0"), // art museum
@@ -675,9 +683,9 @@ const IMAGES: Record<string, string[]> = {
   ],
   "Krog Street Market": FOOD_HALL,
   "Centennial Olympic Park": [
-    u("1585320806297-9794b3e4eeae"), // Olympic park
-    u("1507525428034-b723cf961d3e"), // fountain
-    u("1476673160081-cf065ac3b5f5"), // downtown park
+    u("1656940178655-b44eb538be53"), // Centennial Olympic Park
+    u("1656940179326-7aa621e8e3e7"), // Olympic fountain
+    u("1656940533594-fdfec1ebc9c2"), // Atlanta Olympic park
   ],
   "Center for Civil and Human Rights": [
     u("1564399580075-5dfe19c205f0"), // museum
@@ -736,24 +744,24 @@ const IMAGES: Record<string, string[]> = {
 
   // MIAMI — Attractions
   "South Beach & Art Deco Historic District": [
-    u("1533106497176-45ae19e68ba2"), // South Beach Art Deco
-    u("1514214246283-d427a95c5d2f"), // Miami beach
-    u("1506966953602-c20cc11f75e3"), // Ocean Drive
+    u("1580650897109-bbc9da8a47fd"), // South Beach Art Deco
+    u("1580650897119-b47aad929934"), // Ocean Drive Miami
+    u("1580650897111-ee659750cf08"), // Art Deco buildings
   ],
   "Wynwood Walls": [
-    u("1554907984-15263bfd63bd"), // street art murals
-    u("1564399580075-5dfe19c205f0"), // graffiti walls
-    u("1569974498991-d3c12a504f95"), // Wynwood art
+    u("1664476634626-cdf636965082"), // Wynwood Walls murals
+    u("1547599779-893af5ceaee7"), // Wynwood street art
+    u("1558729387-b9a8aff265bb"), // Wynwood graffiti
   ],
   "Vizcaya Museum and Gardens": [
-    u("1564399580075-5dfe19c205f0"), // villa museum
-    u("1558618666-fcd25c85f82e"), // formal gardens
-    u("1518998053901-5348d7dc4ca6"), // Renaissance architecture
+    u("1675724176242-d8c91f007f52"), // Vizcaya Museum
+    u("1722815454994-8fe5fabe8e91"), // Vizcaya gardens
+    u("1722815792516-39b6650e26a5"), // Vizcaya villa
   ],
   "Little Havana / Calle Ocho Walk": [
-    u("1512058564366-18510be2db19"), // Little Havana
-    u("1569974498991-d3c12a504f95"), // Calle Ocho
-    u("1551504734-5ee1c4a1479b"), // Cuban culture
+    u("1548209570-75a4a6d34466"), // Little Havana
+    u("1548211726-7f93384ec097"), // Calle Ocho
+    u("1574167630074-8221b69f8b98"), // Cuban culture
   ],
   "P\u00E9rez Art Museum Miami (PAMM)": [
     u("1564399580075-5dfe19c205f0"), // contemporary art
@@ -761,9 +769,9 @@ const IMAGES: Record<string, string[]> = {
     u("1518998053901-5348d7dc4ca6"), // modern architecture
   ],
   "Everglades National Park": [
-    u("1507525428034-b723cf961d3e"), // wetlands
-    u("1476673160081-cf065ac3b5f5"), // nature preserve
-    u("1518837695005-2083093ee35b"), // wildlife
+    u("1649036853210-39256f4d8885"), // Everglades National Park
+    u("1709640213114-d378786731f1"), // Everglades wetlands
+    u("1709640213692-9761aba5e8e1"), // Everglades wildlife
   ],
   "Key Biscayne / Crandon Park": [
     u("1514214246283-d427a95c5d2f"), // tropical beach
