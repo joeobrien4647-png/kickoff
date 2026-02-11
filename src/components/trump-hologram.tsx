@@ -12,7 +12,7 @@ const QUOTES = [
   "The food, the cities, the football \u{2014} it's going to be beautiful! \u{1F31F}",
 ];
 
-export function TrumpHologram() {
+export function TrumpHologram({ compact = false }: { compact?: boolean }) {
   const [quoteIndex, setQuoteIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
 
@@ -29,10 +29,12 @@ export function TrumpHologram() {
   }, []);
 
   return (
-    <section className="hidden sm:block">
-      <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        Presidential Address
-      </h3>
+    <section>
+      {!compact && (
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+          Presidential Address
+        </h3>
+      )}
       <div
         className="relative overflow-hidden rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-4"
         style={{
@@ -53,7 +55,6 @@ export function TrumpHologram() {
         {/* Trump character */}
         <div className="relative flex items-start gap-3">
           <div className="flex shrink-0 flex-col items-center">
-            {/* Simple emoji Trump */}
             <span className="text-3xl" role="img" aria-label="Trump">
               {"👨‍💼"}
             </span>

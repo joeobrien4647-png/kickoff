@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { daysUntilTrip } from "@/lib/dates";
+import { TrumpHologram } from "@/components/trump-hologram";
 
 interface Traveler {
   id: string;
@@ -141,6 +142,11 @@ export default function LoginPage() {
               )}
             </div>
           ))}
+        </div>
+
+        {/* Trump Hologram */}
+        <div className="mb-8 w-full max-w-sm">
+          <TrumpHologram compact />
         </div>
 
         {/* Login form — glass morphism card */}
