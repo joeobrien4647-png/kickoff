@@ -248,6 +248,19 @@ sqlite.exec(`
     updated_at TEXT NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS decisions (
+    id TEXT PRIMARY KEY,
+    question TEXT NOT NULL,
+    description TEXT,
+    category TEXT NOT NULL DEFAULT 'route',
+    options TEXT NOT NULL DEFAULT '[]',
+    status TEXT NOT NULL DEFAULT 'open',
+    decided_option TEXT,
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
   CREATE TABLE IF NOT EXISTS photos (
     id TEXT PRIMARY KEY,
     stop_id TEXT REFERENCES stops(id),

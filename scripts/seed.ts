@@ -47,6 +47,7 @@ sqlite.exec("DELETE FROM itinerary_items");
 sqlite.exec("DELETE FROM venue_votes");
 sqlite.exec("DELETE FROM activity_log");
 sqlite.exec("DELETE FROM transports");
+sqlite.exec("DELETE FROM decisions");
 sqlite.exec("DELETE FROM matches");
 sqlite.exec("DELETE FROM accommodations");
 sqlite.exec("DELETE FROM stops");
@@ -1887,6 +1888,125 @@ for (const t of transportData) {
 }
 console.log();
 
+// ============ DECISIONS ============
+console.log("Creating key decisions...");
+
+const decisionData = [
+  {
+    id: ulid(),
+    question: "How do we get from DC to Nashville?",
+    description: "It's a 9+ hour drive. Flying is ~$110pp but adds airport logistics. Car needs to get there either way.",
+    category: "transport" as const,
+    options: JSON.stringify([
+      { text: "Fly (~$110pp, 1.5h)", votes: [] },
+      { text: "Drive (9h 40m, scenic route)", votes: [] },
+      { text: "One drives the car, two fly", votes: [] },
+    ]),
+    status: "open" as const,
+    decidedOption: null,
+    sortOrder: 1,
+  },
+  {
+    id: ulid(),
+    question: "How do we get from Nashville to Miami?",
+    description: "Even longer than DC\u2192Nashville. 11+ hours of driving. Could fly but car still needs to get to Miami for the return flight.",
+    category: "transport" as const,
+    options: JSON.stringify([
+      { text: "Drive \u2014 split over 2 days with an overnight stop", votes: [] },
+      { text: "Drive straight through (11h 30m, take turns)", votes: [] },
+      { text: "One drives, two fly (~$100pp)", votes: [] },
+    ]),
+    status: "open" as const,
+    decidedOption: null,
+    sortOrder: 2,
+  },
+  {
+    id: ulid(),
+    question: "Key West overnight trip?",
+    description: "Greg found an Airstream motorhome on Airbnb (~$130/night, 3 beds). It's a 3.5hr drive from Miami each way.",
+    category: "activity" as const,
+    options: JSON.stringify([
+      { text: "Yes \u2014 book the Airstream, stay overnight", votes: ["Greg"] },
+      { text: "Yes \u2014 but day trip only (7hr round trip)", votes: [] },
+      { text: "Skip it \u2014 not enough time", votes: [] },
+    ]),
+    status: "open" as const,
+    decidedOption: null,
+    sortOrder: 3,
+  },
+  {
+    id: ulid(),
+    question: "NYC: where do we stay?",
+    description: "Manhattan is pricier but walkable. Brooklyn is cheaper with better food scene. Both have good transit to MetLife Stadium.",
+    category: "accommodation" as const,
+    options: JSON.stringify([
+      { text: "Manhattan \u2014 Times Square area", votes: [] },
+      { text: "Manhattan \u2014 Lower East Side / East Village", votes: [] },
+      { text: "Brooklyn \u2014 Williamsburg", votes: [] },
+      { text: "Brooklyn \u2014 Downtown", votes: [] },
+    ]),
+    status: "open" as const,
+    decidedOption: null,
+    sortOrder: 4,
+  },
+  {
+    id: ulid(),
+    question: "Match tickets: what's the plan?",
+    description: "FIFA ballot was unsuccessful for all 3 of us. Resale prices are $1000+. Last-minute sales phase is our best hope.",
+    category: "budget" as const,
+    options: JSON.stringify([
+      { text: "Keep trying \u2014 last-minute sales + check daily", votes: [] },
+      { text: "Set a max budget ($500pp) and buy whatever we can", votes: [] },
+      { text: "Give up on tickets \u2014 watch at fan parks/sports bars", votes: [] },
+      { text: "Must get Scotland v Haiti \u2014 skip others if needed", votes: [] },
+    ]),
+    status: "open" as const,
+    decidedOption: null,
+    sortOrder: 5,
+  },
+  {
+    id: ulid(),
+    question: "Daily budget per person?",
+    description: "Flights and free accommodation (Lisa's, Greg's sister) are sorted. This is for food, drinks, activities, transport.",
+    category: "budget" as const,
+    options: JSON.stringify([
+      { text: "$100/day \u2014 budget mode", votes: [] },
+      { text: "$150/day \u2014 comfortable", votes: [] },
+      { text: "$200/day \u2014 treat ourselves", votes: [] },
+      { text: "No budget \u2014 YOLO it's the World Cup", votes: [] },
+    ]),
+    status: "open" as const,
+    decidedOption: null,
+    sortOrder: 6,
+  },
+  {
+    id: ulid(),
+    question: "Nashville: route confirmed?",
+    description: "The group prefers Nashville over Atlanta. Confirming this means we commit to Nashville as stop 5.",
+    category: "route" as const,
+    options: JSON.stringify([
+      { text: "Yes \u2014 Nashville is locked in", votes: ["Joe", "Jonny", "Greg"] },
+      { text: "Reconsider \u2014 maybe Atlanta is better for matches", votes: [] },
+    ]),
+    status: "decided" as const,
+    decidedOption: "Yes \u2014 Nashville is locked in",
+    sortOrder: 0,
+  },
+];
+
+for (const d of decisionData) {
+  db.insert(schema.decisions)
+    .values({
+      ...d,
+      createdAt: now(),
+      updatedAt: now(),
+    })
+    .run();
+  const statusIcon = d.status === "decided" ? "\u2713" : "?";
+  console.log(`  [${statusIcon}] ${d.question}`);
+}
+console.log();
+
 // ============ NOTES ============
 console.log("Creating notes...");
 
@@ -1997,6 +2117,7 @@ console.log(`  ${count("expenses")} expenses`);
 console.log(`  ${count("expense_splits")} expense splits`);
 console.log(`  ${count("notes")} notes`);
 console.log(`  ${count("transports")} transports`);
+console.log(`  ${count("decisions")} decisions`);
 console.log("========================================");
 
 sqlite.close();

@@ -1,10 +1,12 @@
 import { db } from "@/lib/db";
-import { stops, accommodations, matches, ideas } from "@/lib/schema";
+import { stops, accommodations, matches, ideas, decisions as decisionsTable, travelers } from "@/lib/schema";
 import { asc, sql } from "drizzle-orm";
 import { RouteOverview } from "@/components/route/route-overview";
 import { RouteExplorer } from "@/components/route/route-explorer";
 import { RouteMap } from "@/components/route/route-map";
+import { KeyDecisions } from "@/components/route/key-decisions";
 import { ROUTE_SCENARIOS } from "@/lib/route-scenarios";
+import { getSession } from "@/lib/auth";
 import type { Stop, Accommodation, Match } from "@/lib/schema";
 
 /** Drive info stored as JSON in the driveFromPrev column */
@@ -36,11 +38,11 @@ const CITY_SLUG: Record<string, string> = {
   "New York": "nyc",
   Philadelphia: "philadelphia",
   "Washington DC": "washington-dc",
-  Atlanta: "atlanta",
+  Nashville: "nashville",
   Miami: "miami",
 };
 
-export default function RoutePage() {
+export default async function RoutePage() {
   const allStops = db
     .select()
     .from(stops)
@@ -59,6 +61,10 @@ export default function RoutePage() {
     .from(ideas)
     .groupBy(ideas.stopId)
     .all();
+
+  const allDecisions = db.select().from(decisionsTable).orderBy(asc(decisionsTable.sortOrder)).all();
+  const allTravelers = db.select().from(travelers).all();
+  const session = await getSession();
 
   const ideaCountMap = new Map(ideaCounts.map((r) => [r.stopId, r.count]));
   const accByStop = new Map(allAccommodations.map((a) => [a.stopId, a]));
@@ -107,6 +113,12 @@ export default function RoutePage() {
       </section>
 
       <RouteExplorer scenarios={ROUTE_SCENARIOS} />
+
+      <KeyDecisions
+        decisions={allDecisions}
+        travelers={allTravelers}
+        currentUser={session?.travelerName ?? ""}
+      />
 
       <RouteMap
         stops={allStops.map((stop) => ({

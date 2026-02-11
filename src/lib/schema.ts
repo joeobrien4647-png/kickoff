@@ -314,6 +314,24 @@ export const transports = sqliteTable("transports", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// ============ DECISIONS ============
+export const decisions = sqliteTable("decisions", {
+  id: text("id").primaryKey(),
+  question: text("question").notNull(),
+  description: text("description"), // context / why this matters
+  category: text("category", {
+    enum: ["route", "transport", "accommodation", "activity", "budget"],
+  }).notNull(),
+  options: text("options").notNull(), // JSON: [{text: string, votes: string[]}]
+  status: text("status", {
+    enum: ["open", "decided"],
+  }).notNull().default("open"),
+  decidedOption: text("decided_option"), // the chosen option text once decided
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 // ============ PHOTOS ============
 export const photos = sqliteTable("photos", {
   id: text("id").primaryKey(),
@@ -342,4 +360,5 @@ export type Prediction = typeof predictions.$inferSelect;
 export type ActivityLogEntry = typeof activityLog.$inferSelect;
 export type VenueVote = typeof venueVotes.$inferSelect;
 export type Transport = typeof transports.$inferSelect;
+export type Decision = typeof decisions.$inferSelect;
 export type Photo = typeof photos.$inferSelect;

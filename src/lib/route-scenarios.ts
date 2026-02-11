@@ -47,9 +47,9 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     id: "full-road-trip",
     name: "The Full Road Trip",
     tagline: "See it all, drive it all",
-    totalMiles: 1755,
-    totalDriveHours: 27,
-    totalDriveMinutes: 35,
+    totalMiles: 1900,
+    totalDriveHours: 29,
+    totalDriveMinutes: 15,
     flightCount: 0,
     estimatedFlightCostPP: 0,
     pros: [
@@ -58,9 +58,9 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
       "Cheapest option with no flight costs",
     ],
     cons: [
-      "27+ hours of total driving",
-      "Exhausting DC → Atlanta leg (9h 30m)",
-      "Exhausting Atlanta → Miami leg (10h)",
+      "29+ hours of total driving",
+      "Exhausting DC → Nashville leg (9h 40m)",
+      "Exhausting Nashville → Miami leg (11h 30m)",
     ],
     legs: [
       {
@@ -90,26 +90,26 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
       {
         type: "drive",
         from: WASHINGTON_DC,
-        to: ATLANTA,
-        miles: 640,
+        to: NASHVILLE,
+        miles: 670,
         hours: 9,
-        minutes: 30,
+        minutes: 40,
       },
       {
         type: "drive",
-        from: ATLANTA,
+        from: NASHVILLE,
         to: MIAMI,
-        miles: 665,
-        hours: 10,
-        minutes: 0,
+        miles: 780,
+        hours: 11,
+        minutes: 30,
       },
     ],
   },
 
-  // ── 2. Skip Atlanta ────────────────────────────────────────────────
+  // ── 2. Skip Nashville ──────────────────────────────────────────────
   {
-    id: "skip-atlanta",
-    name: "Skip Atlanta",
+    id: "skip-nashville",
+    name: "Skip Nashville",
     tagline: "Fly south, skip the drive",
     totalMiles: 450,
     totalDriveHours: 8,
@@ -117,11 +117,11 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     flightCount: 1,
     estimatedFlightCostPP: 130,
     pros: [
-      "Eliminates 19+ hours of driving south of DC",
+      "Eliminates 21+ hours of driving south of DC",
       "Arrive in Miami fresh and ready for matches",
     ],
     cons: [
-      "Misses Atlanta matches and city entirely",
+      "Skips Nashville — the group's preferred stop",
       "One-way flight cost adds up for the group",
     ],
     legs: [
@@ -172,8 +172,8 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     estimatedFlightCostPP: 220,
     pros: [
       "Visits every host city on the route",
-      "No brutal 9–10 hour drives",
-      "Saves 19+ hours of driving vs. the full road trip",
+      "No brutal 9–11 hour drives",
+      "Saves 21+ hours of driving vs. the full road trip",
     ],
     cons: [
       "Most expensive option for flights",
@@ -208,18 +208,18 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
       {
         type: "flight",
         from: WASHINGTON_DC,
-        to: ATLANTA,
-        miles: 600,
-        hours: 2,
-        minutes: 0,
+        to: NASHVILLE,
+        miles: 480,
+        hours: 1,
+        minutes: 30,
       },
       {
         type: "flight",
-        from: ATLANTA,
+        from: NASHVILLE,
         to: MIAMI,
-        miles: 665,
+        miles: 780,
         hours: 2,
-        minutes: 0,
+        minutes: 30,
       },
     ],
   },
@@ -240,7 +240,7 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     ],
     cons: [
       "Most expensive total flight cost",
-      "Skips Atlanta matches and city",
+      "Skips Nashville and Atlanta",
       "Less of a road trip feel",
     ],
     legs: [
@@ -295,8 +295,8 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
       "Sees every host city on the route",
     ],
     cons: [
+      "Skips Nashville \u2014 the group\u2019s preferred stop",
       "Extra driving through Charlotte adds a detour",
-      "Similar total mileage to the full road trip",
       "Charlotte has no World Cup matches",
     ],
     legs: [
@@ -351,25 +351,25 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     ],
   },
 
-  // ── 6. The Music City Detour ────────────────────────────────────────
+  // ── 6. Nashville Route ──────────────────────────────────────────────
   {
-    id: "music-city-detour",
-    name: "The Music City Detour",
-    tagline: "Honky-tonks and hot chicken",
-    totalMiles: 2025,
-    totalDriveHours: 31,
-    totalDriveMinutes: 20,
+    id: "nashville-route",
+    name: "Nashville Route",
+    tagline: "The chosen route \u2014 honky-tonks and hot chicken",
+    totalMiles: 1900,
+    totalDriveHours: 29,
+    totalDriveMinutes: 15,
     flightCount: 0,
     estimatedFlightCostPP: 0,
     pros: [
+      "The group\u2019s preferred route",
       "Nashville adds world-class nightlife and live music",
       "Broadway honky-tonks and hot chicken are bucket-list worthy",
-      "Only adds ~4 hours vs. the direct DC\u2192Atlanta route",
     ],
     cons: [
-      "31+ hours of total driving \u2014 the longest route",
+      "29+ hours of total driving",
       "Nashville has no World Cup matches",
-      "DC \u2192 Nashville is still a 9.5 hour slog",
+      "DC \u2192 Nashville is still a 9h 40m slog",
     ],
     legs: [
       {
@@ -400,25 +400,17 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
         type: "drive",
         from: WASHINGTON_DC,
         to: NASHVILLE,
-        miles: 660,
+        miles: 670,
         hours: 9,
-        minutes: 30,
+        minutes: 40,
       },
       {
         type: "drive",
         from: NASHVILLE,
-        to: ATLANTA,
-        miles: 250,
-        hours: 3,
-        minutes: 45,
-      },
-      {
-        type: "drive",
-        from: ATLANTA,
         to: MIAMI,
-        miles: 665,
-        hours: 10,
-        minutes: 0,
+        miles: 780,
+        hours: 11,
+        minutes: 30,
       },
     ],
   },
@@ -439,7 +431,7 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
       "Actually shorter total drive than the Atlanta route",
     ],
     cons: [
-      "Skips Atlanta matches entirely",
+      "Skips Nashville and Atlanta entirely",
       "No World Cup venues on the southern leg",
       "Charleston \u2192 Miami is still 8+ hours",
     ],
@@ -515,8 +507,8 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     ],
     cons: [
       "Most expensive option overall (trains + flights)",
+      "Skips Nashville \u2014 flies direct to Atlanta instead",
       "Less schedule flexibility \u2014 tied to train times",
-      "Airport logistics for two southern flights",
     ],
     legs: [
       {
@@ -567,18 +559,18 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
     id: "orlando-swing",
     name: "The Orlando Swing",
     tagline: "Theme parks and touchdowns",
-    totalMiles: 1765,
-    totalDriveHours: 27,
-    totalDriveMinutes: 20,
+    totalMiles: 2035,
+    totalDriveHours: 30,
+    totalDriveMinutes: 30,
     flightCount: 0,
     estimatedFlightCostPP: 0,
     pros: [
       "Orlando adds theme parks, International Drive nightlife",
-      "Breaks the brutal Atlanta\u2192Miami leg into two manageable drives",
+      "Breaks the brutal Nashville\u2192Miami leg into two manageable drives",
       "Extra day in Orlando for rest and fun",
     ],
     cons: [
-      "Similar total driving to the full road trip",
+      "30+ hours of total driving \u2014 the longest route option",
       "Orlando has no World Cup venues",
       "Temptation to spend too long at theme parks",
     ],
@@ -610,17 +602,17 @@ export const ROUTE_SCENARIOS: RouteScenario[] = [
       {
         type: "drive",
         from: WASHINGTON_DC,
-        to: ATLANTA,
-        miles: 640,
+        to: NASHVILLE,
+        miles: 670,
         hours: 9,
-        minutes: 30,
+        minutes: 40,
       },
       {
         type: "drive",
-        from: ATLANTA,
+        from: NASHVILLE,
         to: ORLANDO,
-        miles: 440,
-        hours: 6,
+        miles: 680,
+        hours: 9,
         minutes: 15,
       },
       {
