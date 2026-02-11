@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import {
   MapPin,
   Clock,
@@ -6,12 +9,15 @@ import {
   Search,
   Tv,
   Trophy,
+  CalendarClock,
+  ChevronDown,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatTime } from "@/lib/dates";
 import { countryFlag, TICKET_STATUS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
-import type { Match } from "@/lib/schema";
+import { MatchDayTimeline } from "@/components/matches/match-day-timeline";
+import type { Match, Stop } from "@/lib/schema";
 
 // ── Ticket badge config ─────────────────────────────────────────────
 const TICKET_BADGE = {
@@ -45,13 +51,17 @@ interface MatchCardProps {
   nearby?: boolean;
   /** Tighter spacing for embedding inside other cards */
   compact?: boolean;
+  /** Associated stop — used for Match Day Plan timeline */
+  stop?: Stop;
 }
 
 // ── Component ────────────────────────────────────────────────────────
-export function MatchCard({ match, nearby, compact }: MatchCardProps) {
+export function MatchCard({ match, nearby, compact, stop }: MatchCardProps) {
+  const [timelineOpen, setTimelineOpen] = useState(false);
   const mustSee = match.priority >= 3;
   const ticket = TICKET_BADGE[match.ticketStatus];
   const TicketIcon = ticket.icon;
+  const showTimeline = match.attending && !!match.kickoff;
 
   return (
     <div
@@ -143,6 +153,38 @@ export function MatchCard({ match, nearby, compact }: MatchCardProps) {
           {ticket.label}
         </Badge>
       </div>
+
+      {/* ── Match Day Plan (collapsible timeline) ──────────────────── */}
+      {showTimeline && (
+        <>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setTimelineOpen((prev) => !prev);
+            }}
+            className={cn(
+              "flex items-center gap-2 w-full text-left border-t border-border transition-colors hover:bg-muted/30",
+              compact ? "px-3 py-1.5" : "px-4 py-2"
+            )}
+          >
+            <CalendarClock className="size-3.5 text-wc-gold" />
+            <span className="text-xs font-medium text-wc-gold">
+              Match Day Plan
+            </span>
+            <ChevronDown
+              className={cn(
+                "size-3 text-muted-foreground ml-auto transition-transform",
+                timelineOpen && "rotate-180"
+              )}
+            />
+          </button>
+          {timelineOpen && (
+            <div className="border-t border-border px-4 py-4">
+              <MatchDayTimeline match={match} stop={stop} />
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

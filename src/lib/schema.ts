@@ -294,6 +294,26 @@ export const venueVotes = sqliteTable("venue_votes", {
   createdAt: text("created_at").notNull(),
 });
 
+// ============ TRANSPORTS ============
+export const transports = sqliteTable("transports", {
+  id: text("id").primaryKey(),
+  type: text("type", {
+    enum: ["flight", "train", "car_rental", "bus", "rideshare"],
+  }).notNull(),
+  fromCity: text("from_city").notNull(),
+  toCity: text("to_city").notNull(),
+  departDate: text("depart_date").notNull(),
+  departTime: text("depart_time"),
+  arriveTime: text("arrive_time"),
+  carrier: text("carrier"),
+  confirmationRef: text("confirmation_ref"),
+  cost: real("cost"),
+  bookingUrl: text("booking_url"),
+  notes: text("notes"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 // ============ TYPE EXPORTS ============
 export type TripSettings = typeof tripSettings.$inferSelect;
 export type Traveler = typeof travelers.$inferSelect;
@@ -310,3 +330,4 @@ export type Note = typeof notes.$inferSelect;
 export type Prediction = typeof predictions.$inferSelect;
 export type ActivityLogEntry = typeof activityLog.$inferSelect;
 export type VenueVote = typeof venueVotes.$inferSelect;
+export type Transport = typeof transports.$inferSelect;

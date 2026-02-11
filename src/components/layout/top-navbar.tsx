@@ -12,6 +12,9 @@ import {
   Lightbulb,
   ClipboardCheck,
   Backpack,
+  Bed,
+  Plane,
+  Music,
   StickyNote,
   Settings,
   Route,
@@ -54,6 +57,8 @@ const DIRECT_LINKS = [
 
 const PLANNING_ITEMS = [
   { href: "/budget", label: "Budget", icon: Wallet },
+  { href: "/accommodations", label: "Accommodations", icon: Bed },
+  { href: "/transport", label: "Transport", icon: Plane },
   { href: "/itinerary", label: "Itinerary", icon: CalendarDays },
   { href: "/ideas", label: "Ideas", icon: Lightbulb },
   { href: "/checklist", label: "Checklist", icon: ClipboardCheck },
@@ -63,6 +68,7 @@ const PLANNING_ITEMS = [
 
 const MORE_ITEMS = [
   { href: "/emergency", label: "Emergency Info", icon: Shield },
+  { href: "/playlist", label: "Playlist", icon: Music },
   { href: "/print", label: "Print Itinerary", icon: Printer },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/settings", label: "Settings", icon: Settings },

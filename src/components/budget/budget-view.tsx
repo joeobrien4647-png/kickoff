@@ -32,6 +32,7 @@ import { formatDate } from "@/lib/dates";
 import { EXPENSE_CATEGORIES } from "@/lib/constants";
 import { AddExpenseForm } from "@/components/budget/add-expense-form";
 import { SettlementCard } from "@/components/budget/settlement-card";
+import { BudgetAnalytics } from "@/components/budget/budget-analytics";
 import type { Expense, ExpenseSplit, Traveler, Stop } from "@/lib/schema";
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -227,6 +228,16 @@ export function BudgetView({
           </div>
         </section>
       )}
+
+      {/* ── B2) Analytics ── */}
+      <BudgetAnalytics
+        expenses={expenses}
+        travelers={travelers}
+        stops={stops}
+        totalSpent={totalSpent}
+        perPerson={perPerson}
+        categoryBreakdown={categoryBreakdown}
+      />
 
       {/* ── C) Who Owes Whom ── */}
       <SettlementCard

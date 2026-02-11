@@ -21,6 +21,9 @@ import { ActivityFeed } from "@/components/activity-feed";
 import { WhosPaying } from "@/components/whos-paying";
 import { TripStats } from "@/components/trip-stats";
 import { TrumpHologram } from "@/components/trump-hologram";
+import { TripCountdown } from "@/components/trip-countdown";
+import { CurrencyConverter } from "@/components/currency-converter";
+import { WhatsAppLink } from "@/components/whatsapp-link";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -377,6 +380,9 @@ export default function HomePage() {
 
         {/* ── Sidebar ───────────────────────────────────────────────── */}
         <aside className="space-y-6">
+          {/* Trip countdown */}
+          <TripCountdown />
+
           {/* Weather widget for next stop */}
           {nextStop && weatherCoords && (
             <WeatherWidget
@@ -385,6 +391,9 @@ export default function HomePage() {
               lng={weatherCoords.lng}
             />
           )}
+
+          {/* Currency converter */}
+          <CurrencyConverter />
 
           {/* Activity feed */}
           <section>
@@ -400,6 +409,9 @@ export default function HomePage() {
 
           {/* Trump Hologram */}
           <TrumpHologram />
+
+          {/* WhatsApp group link */}
+          <WhatsAppLink />
 
           {/* Who's Paying? spinner */}
           {allTravelers.length > 1 && (

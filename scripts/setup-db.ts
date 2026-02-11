@@ -230,6 +230,23 @@ sqlite.exec(`
     created_at TEXT NOT NULL,
     UNIQUE(venue_name, city, voter_name)
   );
+
+  CREATE TABLE IF NOT EXISTS transports (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    from_city TEXT NOT NULL,
+    to_city TEXT NOT NULL,
+    depart_date TEXT NOT NULL,
+    depart_time TEXT,
+    arrive_time TEXT,
+    carrier TEXT,
+    confirmation_ref TEXT,
+    cost REAL,
+    booking_url TEXT,
+    notes TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
 `);
 
 // Add actual score columns to matches (may already exist)
