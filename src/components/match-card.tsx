@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapPin,
   Clock,
@@ -63,6 +63,36 @@ export function MatchCard({ match, nearby, compact, stop }: MatchCardProps) {
   const TicketIcon = ticket.icon;
   const showTimeline = match.attending && !!match.kickoff;
 
+  // ── Live countdown ──────────────────────────────────────────────────
+  const [, forceUpdate] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => forceUpdate((n) => n + 1), 60_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  function getMatchCountdown(): string | null {
+    const matchDateTime = new Date(
+      `${match.matchDate}T${match.kickoff ?? "12:00"}:00`
+    );
+    const diff = matchDateTime.getTime() - Date.now();
+
+    if (diff < 0) return null;
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+    if (days === 0 && hours === 0 && minutes <= 0) return null;
+    if (days === 0 && hours === 0) return `${minutes}m`;
+    if (days === 0) return `${hours}h ${minutes}m`;
+    if (days <= 7) return `${days}d ${hours}h`;
+    return `${days}d`;
+  }
+
+  const isToday = match.matchDate === new Date().toISOString().slice(0, 10);
+  const countdown = getMatchCountdown();
+
   return (
     <div
       className={cn(
@@ -87,6 +117,18 @@ export function MatchCard({ match, nearby, compact, stop }: MatchCardProps) {
         <span className="text-xs font-medium text-wc-gold">
           {match.groupName ?? match.round ?? "Match"}
         </span>
+
+        {/* Countdown */}
+        {isToday ? (
+          <span className="text-[10px] font-bold text-wc-coral uppercase tracking-wide animate-pulse">
+            TODAY
+          </span>
+        ) : countdown ? (
+          <span className="text-[10px] font-medium text-wc-teal tabular-nums">
+            {countdown}
+          </span>
+        ) : null}
+
         {match.kickoff && (
           <span className="flex items-center gap-1 text-xs text-muted-foreground">
             <Clock className="size-3" />

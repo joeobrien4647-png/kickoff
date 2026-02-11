@@ -314,6 +314,17 @@ export const transports = sqliteTable("transports", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// ============ PHOTOS ============
+export const photos = sqliteTable("photos", {
+  id: text("id").primaryKey(),
+  stopId: text("stop_id").references(() => stops.id),
+  caption: text("caption"),
+  data: text("data").notNull(), // base64 encoded image
+  takenDate: text("taken_date"),
+  addedBy: text("added_by").notNull(),
+  createdAt: text("created_at").notNull(),
+});
+
 // ============ TYPE EXPORTS ============
 export type TripSettings = typeof tripSettings.$inferSelect;
 export type Traveler = typeof travelers.$inferSelect;
@@ -331,3 +342,4 @@ export type Prediction = typeof predictions.$inferSelect;
 export type ActivityLogEntry = typeof activityLog.$inferSelect;
 export type VenueVote = typeof venueVotes.$inferSelect;
 export type Transport = typeof transports.$inferSelect;
+export type Photo = typeof photos.$inferSelect;

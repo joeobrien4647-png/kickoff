@@ -4,7 +4,7 @@ export const ROUTE_STOPS = [
   { name: "New York", lat: 40.7128, lng: -74.006 },
   { name: "Philadelphia", lat: 39.9526, lng: -75.1652 },
   { name: "Washington DC", lat: 38.9072, lng: -77.0369 },
-  { name: "Atlanta", lat: 33.749, lng: -84.388 },
+  { name: "Nashville", lat: 36.1627, lng: -86.7816 },
   { name: "Miami", lat: 25.7617, lng: -80.1918 },
 ] as const;
 
@@ -187,13 +187,13 @@ export const CITY_IDENTITY: Record<
     icon: "Building",
     tagline: "The nation's capital",
   },
-  Atlanta: {
+  Nashville: {
     color: "text-purple-400",
     bg: "bg-purple-400/8",
     border: "border-purple-400/30",
     gradient: "from-purple-400/12 via-transparent to-transparent",
-    icon: "TreePine",
-    tagline: "Gateway to the South",
+    icon: "Music",
+    tagline: "Music City",
   },
   Miami: {
     color: "text-emerald-400",

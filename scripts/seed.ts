@@ -146,16 +146,16 @@ const stopData = [
   },
   {
     id: ulid(),
-    name: "Atlanta",
-    city: "Atlanta",
-    state: "GA",
+    name: "Nashville, TN",
+    city: "Nashville",
+    state: "TN",
     arriveDate: "2026-06-22",
     departDate: "2026-06-24",
     sortOrder: 5,
-    lat: 33.749,
-    lng: -84.388,
-    driveFromPrev: JSON.stringify({ miles: 640, hours: 9, minutes: 30 }),
-    notes: null,
+    lat: 36.1627,
+    lng: -86.7816,
+    driveFromPrev: JSON.stringify({ miles: 670, hours: 9, minutes: 40 }),
+    notes: "Music City! Grand Ole Opry, Broadway honky-tonks, hot chicken. Jonny's dream stop. May fly from DC (~$110pp) instead of driving 9+ hours.",
   },
   {
     id: ulid(),
@@ -178,7 +178,7 @@ const stopIds = {
   nyc: stopData[1].id,
   philly: stopData[2].id,
   dc: stopData[3].id,
-  atlanta: stopData[4].id,
+  nashville: stopData[4].id,
   miami: stopData[5].id,
 };
 
@@ -246,15 +246,15 @@ const accommodationData = [
   },
   {
     id: ulid(),
-    stopId: stopIds.atlanta,
-    name: "TBD",
+    stopId: stopIds.nashville,
+    name: "TBD — Downtown Hotel",
     type: "hotel" as const,
     address: null,
     contact: null,
     costPerNight: null,
     nights: 2,
     confirmed: false,
-    notes: "May swap Atlanta for Nashville — group prefers Nashville route. If Nashville: look at downtown hotels near Broadway.",
+    notes: "Downtown Nashville near Broadway. Walking distance to honky-tonks and live music venues.",
   },
   {
     id: ulid(),
@@ -321,7 +321,7 @@ const matchData = [
   },
   {
     id: ulid(),
-    stopId: null, // Jun 23 — travelers in Atlanta
+    stopId: null, // Jun 23 — travelers in Nashville
     homeTeam: "England",
     awayTeam: "Ghana",
     venue: "Gillette Stadium",
@@ -379,7 +379,7 @@ const matchData = [
   },
   {
     id: ulid(),
-    stopId: null, // Jun 22 — travelers in Atlanta
+    stopId: null, // Jun 22 — travelers in Nashville
     homeTeam: "Norway",
     awayTeam: "Senegal",
     venue: "MetLife Stadium",
@@ -451,7 +451,7 @@ const matchData = [
   },
   {
     id: ulid(),
-    stopId: null, // Jun 22 — travelers in Atlanta
+    stopId: null, // Jun 22 — travelers in Nashville
     homeTeam: "France",
     awayTeam: "Playoff Winner",
     venue: "Lincoln Financial Field",
@@ -537,7 +537,7 @@ const matchData = [
   },
   {
     id: ulid(),
-    stopId: stopIds.atlanta, // Jun 22-24, match Jun 24
+    stopId: stopIds.nashville, // Jun 22-24, match Jun 24 (travelers in Nashville, match in Atlanta)
     homeTeam: "Morocco",
     awayTeam: "Haiti",
     venue: "Mercedes-Benz Stadium",
@@ -706,16 +706,16 @@ const itineraryData = [
   {
     id: ulid(),
     date: "2026-06-22",
-    stopId: stopIds.atlanta,
+    stopId: stopIds.nashville,
     matchId: null,
-    title: "Drive to Atlanta",
+    title: "Travel to Nashville",
     type: "travel" as const,
     startTime: "07:00",
     endTime: null,
     location: null,
     confirmed: false,
     sortOrder: 1,
-    notes: "~9.5 hours - long drive day!",
+    notes: "~9h 40m drive or fly (~$110pp). May fly instead of driving.",
   },
   {
     id: ulid(),
@@ -1233,68 +1233,10 @@ const ideaData = [
     notes: "Good crawl route: Board Room → Dirty Habit → The Admiral",
   },
 
-  // --- Atlanta ---
+  // --- Nashville ---
   {
     id: ulid(),
-    stopId: stopIds.atlanta,
-    title: "World of Coca-Cola",
-    category: "activity" as const,
-    description: "Interactive museum dedicated to Coca-Cola history with unlimited tastings from around the world",
-    url: "https://www.worldofcoca-cola.com/",
-    address: "121 Baker St NW, Atlanta, GA 30313",
-    estimatedCost: 22,
-    estimatedDuration: "2 hours",
-    votes: "[]",
-    addedBy: "Greg",
-    notes: "Taste room has drinks from 100+ countries",
-  },
-  {
-    id: ulid(),
-    stopId: stopIds.atlanta,
-    title: "Georgia Aquarium",
-    category: "activity" as const,
-    description: "Largest aquarium in the Western Hemisphere — whale sharks, beluga whales, manta rays",
-    url: "https://www.georgiaaquarium.org/",
-    address: "225 Baker St NW, Atlanta, GA 30313",
-    estimatedCost: 45,
-    estimatedDuration: "3 hours",
-    votes: "[]",
-    addedBy: "Joe",
-    notes: "Next door to World of Coca-Cola — do both in one go",
-  },
-  {
-    id: ulid(),
-    stopId: stopIds.atlanta,
-    title: "Ponce City Market",
-    category: "food" as const,
-    description: "Huge food hall and rooftop amusement park in a converted Sears building on the BeltLine",
-    url: "https://www.poncecitymarket.com/",
-    address: "675 Ponce De Leon Ave NE, Atlanta, GA 30308",
-    estimatedCost: 25,
-    estimatedDuration: "2 hours",
-    votes: "[]",
-    addedBy: "Jonny",
-    notes: "Rooftop has mini golf, games, and great views of the Atlanta skyline",
-  },
-  {
-    id: ulid(),
-    stopId: stopIds.atlanta,
-    title: "Stats Brewpub — World Cup Watch",
-    category: "sports_bar" as const,
-    description: "Sports bar right across from Mercedes-Benz Stadium with 70+ TVs",
-    url: null,
-    address: "300 Marietta St NW, Atlanta, GA 30313",
-    estimatedCost: 30,
-    estimatedDuration: "2 hours",
-    votes: "[]",
-    addedBy: "Jonny",
-    notes: "Walking distance to the stadium — perfect for pre/post match",
-  },
-
-  // --- Nashville ideas (potential stop replacing Atlanta) ---
-  {
-    id: ulid(),
-    stopId: stopIds.atlanta, // Linked to Atlanta slot — may swap to Nashville stop
+    stopId: stopIds.nashville,
     title: "Grand Ole Opry Show",
     category: "activity" as const,
     description: "The legendary country music venue — live performances every week since 1925",
@@ -1308,7 +1250,7 @@ const ideaData = [
   },
   {
     id: ulid(),
-    stopId: stopIds.atlanta, // Linked to Atlanta slot
+    stopId: stopIds.nashville,
     title: "Morgan Wallen's Bar (This Bar)",
     category: "nightlife" as const,
     description: "Country star Morgan Wallen's 6-story bar on Broadway — live music, rooftop, multiple floors",
@@ -1322,7 +1264,7 @@ const ideaData = [
   },
   {
     id: ulid(),
-    stopId: stopIds.atlanta, // Linked to Atlanta slot
+    stopId: stopIds.nashville,
     title: "Broadway Honky-Tonk Crawl",
     category: "nightlife" as const,
     description: "Nashville's Lower Broadway — wall-to-wall live music bars, no cover charges, cold beer",
@@ -1336,7 +1278,7 @@ const ideaData = [
   },
   {
     id: ulid(),
-    stopId: stopIds.atlanta, // Linked to Atlanta slot
+    stopId: stopIds.nashville,
     title: "Disc Golf Course",
     category: "activity" as const,
     description: "Outdoor disc golf — Jonny's suggestion for an active afternoon",
@@ -1614,12 +1556,12 @@ const logisticsData = [
   },
   {
     id: ulid(),
-    title: "Research Atlanta → Miami options",
+    title: "Research Nashville → Miami options",
     category: "transport" as const,
     status: "todo" as const,
     priority: 2,
     dueDate: "2026-04-01",
-    notes: "10hr drive is brutal. Consider internal flight? Or drive overnight? Budget flights ~$80-150pp",
+    notes: "~10hr drive or internal flight. Budget flights ~$80-150pp",
   },
   {
     id: ulid(),
@@ -1637,7 +1579,7 @@ const logisticsData = [
     status: "todo" as const,
     priority: 1,
     dueDate: "2026-06-10",
-    notes: "Boston, NYC, Philly, DC, Atlanta, Miami + routes between",
+    notes: "Boston, NYC, Philly, DC, Nashville, Miami + routes between",
   },
   {
     id: ulid(),
@@ -1692,12 +1634,12 @@ const logisticsData = [
   },
   {
     id: ulid(),
-    title: "Book Atlanta accommodation",
+    title: "Book Nashville accommodation",
     category: "accommodation" as const,
     status: "todo" as const,
     priority: 3,
     dueDate: "2026-04-01",
-    notes: "Jun 22-24, 2 nights. Near Mercedes-Benz Stadium ideally",
+    notes: "Jun 22-24, 2 nights. Downtown Nashville near Broadway.",
     cost: 250,
   },
   {

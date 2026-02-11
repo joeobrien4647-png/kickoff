@@ -21,6 +21,7 @@ import { ActivityFeed } from "@/components/activity-feed";
 import { WhosPaying } from "@/components/whos-paying";
 import { TripStats } from "@/components/trip-stats";
 import { TrumpHologram } from "@/components/trump-hologram";
+import { HeroCountdown } from "@/components/hero-countdown";
 import { TripCountdown } from "@/components/trip-countdown";
 import { CurrencyConverter } from "@/components/currency-converter";
 import { WhatsAppLink } from "@/components/whatsapp-link";
@@ -221,12 +222,7 @@ export default function HomePage() {
     <div className="mx-auto max-w-5xl pb-8">
       {/* ── Hero / Countdown ─────────────────────────────────────────── */}
       <section className="flex flex-col items-center text-center pt-8 md:pt-12">
-        <p className="text-7xl md:text-9xl font-bold tabular-nums bg-gradient-to-b from-wc-gold to-wc-coral bg-clip-text text-transparent">
-          {isDuringTrip ? currentDay : remaining}
-        </p>
-        <p className="text-lg text-muted-foreground mt-2">
-          {isDuringTrip ? `Day ${currentDay} of the trip` : "days to go"}
-        </p>
+        <HeroCountdown />
         <p className="text-sm text-muted-foreground/70 mt-1">
           {attendingCount} matches &middot; {allStops.length} cities &middot;{" "}
           {Math.round(totalMiles)} miles

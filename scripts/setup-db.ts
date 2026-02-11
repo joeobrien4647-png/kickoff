@@ -247,6 +247,16 @@ sqlite.exec(`
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS photos (
+    id TEXT PRIMARY KEY,
+    stop_id TEXT REFERENCES stops(id),
+    caption TEXT,
+    data TEXT NOT NULL,
+    taken_date TEXT,
+    added_by TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  );
 `);
 
 // Add actual score columns to matches (may already exist)

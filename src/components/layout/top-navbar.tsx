@@ -19,6 +19,7 @@ import {
   Settings,
   Route,
   Printer,
+  Camera,
   Menu,
   ChevronDown,
   Compass,
@@ -69,6 +70,7 @@ const PLANNING_ITEMS = [
 const MORE_ITEMS = [
   { href: "/emergency", label: "Emergency Info", icon: Shield },
   { href: "/playlist", label: "Playlist", icon: Music },
+  { href: "/photos", label: "Photos", icon: Camera },
   { href: "/print", label: "Print Itinerary", icon: Printer },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/settings", label: "Settings", icon: Settings },
