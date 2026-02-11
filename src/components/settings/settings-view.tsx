@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Eye, EyeOff, Download } from "lucide-react";
+import { Moon, Sun, Eye, EyeOff, Download, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +24,7 @@ export function SettingsView({ trip, travelers }: SettingsViewProps) {
   const { theme, setTheme } = useTheme();
   const [codeRevealed, setCodeRevealed] = useState(false);
   const [exporting, setExporting] = useState(false);
+  const [calendarExporting, setCalendarExporting] = useState<string | null>(null);
 
   const maskedCode = trip?.tripCode
     ? trip.tripCode.slice(0, 2) + "\u2022".repeat(trip.tripCode.length - 2)
@@ -51,6 +52,30 @@ export function SettingsView({ trip, travelers }: SettingsViewProps) {
       toast.error("Failed to export data");
     } finally {
       setExporting(false);
+    }
+  }
+
+  async function handleCalendarExport(type?: "matches" | "travel") {
+    const label = type ?? "all";
+    setCalendarExporting(label);
+    try {
+      const url = type ? `/api/calendar?type=${type}` : "/api/calendar";
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Calendar export failed");
+      const blob = await res.blob();
+      const href = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = `kickoff-2026${type ? `-${type}` : ""}.ics`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(href);
+      toast.success("Calendar file downloaded");
+    } catch {
+      toast.error("Failed to export calendar");
+    } finally {
+      setCalendarExporting(null);
     }
   }
 
@@ -194,6 +219,50 @@ export function SettingsView({ trip, travelers }: SettingsViewProps) {
             <Download className="size-4 mr-1.5" />
             {exporting ? "Exporting..." : "Export All Data"}
           </Button>
+        </CardContent>
+      </Card>
+
+      {/* ---- Section 4: Calendar Export ---- */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Calendar Export</CardTitle>
+          <CardDescription>
+            Download an .ics file to add matches and travel days to your calendar
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              onClick={() => handleCalendarExport()}
+              disabled={calendarExporting !== null}
+            >
+              <CalendarDays className="size-4 mr-1.5" />
+              {calendarExporting === "all"
+                ? "Exporting..."
+                : "Export All to Calendar"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleCalendarExport("matches")}
+              disabled={calendarExporting !== null}
+            >
+              <CalendarDays className="size-4 mr-1.5" />
+              {calendarExporting === "matches"
+                ? "Exporting..."
+                : "Export Matches Only"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => handleCalendarExport("travel")}
+              disabled={calendarExporting !== null}
+            >
+              <CalendarDays className="size-4 mr-1.5" />
+              {calendarExporting === "travel"
+                ? "Exporting..."
+                : "Export Travel Days Only"}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>

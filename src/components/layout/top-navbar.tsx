@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Home,
   Calendar,
+  CalendarDays,
   Trophy,
   Wallet,
   Lightbulb,
@@ -19,6 +20,7 @@ import {
   ChevronDown,
   Compass,
   Target,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -52,6 +54,7 @@ const DIRECT_LINKS = [
 
 const PLANNING_ITEMS = [
   { href: "/budget", label: "Budget", icon: Wallet },
+  { href: "/itinerary", label: "Itinerary", icon: CalendarDays },
   { href: "/ideas", label: "Ideas", icon: Lightbulb },
   { href: "/checklist", label: "Checklist", icon: ClipboardCheck },
   { href: "/packing", label: "Packing", icon: Backpack },
@@ -59,6 +62,7 @@ const PLANNING_ITEMS = [
 ] as const;
 
 const MORE_ITEMS = [
+  { href: "/emergency", label: "Emergency Info", icon: Shield },
   { href: "/print", label: "Print Itinerary", icon: Printer },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/settings", label: "Settings", icon: Settings },

@@ -2,7 +2,9 @@
 
 import { Clock, DollarSign, ExternalLink, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { VoteButton } from "@/components/guide/vote-button";
 import type { Attraction } from "@/lib/city-profiles";
+import type { VenueVote } from "@/lib/schema";
 
 function googleMapsUrl(name: string, city: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
@@ -33,9 +35,12 @@ const CATEGORY_LABELS: Record<string, string> = {
 interface AttractionCardProps {
   attraction: Attraction;
   city?: string;
+  votes?: VenueVote[];
+  currentUser?: string | null;
+  onVoteChange?: (venueName: string, newVotes: VenueVote[]) => void;
 }
 
-export function AttractionCard({ attraction, city }: AttractionCardProps) {
+export function AttractionCard({ attraction, city, votes, currentUser, onVoteChange }: AttractionCardProps) {
   const categoryColor = CATEGORY_COLORS[attraction.category] ?? "";
   const categoryLabel = CATEGORY_LABELS[attraction.category] ?? attraction.category;
 
@@ -81,7 +86,7 @@ export function AttractionCard({ attraction, city }: AttractionCardProps) {
         </p>
       )}
 
-      {/* Links */}
+      {/* Links + Vote */}
       {city && (
         <div className="mt-auto pt-2 border-t border-border flex items-center gap-3">
           <a
@@ -100,6 +105,18 @@ export function AttractionCard({ attraction, city }: AttractionCardProps) {
           >
             <ExternalLink className="size-2.5" /> TripAdvisor
           </a>
+          {votes && onVoteChange && (
+            <div className="ml-auto">
+              <VoteButton
+                venueName={attraction.name}
+                city={city}
+                category="attraction"
+                votes={votes}
+                currentUser={currentUser ?? null}
+                onVoteChange={onVoteChange}
+              />
+            </div>
+          )}
         </div>
       )}
       </div>

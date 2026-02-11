@@ -2,7 +2,9 @@
 
 import { MapPin, ExternalLink, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { VoteButton } from "@/components/guide/vote-button";
 import type { NightlifeSpot } from "@/lib/city-profiles";
+import type { VenueVote } from "@/lib/schema";
 
 function googleMapsUrl(name: string, city: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
@@ -35,9 +37,12 @@ const TYPE_LABELS: Record<string, string> = {
 interface NightlifeCardProps {
   spot: NightlifeSpot;
   city?: string;
+  votes?: VenueVote[];
+  currentUser?: string | null;
+  onVoteChange?: (venueName: string, newVotes: VenueVote[]) => void;
 }
 
-export function NightlifeCard({ spot, city }: NightlifeCardProps) {
+export function NightlifeCard({ spot, city, votes, currentUser, onVoteChange }: NightlifeCardProps) {
   const typeColor = TYPE_COLORS[spot.type] ?? "";
   const typeLabel = TYPE_LABELS[spot.type] ?? spot.type;
 
@@ -68,7 +73,7 @@ export function NightlifeCard({ spot, city }: NightlifeCardProps) {
         {spot.oneLiner}
       </p>
 
-      {/* Links */}
+      {/* Links + Vote */}
       {city && (
         <div className="mt-auto pt-2 border-t border-border flex items-center gap-3">
           <a
@@ -87,6 +92,18 @@ export function NightlifeCard({ spot, city }: NightlifeCardProps) {
           >
             <ExternalLink className="size-2.5" /> TripAdvisor
           </a>
+          {votes && onVoteChange && (
+            <div className="ml-auto">
+              <VoteButton
+                venueName={spot.name}
+                city={city}
+                category="nightlife"
+                votes={votes}
+                currentUser={currentUser ?? null}
+                onVoteChange={onVoteChange}
+              />
+            </div>
+          )}
         </div>
       )}
       </div>

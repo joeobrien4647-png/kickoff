@@ -219,6 +219,17 @@ sqlite.exec(`
     actor TEXT NOT NULL,
     created_at TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS venue_votes (
+    id TEXT PRIMARY KEY,
+    venue_name TEXT NOT NULL,
+    city TEXT NOT NULL,
+    category TEXT NOT NULL,
+    voter_name TEXT NOT NULL,
+    vote INTEGER NOT NULL DEFAULT 1,
+    created_at TEXT NOT NULL,
+    UNIQUE(venue_name, city, voter_name)
+  );
 `);
 
 // Add actual score columns to matches (may already exist)

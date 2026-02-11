@@ -1,0 +1,12 @@
+{
+  "name": "Kickoff - World Cup 2026",
+  "short_name": "Kickoff",
+  "description": "World Cup 2026 East Coast Road Trip Planner",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0f766e",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}

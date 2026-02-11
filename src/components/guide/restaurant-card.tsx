@@ -2,7 +2,9 @@
 
 import { MapPin, ExternalLink, Map } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { VoteButton } from "@/components/guide/vote-button";
 import type { Restaurant } from "@/lib/city-profiles";
+import type { VenueVote } from "@/lib/schema";
 
 function googleMapsUrl(name: string, city: string) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
@@ -39,9 +41,12 @@ const DEFAULT_CUISINE_COLOR =
 interface RestaurantCardProps {
   restaurant: Restaurant;
   city?: string;
+  votes?: VenueVote[];
+  currentUser?: string | null;
+  onVoteChange?: (venueName: string, newVotes: VenueVote[]) => void;
 }
 
-export function RestaurantCard({ restaurant, city }: RestaurantCardProps) {
+export function RestaurantCard({ restaurant, city, votes, currentUser, onVoteChange }: RestaurantCardProps) {
   const cuisineColor = CUISINE_COLORS[restaurant.cuisine] ?? DEFAULT_CUISINE_COLOR;
 
   return (
@@ -86,7 +91,7 @@ export function RestaurantCard({ restaurant, city }: RestaurantCardProps) {
         <span className="text-muted-foreground">{restaurant.mustOrder}</span>
       </p>
 
-      {/* Links */}
+      {/* Links + Vote */}
       {city && (
         <div className="mt-auto pt-2 border-t border-border flex items-center gap-3">
           <a
@@ -105,6 +110,18 @@ export function RestaurantCard({ restaurant, city }: RestaurantCardProps) {
           >
             <ExternalLink className="size-2.5" /> TripAdvisor
           </a>
+          {votes && onVoteChange && (
+            <div className="ml-auto">
+              <VoteButton
+                venueName={restaurant.name}
+                city={city}
+                category="restaurant"
+                votes={votes}
+                currentUser={currentUser ?? null}
+                onVoteChange={onVoteChange}
+              />
+            </div>
+          )}
         </div>
       )}
       </div>

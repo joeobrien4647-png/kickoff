@@ -281,6 +281,19 @@ export const activityLog = sqliteTable("activity_log", {
   createdAt: text("created_at").notNull(),
 });
 
+// ============ VENUE VOTES ============
+export const venueVotes = sqliteTable("venue_votes", {
+  id: text("id").primaryKey(),
+  venueName: text("venue_name").notNull(),
+  city: text("city").notNull(),
+  category: text("category", {
+    enum: ["restaurant", "attraction", "nightlife", "shopping"],
+  }).notNull(),
+  voterName: text("voter_name").notNull(),
+  vote: integer("vote").notNull().default(1), // 1 = upvote
+  createdAt: text("created_at").notNull(),
+});
+
 // ============ TYPE EXPORTS ============
 export type TripSettings = typeof tripSettings.$inferSelect;
 export type Traveler = typeof travelers.$inferSelect;
@@ -296,3 +309,4 @@ export type Logistics = typeof logistics.$inferSelect;
 export type Note = typeof notes.$inferSelect;
 export type Prediction = typeof predictions.$inferSelect;
 export type ActivityLogEntry = typeof activityLog.$inferSelect;
+export type VenueVote = typeof venueVotes.$inferSelect;

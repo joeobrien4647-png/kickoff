@@ -1,0 +1,9 @@
+import { EmergencyView } from "@/components/emergency/emergency-view";
+
+export default function EmergencyPage() {
+  return (
+    <div className="mx-auto max-w-2xl space-y-6 pb-8">
+      <EmergencyView />
+    </div>
+  );
+}

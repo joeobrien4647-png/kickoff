@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import {
   ArrowLeft,
@@ -24,14 +24,32 @@ import { Badge } from "@/components/ui/badge";
 import { RestaurantCard } from "@/components/guide/restaurant-card";
 import { AttractionCard } from "@/components/guide/attraction-card";
 import { NightlifeCard } from "@/components/guide/nightlife-card";
+import { VoteButton } from "@/components/guide/vote-button";
+import { TopPicks } from "@/components/guide/top-picks";
 import { formatDate } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import type { CityProfile } from "@/lib/city-profiles";
-import type { Stop } from "@/lib/schema";
+import type { Stop, VenueVote } from "@/lib/schema";
 
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
+
+/** Read the travelerName from the kickoff_session cookie (client-side). */
+function getCurrentUser(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie
+    .split("; ")
+    .find((c) => c.startsWith("kickoff_session="));
+  if (!match) return null;
+  try {
+    const decoded = decodeURIComponent(match.split("=").slice(1).join("="));
+    const session = JSON.parse(decoded) as { travelerName?: string };
+    return session.travelerName ?? null;
+  } catch {
+    return null;
+  }
+}
 
 /** Map profile city name to the stop city value in the DB */
 const PROFILE_TO_STOP_CITY: Record<string, string> = {
@@ -93,6 +111,38 @@ export function CityProfileView({
   profile,
   stops,
 }: CityProfileViewProps) {
+  // --------------- Votes & current user ---------------
+  const [allVotes, setAllVotes] = useState<VenueVote[]>([]);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
+
+  useEffect(() => {
+    setCurrentUser(getCurrentUser());
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/venue-votes?city=${encodeURIComponent(cityName)}`)
+      .then((r) => r.json())
+      .then((data: VenueVote[]) => setAllVotes(data))
+      .catch(() => {}); // silently fail — votes are non-critical
+  }, [cityName]);
+
+  /** Get votes for a specific venue */
+  const votesFor = useCallback(
+    (venueName: string) => allVotes.filter((v) => v.venueName === venueName),
+    [allVotes]
+  );
+
+  /** Handle optimistic vote update from any card */
+  const handleVoteChange = useCallback(
+    (venueName: string, newVotes: VenueVote[]) => {
+      setAllVotes((prev) => [
+        ...prev.filter((v) => v.venueName !== venueName),
+        ...newVotes,
+      ]);
+    },
+    []
+  );
+
   // --------------- Filters ---------------
   const [cuisineFilter, setCuisineFilter] = useState("All");
   const [attractionFilter, setAttractionFilter] = useState("All");
@@ -176,6 +226,9 @@ export function CityProfileView({
         </p>
       </section>
 
+      {/* Top Picks */}
+      <TopPicks votes={allVotes} />
+
       {/* Tabs */}
       <Tabs defaultValue="eat">
         <TabsList variant="line" className="w-full flex-wrap">
@@ -201,7 +254,14 @@ export function CityProfileView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredRestaurants.map((r) => (
-                <RestaurantCard key={r.name} restaurant={r} city={cityName} />
+                <RestaurantCard
+                  key={r.name}
+                  restaurant={r}
+                  city={cityName}
+                  votes={votesFor(r.name)}
+                  currentUser={currentUser}
+                  onVoteChange={handleVoteChange}
+                />
               ))}
             </div>
           )}
@@ -229,7 +289,14 @@ export function CityProfileView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredAttractions.map((a) => (
-                <AttractionCard key={a.name} attraction={a} city={cityName} />
+                <AttractionCard
+                  key={a.name}
+                  attraction={a}
+                  city={cityName}
+                  votes={votesFor(a.name)}
+                  currentUser={currentUser}
+                  onVoteChange={handleVoteChange}
+                />
               ))}
             </div>
           )}
@@ -256,7 +323,14 @@ export function CityProfileView({
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filteredNightlife.map((n) => (
-                <NightlifeCard key={n.name} spot={n} city={cityName} />
+                <NightlifeCard
+                  key={n.name}
+                  spot={n}
+                  city={cityName}
+                  votes={votesFor(n.name)}
+                  currentUser={currentUser}
+                  onVoteChange={handleVoteChange}
+                />
               ))}
             </div>
           )}
@@ -302,6 +376,16 @@ export function CityProfileView({
                     >
                       <ExternalLink className="size-2.5" /> TripAdvisor
                     </a>
+                    <div className="ml-auto">
+                      <VoteButton
+                        venueName={area.name}
+                        city={cityName}
+                        category="shopping"
+                        votes={votesFor(area.name)}
+                        currentUser={currentUser}
+                        onVoteChange={handleVoteChange}
+                      />
+                    </div>
                   </div>
                 </div>
               ))}

@@ -3,6 +3,7 @@ import { stops, accommodations, matches, ideas } from "@/lib/schema";
 import { asc, sql } from "drizzle-orm";
 import { RouteOverview } from "@/components/route/route-overview";
 import { RouteExplorer } from "@/components/route/route-explorer";
+import { RouteMap } from "@/components/route/route-map";
 import { ROUTE_SCENARIOS } from "@/lib/route-scenarios";
 import type { Stop, Accommodation, Match } from "@/lib/schema";
 
@@ -29,6 +30,15 @@ function parseDrive(raw: string | null): DriveInfo | null {
     return null;
   }
 }
+
+const CITY_SLUG: Record<string, string> = {
+  Boston: "boston",
+  "New York": "nyc",
+  Philadelphia: "philadelphia",
+  "Washington DC": "washington-dc",
+  Atlanta: "atlanta",
+  Miami: "miami",
+};
 
 export default function RoutePage() {
   const allStops = db
@@ -97,6 +107,18 @@ export default function RoutePage() {
       </section>
 
       <RouteExplorer scenarios={ROUTE_SCENARIOS} />
+
+      <RouteMap
+        stops={allStops.map((stop) => ({
+          city: stop.city,
+          state: stop.state,
+          slug: CITY_SLUG[stop.city] ?? stop.city.toLowerCase(),
+          arriveDate: stop.arriveDate,
+          departDate: stop.departDate,
+          matchCount: allMatches.filter((m) => m.stopId === stop.id).length,
+          drive: parseDrive(stop.driveFromPrev) ?? undefined,
+        }))}
+      />
 
       <RouteOverview
         routeStops={routeStops}
