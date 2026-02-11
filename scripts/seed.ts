@@ -40,9 +40,13 @@ sqlite.exec("DELETE FROM expense_splits");
 sqlite.exec("DELETE FROM expenses");
 sqlite.exec("DELETE FROM packing_items");
 sqlite.exec("DELETE FROM notes");
+sqlite.exec("DELETE FROM predictions");
 sqlite.exec("DELETE FROM ideas");
 sqlite.exec("DELETE FROM logistics");
 sqlite.exec("DELETE FROM itinerary_items");
+sqlite.exec("DELETE FROM venue_votes");
+sqlite.exec("DELETE FROM activity_log");
+sqlite.exec("DELETE FROM transports");
 sqlite.exec("DELETE FROM matches");
 sqlite.exec("DELETE FROM accommodations");
 sqlite.exec("DELETE FROM stops");
@@ -73,7 +77,7 @@ console.log("Creating travelers...");
 const travelerData = [
   { id: ulid(), name: "Joe", color: "#3b82f6", emoji: "⚽" },
   { id: ulid(), name: "Jonny", color: "#22c55e", emoji: "🏴󠁧󠁢󠁥󠁮󠁧󠁿" },
-  { id: ulid(), name: "Greg", color: "#f59e0b", emoji: "🇧🇷" },
+  { id: ulid(), name: "Greg", color: "#f59e0b", emoji: "🏴󠁧󠁢󠁳󠁣󠁴󠁿" },
 ];
 
 for (const traveler of travelerData) {
@@ -197,54 +201,72 @@ const accommodationData = [
     stopId: stopIds.boston,
     name: "Lisa's Place",
     type: "host" as const,
+    address: "18 Hemlock Street, Londonderry, NH 03053",
     contact: "Lisa Natale",
+    costPerNight: 0,
+    nights: 3,
     confirmed: true,
-    notes: "New Hampshire, ~1hr outside Boston. Irish pub in the garden!",
+    notes: "Lisa's husband is Irish. Has a pool and an Irish pub in the garden! ~1hr from Boston/Gillette Stadium.",
   },
   {
     id: ulid(),
     stopId: stopIds.nyc,
-    name: "TBD",
+    name: "TBD — Airbnb",
     type: "airbnb" as const,
+    address: null,
     contact: null,
+    costPerNight: null,
+    nights: 3,
     confirmed: false,
-    notes: null,
+    notes: "Quick 1-2 night stay, just enough to see the sights. Manhattan or Brooklyn.",
   },
   {
     id: ulid(),
     stopId: stopIds.philly,
-    name: "TBD",
+    name: "TBD — Airbnb",
     type: "airbnb" as const,
+    address: null,
     contact: null,
+    costPerNight: null,
+    nights: 2,
     confirmed: false,
-    notes: null,
+    notes: "Quick stop, 1-2 nights max. Near stadiums or Old City area.",
   },
   {
     id: ulid(),
     stopId: stopIds.dc,
-    name: "Friend's Sister's Place",
+    name: "Greg's Sister's Place",
     type: "host" as const,
-    contact: null,
+    address: "1608 Dogwood Drive, Alexandria, VA",
+    contact: "Greg's sister",
+    costPerNight: 0,
+    nights: 3,
     confirmed: true,
-    notes: "Friend's sister in DC",
+    notes: "Greg's sister lives in Alexandria, just outside DC. Free accommodation — she can show us around!",
   },
   {
     id: ulid(),
     stopId: stopIds.atlanta,
     name: "TBD",
     type: "hotel" as const,
+    address: null,
     contact: null,
+    costPerNight: null,
+    nights: 2,
     confirmed: false,
-    notes: null,
+    notes: "May swap Atlanta for Nashville — group prefers Nashville route. If Nashville: look at downtown hotels near Broadway.",
   },
   {
     id: ulid(),
     stopId: stopIds.miami,
-    name: "TBD",
+    name: "TBD — Airbnb",
     type: "airbnb" as const,
+    address: null,
     contact: null,
+    costPerNight: null,
+    nights: 2,
     confirmed: false,
-    notes: null,
+    notes: "South Beach or Miami Beach area. Also considering Key West overnight — Airstream motorhome on Airbnb ~$130/night, 3 beds.",
   },
 ];
 
@@ -252,9 +274,6 @@ for (const acc of accommodationData) {
   db.insert(schema.accommodations)
     .values({
       ...acc,
-      address: null,
-      costPerNight: null,
-      nights: null,
       bookingUrl: null,
       createdAt: now(),
       updatedAt: now(),
@@ -591,15 +610,28 @@ const matchData = [
 ];
 
 for (const match of matchData) {
+  // Key matches we tried for in ballot (all unsuccessful Feb 2026)
+  const isScotlandHaiti = match.homeTeam === "Haiti" && match.awayTeam === "Scotland";
+  const isScotlandBrazil = match.homeTeam === "Scotland" && match.awayTeam === "Brazil";
+  const isEnglandGhana = match.homeTeam === "England" && match.awayTeam === "Ghana";
+
+  const triedBallot = isScotlandHaiti || isScotlandBrazil || isEnglandGhana;
+  const ticketStatus = triedBallot ? "seeking" as const : "none" as const;
+  const ticketNotes = triedBallot
+    ? "FIFA ballot unsuccessful (Feb 2026). Resale prices extortionate ($1000+). Trying last-minute sales phase. May watch at fan park instead."
+    : null;
+
   db.insert(schema.matches)
     .values({
       ...match,
-      ticketStatus: "none",
+      ticketStatus,
       ticketPrice: null,
       ticketUrl: null,
-      ticketNotes: null,
+      ticketNotes,
       fanZone: null,
       attending: false,
+      actualHomeScore: null,
+      actualAwayScore: null,
       createdAt: now(),
       updatedAt: now(),
     })
@@ -777,7 +809,7 @@ const packingData: {
   },
   {
     category: "fan_gear",
-    items: ["England shirt", "Scarf", "Bucket hat"],
+    items: ["England shirt", "Scotland shirt", "Scarf", "Bucket hat"],
   },
   {
     category: "gear",
@@ -913,6 +945,20 @@ const ideaData = [
     votes: "[]",
     addedBy: "Joe",
     notes: "Free — can combine with a walk along the Charles River",
+  },
+  {
+    id: ulid(),
+    stopId: stopIds.boston,
+    title: "Maine Day Trip — Castine",
+    category: "sightseeing" as const,
+    description: "Drive up to Castine, Maine — quaint coastal town with harbour views, lobster shacks, and maritime history",
+    url: null,
+    address: "Castine, ME 04421",
+    estimatedCost: 50,
+    estimatedDuration: "full day",
+    votes: JSON.stringify(["Jonny"]),
+    addedBy: "Jonny",
+    notes: "Jonny really wants to see Maine. ~3hr drive from Lisa's place in NH. Could be a tight day trip.",
   },
   {
     id: ulid(),
@@ -1245,6 +1291,64 @@ const ideaData = [
     notes: "Walking distance to the stadium — perfect for pre/post match",
   },
 
+  // --- Nashville ideas (potential stop replacing Atlanta) ---
+  {
+    id: ulid(),
+    stopId: stopIds.atlanta, // Linked to Atlanta slot — may swap to Nashville stop
+    title: "Grand Ole Opry Show",
+    category: "activity" as const,
+    description: "The legendary country music venue — live performances every week since 1925",
+    url: "https://www.opry.com/",
+    address: "2804 Opryland Dr, Nashville, TN 37214",
+    estimatedCost: 54,
+    estimatedDuration: "3 hours",
+    votes: JSON.stringify(["Jonny"]),
+    addedBy: "Jonny",
+    notes: "Jonny is well into country music. ~$54 per ticket. Book early!",
+  },
+  {
+    id: ulid(),
+    stopId: stopIds.atlanta, // Linked to Atlanta slot
+    title: "Morgan Wallen's Bar (This Bar)",
+    category: "nightlife" as const,
+    description: "Country star Morgan Wallen's 6-story bar on Broadway — live music, rooftop, multiple floors",
+    url: null,
+    address: "301 Broadway, Nashville, TN 37201",
+    estimatedCost: 40,
+    estimatedDuration: "2 hours",
+    votes: JSON.stringify(["Jonny"]),
+    addedBy: "Jonny",
+    notes: "On Nashville's famous Broadway honky-tonk strip",
+  },
+  {
+    id: ulid(),
+    stopId: stopIds.atlanta, // Linked to Atlanta slot
+    title: "Broadway Honky-Tonk Crawl",
+    category: "nightlife" as const,
+    description: "Nashville's Lower Broadway — wall-to-wall live music bars, no cover charges, cold beer",
+    url: null,
+    address: "Lower Broadway, Nashville, TN 37203",
+    estimatedCost: 50,
+    estimatedDuration: "4 hours",
+    votes: "[]",
+    addedBy: "Joe",
+    notes: "Free live music all day. Tootsie's, Robert's Western World, The Stage are must-visits.",
+  },
+  {
+    id: ulid(),
+    stopId: stopIds.atlanta, // Linked to Atlanta slot
+    title: "Disc Golf Course",
+    category: "activity" as const,
+    description: "Outdoor disc golf — Jonny's suggestion for an active afternoon",
+    url: null,
+    address: null,
+    estimatedCost: 5,
+    estimatedDuration: "2 hours",
+    votes: JSON.stringify(["Jonny"]),
+    addedBy: "Jonny",
+    notes: "Nashville has several good courses. Could do this in any city really.",
+  },
+
   // --- Miami ---
   {
     id: ulid(),
@@ -1315,6 +1419,20 @@ const ideaData = [
     votes: "[]",
     addedBy: "Jonny",
     notes: "Day pass may be needed if not a guest — check availability",
+  },
+  {
+    id: ulid(),
+    stopId: stopIds.miami,
+    title: "Key West Overnight Trip",
+    category: "activity" as const,
+    description: "Drive from Miami to Key West for an overnight stay — Duval Street bars, sunset at Mallory Square, Hemingway House",
+    url: null,
+    address: "Key West, FL 33040",
+    estimatedCost: 130,
+    estimatedDuration: "overnight",
+    votes: JSON.stringify(["Greg"]),
+    addedBy: "Greg",
+    notes: "Greg found an Airstream motorhome on Airbnb ~$130/night, 3 beds. ~3.5hr drive from Miami. Could do it as a day trip but overnight is better.",
   },
   {
     id: ulid(),
@@ -1445,7 +1563,8 @@ const logisticsData = [
     status: "todo" as const,
     priority: 3,
     dueDate: "2026-04-01",
-    notes: "All 3 need to apply. $21 per person. Apply at least 72 hours before travel.",
+    url: "https://esta.cbp.dhs.gov/esta",
+    notes: "All 3 need to apply. $21 per person (valid 2 years). Apply at least 72 hours before travel.",
   },
   {
     id: ulid(),
@@ -1491,7 +1610,7 @@ const logisticsData = [
     status: "todo" as const,
     priority: 3,
     dueDate: "2026-04-15",
-    notes: "Pick up Boston, drop off Miami. Need full-size for 3 + luggage. Joe driving.",
+    notes: "Pick up Boston, drop off Miami. Need full-size for 3 + luggage. Joe and Jonny driving (Greg 'can drive... just shouldn't'). NO EV — poor US charging infrastructure (Greg's brother-in-law in auto industry confirmed). Gas is cheap in the US.",
   },
   {
     id: ulid(),
@@ -1504,12 +1623,12 @@ const logisticsData = [
   },
   {
     id: ulid(),
-    title: "Research DC → Atlanta options",
+    title: "Research DC → Nashville options",
     category: "transport" as const,
     status: "todo" as const,
     priority: 2,
     dueDate: "2026-04-01",
-    notes: "9.5hr drive. Could fly and rent second car? Or push through in one day",
+    notes: "Group prefers Nashville over Atlanta. Internal flight ~$110pp with luggage. Or 9hr drive.",
   },
   {
     id: ulid(),
@@ -1533,12 +1652,12 @@ const logisticsData = [
   // --- Accommodation ---
   {
     id: ulid(),
-    title: "Confirm Lisa's place (Boston)",
+    title: "Confirm Lisa's place (Boston/NH)",
     category: "accommodation" as const,
-    status: "todo" as const,
+    status: "done" as const,
     priority: 2,
     dueDate: "2026-05-15",
-    notes: "New Hampshire, 1hr from Boston. Check dates Jun 11-14",
+    notes: "CONFIRMED — 18 Hemlock Street, Londonderry, NH 03053. Pool + Irish pub in garden. Lisa's husband is Irish.",
     assignedTo: "Joe",
   },
   {
@@ -1563,12 +1682,13 @@ const logisticsData = [
   },
   {
     id: ulid(),
-    title: "Confirm DC place (friend's sister)",
+    title: "Confirm DC place (Greg's sister)",
     category: "accommodation" as const,
-    status: "todo" as const,
+    status: "done" as const,
     priority: 2,
     dueDate: "2026-05-15",
-    notes: "Jun 19-22, 3 nights",
+    notes: "CONFIRMED — 1608 Dogwood Drive, Alexandria, VA. Greg's sister. Free accommodation.",
+    assignedTo: "Greg",
   },
   {
     id: ulid(),
@@ -1626,7 +1746,7 @@ const logisticsData = [
     status: "todo" as const,
     priority: 1,
     dueDate: "2026-05-01",
-    notes: "Consider Revolut/Wise card if high fees",
+    notes: "Greg has Monzo card (no foreign fees). Joe and Jonny: consider Revolut/Wise/Monzo if current cards have high fees.",
   },
 
   // --- Tech ---
@@ -1659,11 +1779,11 @@ const logisticsData = [
   // --- Bookings ---
   {
     id: ulid(),
-    title: "World Cup ticket secondary market",
+    title: "World Cup tickets — last-minute sales phase",
     category: "booking" as const,
-    status: "todo" as const,
+    status: "in_progress" as const,
     priority: 3,
-    notes: "Monitor StubHub, Viagogo, SeatGeek for East Coast matches. Target: England vs Ghana (Boston Jun 23), Scotland vs Brazil (Miami Jun 24)",
+    notes: "ALL 3 unsuccessful in FIFA ballot (Feb 2026). Resale prices extortionate ($1000+ for Scotland v Haiti). Registered for last-minute sales phase. Plan B: watch at fan parks/sports bars. Still hoping for 1-2 cheaper ones.",
   },
   {
     id: ulid(),
@@ -1672,6 +1792,24 @@ const logisticsData = [
     status: "todo" as const,
     priority: 1,
     notes: "If Red Sox playing Jun 11-14",
+  },
+  {
+    id: ulid(),
+    title: "Book Key West Airstream (Airbnb)",
+    category: "accommodation" as const,
+    status: "todo" as const,
+    priority: 1,
+    dueDate: "2026-05-15",
+    notes: "Greg found Airstream motorhome on Airbnb ~$130/night, 3 beds. Overnight trip from Miami.",
+  },
+  {
+    id: ulid(),
+    title: "Book airport lounge (Heathrow)",
+    category: "booking" as const,
+    status: "todo" as const,
+    priority: 1,
+    dueDate: "2026-06-01",
+    notes: "~£40pp unlimited food/drinks. Joe may have Virgin Atlantic vouchers.",
   },
   {
     id: ulid(),
@@ -1792,53 +1930,126 @@ for (const [name, amt] of Object.entries(paidByName)) {
 }
 console.log();
 
+// ============ TRANSPORTS ============
+console.log("Creating transport bookings...");
+
+const transportData = [
+  {
+    id: ulid(),
+    type: "flight" as const,
+    fromCity: "London Heathrow",
+    toCity: "Boston",
+    departDate: "2026-06-11",
+    departTime: "15:15",
+    arriveTime: null,
+    carrier: "Virgin Atlantic",
+    confirmationRef: null,
+    cost: 300,
+    bookingUrl: null,
+    notes: "Booked Oct 2025 using Joe's air miles. Saved ~£1200. All 3 on same flight. ~£300pp.",
+  },
+  {
+    id: ulid(),
+    type: "flight" as const,
+    fromCity: "Miami",
+    toCity: "London Heathrow",
+    departDate: "2026-06-26",
+    departTime: null,
+    arriveTime: null,
+    carrier: "Virgin Atlantic",
+    confirmationRef: null,
+    cost: 300,
+    bookingUrl: null,
+    notes: "Evening flight. Booked Oct 2025 using Joe's air miles.",
+  },
+];
+
+for (const t of transportData) {
+  db.insert(schema.transports)
+    .values({
+      ...t,
+      createdAt: now(),
+      updatedAt: now(),
+    })
+    .run();
+  console.log(`  ✈ ${t.fromCity} → ${t.toCity} (${t.departDate}) — ${t.carrier}`);
+}
+console.log();
+
 // ============ NOTES ============
 console.log("Creating notes...");
 
 const noteData = [
   {
     id: ulid(),
-    date: "2026-06-10",
+    date: null,
     stopId: null,
-    title: "Packing reminder",
-    content: "Don't forget the portable chargers and adapters. Also need to grab sunscreen before Miami.",
+    title: "Flights BOOKED!",
+    content: "Virgin Atlantic via Joe's air miles — saved ~£1200!\n\nOUTBOUND: London Heathrow → Boston, June 11, ~15:15\nRETURN: Miami → London Heathrow, June 26, evening\n\n~£300 per person. All 3 on same flights.",
     pinned: true,
     addedBy: "Joe",
   },
   {
     id: ulid(),
-    date: "2026-06-11",
-    stopId: stopIds.boston,
-    title: "Restaurant reservations",
-    content: "Need to book Neptune Oyster in Boston ASAP - heard it's a 2hr wait otherwise",
-    pinned: false,
-    addedBy: "Jonny",
+    date: null,
+    stopId: null,
+    title: "Ticket Ballot — ALL UNSUCCESSFUL",
+    content: "All 3 of us were unsuccessful in the FIFA ticket ballot (Feb 5-8, 2026).\n\nResale prices are extortionate — $1000+ for Scotland v Haiti alone.\n\nPLAN: Watch matches at fan parks and sports bars. May still try for 1-2 cheaper ones via last-minute sales phase.\n\nRegistered for FIFA last-minute sales phase.",
+    pinned: true,
+    addedBy: "Joe",
   },
   {
     id: ulid(),
-    date: "2026-06-13",
+    date: null,
+    stopId: null,
+    title: "Route Decision — Nashville vs Atlanta",
+    content: "Group consensus: Boston → NYC → Philly → DC → Nashville → Miami\n\nNashville preferred over Atlanta! Jonny is well into country music — Grand Ole Opry, Morgan Wallen's bar, Broadway honky-tonks.\n\nInternal flight DC → Nashville discussed (~$110pp with luggage) to avoid 9hr drive.\n\nGreg also wants to drive through Florida rather than fly.",
+    pinned: true,
+    addedBy: "Joe",
+  },
+  {
+    id: ulid(),
+    date: null,
     stopId: stopIds.boston,
-    title: "Match day plan",
-    content: "For the USA vs England game, let's arrive at the fan zone 3 hours early. Pre-game at the nearby sports bars.",
+    title: "Lisa's Place — Accommodation Details",
+    content: "18 Hemlock Street, Londonderry, NH 03053\n\nLisa's husband is Irish. They have a POOL and an Irish pub built in the garden!\n\n~1hr from Boston and Gillette Stadium. Free accommodation.\n\nJun 11-14 confirmed.",
+    pinned: false,
+    addedBy: "Joe",
+  },
+  {
+    id: ulid(),
+    date: null,
+    stopId: stopIds.dc,
+    title: "Greg's Sister — DC Accommodation",
+    content: "1608 Dogwood Drive, Alexandria, VA\n\nGreg's sister lives just outside DC. Free accommodation.\nShe can show us around — National Mall, Lincoln Memorial, etc.\n\nJun 19-22.",
     pinned: false,
     addedBy: "Greg",
   },
   {
     id: ulid(),
-    date: "2026-06-15",
+    date: null,
+    stopId: stopIds.miami,
+    title: "Key West Overnight",
+    content: "Greg's idea: overnight trip from Miami to Key West.\n\nFound an Airstream motorhome on Airbnb ~$130/night, 3 beds.\n\n~3.5hr drive from Miami. Duval Street bars, sunset at Mallory Square.",
+    pinned: false,
+    addedBy: "Greg",
+  },
+  {
+    id: ulid(),
+    date: null,
     stopId: null,
-    title: "Budget check",
-    content: "We're running about $200 over budget on accommodations. Maybe switch Atlanta hotel to Airbnb?",
+    title: "Car Rental Notes",
+    content: "Boston pickup → Miami dropoff. Need full-size for 3 + luggage.\n\nJoe and Jonny driving. Greg 'can drive... just shouldn't' 😂\n\nNO EV — Greg's brother-in-law is in the US auto industry and says EV charging infrastructure is poor.\n\nGas is cheap in the US so petrol car is fine.",
     pinned: false,
     addedBy: "Joe",
   },
   {
     id: ulid(),
-    date: "2026-06-10",
+    date: null,
     stopId: null,
-    title: "Flight info",
-    content: "Joe arriving Boston 6/10 at 3pm. Jonny and Greg arriving 6/11 morning.",
-    pinned: true,
+    title: "Airport Lounge — Pre-Flight",
+    content: "Consider booking airport lounge before the flight (~£40 each, unlimited food and drinks).\n\nJoe may have vouchers from Virgin Atlantic.",
+    pinned: false,
     addedBy: "Joe",
   },
 ];
@@ -1874,6 +2085,7 @@ console.log(`  ${count("logistics")} logistics`);
 console.log(`  ${count("expenses")} expenses`);
 console.log(`  ${count("expense_splits")} expense splits`);
 console.log(`  ${count("notes")} notes`);
+console.log(`  ${count("transports")} transports`);
 console.log("========================================");
 
 sqlite.close();
