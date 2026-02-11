@@ -1869,33 +1869,11 @@ function equalSplits(expenseId: string, amount: number) {
   }
 }
 
+// Only real expenses so far — trip is Jun 2026, we're in Feb 2026
 const expenseData = [
-  // Transport (3)
-  { id: ulid(), desc: "Uber to Gillette Stadium", amount: 45, cat: "transport" as const, paidBy: joe.id, date: "2026-06-13", stopId: stopIds.boston },
-  { id: ulid(), desc: "Gas — Boston to New York", amount: 62, cat: "transport" as const, paidBy: greg.id, date: "2026-06-14", stopId: stopIds.nyc },
-  { id: ulid(), desc: "Tolls — I-95 to Philadelphia", amount: 28, cat: "transport" as const, paidBy: joe.id, date: "2026-06-17", stopId: stopIds.philly },
-
-  // Food (4)
-  { id: ulid(), desc: "Lobster dinner at Legal Sea Foods", amount: 120, cat: "food" as const, paidBy: jonny.id, date: "2026-06-12", stopId: stopIds.boston },
-  { id: ulid(), desc: "Joe's Pizza — NYC classic slices", amount: 24, cat: "food" as const, paidBy: joe.id, date: "2026-06-15", stopId: stopIds.nyc },
-  { id: ulid(), desc: "Pat's King of Steaks — cheesesteaks", amount: 36, cat: "food" as const, paidBy: greg.id, date: "2026-06-18", stopId: stopIds.philly },
-  { id: ulid(), desc: "Ben's Chili Bowl — half-smokes", amount: 42, cat: "food" as const, paidBy: jonny.id, date: "2026-06-20", stopId: stopIds.dc },
-
-  // Tickets (2)
-  { id: ulid(), desc: "Haiti vs Scotland — Gillette Stadium", amount: 210, cat: "tickets" as const, paidBy: joe.id, date: "2026-06-13", stopId: stopIds.boston },
-  { id: ulid(), desc: "Scotland vs Brazil — Hard Rock Stadium", amount: 450, cat: "tickets" as const, paidBy: jonny.id, date: "2026-06-24", stopId: stopIds.miami },
-
-  // Accommodation (2)
-  { id: ulid(), desc: "Airbnb — NYC 3 nights", amount: 540, cat: "accommodation" as const, paidBy: greg.id, date: "2026-06-14", stopId: stopIds.nyc },
-  { id: ulid(), desc: "Hotel — Atlanta 2 nights", amount: 280, cat: "accommodation" as const, paidBy: joe.id, date: "2026-06-22", stopId: stopIds.atlanta },
-
-  // Drinks (2)
-  { id: ulid(), desc: "230 Fifth rooftop bar", amount: 78, cat: "drinks" as const, paidBy: jonny.id, date: "2026-06-15", stopId: stopIds.nyc },
-  { id: ulid(), desc: "Dupont Circle bar crawl", amount: 96, cat: "drinks" as const, paidBy: greg.id, date: "2026-06-21", stopId: stopIds.dc },
-
-  // Activities (2)
-  { id: ulid(), desc: "World of Coca-Cola tickets", amount: 66, cat: "activities" as const, paidBy: joe.id, date: "2026-06-23", stopId: stopIds.atlanta },
-  { id: ulid(), desc: "Wynwood Walls admission", amount: 36, cat: "activities" as const, paidBy: greg.id, date: "2026-06-25", stopId: stopIds.miami },
+  // Flights — booked Oct 2025 via Joe's Virgin Atlantic air miles
+  // ~£300pp × 3 = ~£900 total ≈ $1,140 at 1.27 rate
+  { id: ulid(), desc: "Virgin Atlantic flights (LHR→BOS + MIA→LHR)", amount: 1140, cat: "transport" as const, paidBy: joe.id, date: "2025-10-21", stopId: null },
 ];
 
 for (const e of expenseData) {
@@ -1916,18 +1894,9 @@ for (const e of expenseData) {
   equalSplits(e.id, e.amount);
 }
 
-// Log expense summary by payer
-const paidByName: Record<string, number> = { Joe: 0, Jonny: 0, Greg: 0 };
-for (const e of expenseData) {
-  if (e.paidBy === joe.id) paidByName.Joe += e.amount;
-  else if (e.paidBy === jonny.id) paidByName.Jonny += e.amount;
-  else paidByName.Greg += e.amount;
-}
 const totalExpenses = expenseData.reduce((s, e) => s + e.amount, 0);
-console.log(`  ${expenseData.length} expenses totalling $${totalExpenses}`);
-for (const [name, amt] of Object.entries(paidByName)) {
-  console.log(`    ${name} paid: $${amt}`);
-}
+console.log(`  ${expenseData.length} expense(s) totalling $${totalExpenses}`);
+console.log(`    (Only pre-trip costs — trip expenses will be added during the trip)`);
 console.log();
 
 // ============ TRANSPORTS ============

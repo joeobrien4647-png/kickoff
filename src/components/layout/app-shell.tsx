@@ -1,5 +1,6 @@
 import { getSession } from "@/lib/auth";
 import { TopNavbar } from "@/components/layout/top-navbar";
+import { BottomNav } from "@/components/layout/bottom-nav";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -18,9 +19,10 @@ export async function AppShell({ children }: AppShellProps) {
   return (
     <div className="min-h-screen bg-background">
       <TopNavbar travelerName={travelerName} />
-      <main className="mx-auto max-w-7xl px-4 md:px-6 py-6">
+      <main className="mx-auto max-w-7xl px-4 md:px-6 py-6 pb-16 md:pb-0">
         {children}
       </main>
+      <BottomNav />
     </div>
   );
 }
