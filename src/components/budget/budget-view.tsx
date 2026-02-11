@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/dates";
 import { EXPENSE_CATEGORIES } from "@/lib/constants";
 import { AddExpenseForm } from "@/components/budget/add-expense-form";
+import { SettlementCard } from "@/components/budget/settlement-card";
 import type { Expense, ExpenseSplit, Traveler, Stop } from "@/lib/schema";
 
 const CATEGORY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -78,54 +79,6 @@ export function BudgetView({
 
   const totalBudget = BUDGET_PER_PERSON * travelers.length;
   const remaining = totalBudget - totalSpent;
-
-  // Settlement calculations
-  const settlements = useMemo(() => {
-    // For each traveler: what they paid vs what they owe
-    const balances = travelers.map((t) => {
-      const paid = expenses
-        .filter((e) => e.paidBy === t.id)
-        .reduce((sum, e) => sum + e.amount, 0);
-      const owes = perPerson[t.id] ?? 0;
-      return { traveler: t, paid, owes, net: paid - owes };
-    });
-
-    // Greedy settlement: person with most negative pays person with most positive
-    const debtors = balances
-      .filter((b) => b.net < -0.01)
-      .map((b) => ({ ...b }))
-      .sort((a, b) => a.net - b.net);
-    const creditors = balances
-      .filter((b) => b.net > 0.01)
-      .map((b) => ({ ...b }))
-      .sort((a, b) => b.net - a.net);
-
-    const txns: { from: Traveler; to: Traveler; amount: number }[] = [];
-    let di = 0;
-    let ci = 0;
-
-    while (di < debtors.length && ci < creditors.length) {
-      const debt = Math.abs(debtors[di].net);
-      const credit = creditors[ci].net;
-      const transfer = Math.min(debt, credit);
-
-      if (transfer > 0.01) {
-        txns.push({
-          from: debtors[di].traveler,
-          to: creditors[ci].traveler,
-          amount: Math.round(transfer * 100) / 100,
-        });
-      }
-
-      debtors[di].net += transfer;
-      creditors[ci].net -= transfer;
-
-      if (Math.abs(debtors[di].net) < 0.01) di++;
-      if (creditors[ci].net < 0.01) ci++;
-    }
-
-    return { balances, txns };
-  }, [expenses, travelers, perPerson]);
 
   // Filtered expense list
   const filteredExpenses = useMemo(() => {
@@ -276,30 +229,12 @@ export function BudgetView({
       )}
 
       {/* ── C) Who Owes Whom ── */}
-      {settlements.txns.length > 0 && (
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-            Settlements
-          </h2>
-          <div className="space-y-2">
-            {settlements.txns.map((txn, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-2 rounded-lg border bg-card px-3 py-2.5 text-sm"
-              >
-                <span className="font-medium" style={{ color: txn.from.color }}>
-                  {txn.from.name}
-                </span>
-                <span className="text-muted-foreground">owes</span>
-                <span className="font-medium" style={{ color: txn.to.color }}>
-                  {txn.to.name}
-                </span>
-                <span className="ml-auto font-bold">${fmt(txn.amount)}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+      <SettlementCard
+        expenses={expenses}
+        splits={splits}
+        travelers={travelers}
+        perPerson={perPerson}
+      />
 
       {/* ── D) Expense List ── */}
       <section className="space-y-3">

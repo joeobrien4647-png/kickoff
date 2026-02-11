@@ -201,6 +201,35 @@
   100% { transform: translateY(-60px) scale(0); opacity: 0; }
 }
 
+/* Login floating ball animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Hologram animations */
+@keyframes hologram-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.92; }
+  75% { opacity: 0.97; }
+}
+
+@keyframes hologram-scan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes hologram-glow {
+  0%, 100% { box-shadow: 0 0 8px oklch(0.72 0.14 200 / 0.3), inset 0 0 8px oklch(0.72 0.14 200 / 0.1); }
+  50% { box-shadow: 0 0 16px oklch(0.72 0.14 200 / 0.5), inset 0 0 12px oklch(0.72 0.14 200 / 0.15); }
+}
+
+/* Route dot pulse on login */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
 /* Print styles */
 @media print {
   body {

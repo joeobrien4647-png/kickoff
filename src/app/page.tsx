@@ -20,6 +20,7 @@ import { WeatherWidget } from "@/components/weather-widget";
 import { ActivityFeed } from "@/components/activity-feed";
 import { WhosPaying } from "@/components/whos-paying";
 import { TripStats } from "@/components/trip-stats";
+import { TrumpHologram } from "@/components/trump-hologram";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -396,6 +397,9 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </section>
+
+          {/* Trump Hologram */}
+          <TrumpHologram />
 
           {/* Who's Paying? spinner */}
           {allTravelers.length > 1 && (

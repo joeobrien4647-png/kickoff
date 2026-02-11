@@ -22,8 +22,10 @@ import { Badge } from "@/components/ui/badge";
 import { RestaurantCard } from "@/components/guide/restaurant-card";
 import { AttractionCard } from "@/components/guide/attraction-card";
 import { NightlifeCard } from "@/components/guide/nightlife-card";
+import { ImageCarousel } from "@/components/guide/image-carousel";
 import { formatDate } from "@/lib/dates";
 import { cn } from "@/lib/utils";
+import { getVenueImages } from "@/lib/venue-images";
 import type { CityProfile } from "@/lib/city-profiles";
 import type { Stop } from "@/lib/schema";
 
@@ -119,27 +121,42 @@ export function CityProfileView({
           .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
           .join(" ");
 
+  // ─── Enrich venues with images from the external map ───
+  const enriched = useMemo(() => {
+    const withImages = <T extends { name: string; images?: string[] }>(items: T[]) =>
+      items.map((item) => ({
+        ...item,
+        images: item.images ?? getVenueImages(item.name),
+      }));
+    return {
+      restaurants: withImages(profile.restaurants),
+      attractions: withImages(profile.attractions),
+      nightlife: withImages(profile.nightlife),
+      shopping: withImages(profile.shopping),
+    };
+  }, [profile.restaurants, profile.attractions, profile.nightlife, profile.shopping]);
+
   // Filtered data
   const filteredRestaurants = useMemo(
     () =>
       cuisineFilter === "All"
-        ? profile.restaurants
-        : profile.restaurants.filter((r) => r.cuisine === cuisineFilter),
-    [profile.restaurants, cuisineFilter]
+        ? enriched.restaurants
+        : enriched.restaurants.filter((r) => r.cuisine === cuisineFilter),
+    [enriched.restaurants, cuisineFilter]
   );
   const filteredAttractions = useMemo(
     () =>
       attractionFilter === "All"
-        ? profile.attractions
-        : profile.attractions.filter((a) => a.category === attractionFilter),
-    [profile.attractions, attractionFilter]
+        ? enriched.attractions
+        : enriched.attractions.filter((a) => a.category === attractionFilter),
+    [enriched.attractions, attractionFilter]
   );
   const filteredNightlife = useMemo(
     () =>
       nightlifeFilter === "All"
-        ? profile.nightlife
-        : profile.nightlife.filter((n) => n.type === nightlifeFilter),
-    [profile.nightlife, nightlifeFilter]
+        ? enriched.nightlife
+        : enriched.nightlife.filter((n) => n.type === nightlifeFilter),
+    [enriched.nightlife, nightlifeFilter]
   );
 
   // Stop dates
@@ -262,29 +279,37 @@ export function CityProfileView({
 
         {/* ═══════════════════════════ SHOPPING ═══════════════════════════ */}
         <TabsContent value="shopping" className="space-y-4 pt-2">
-          {profile.shopping.length === 0 ? (
+          {enriched.shopping.length === 0 ? (
             <p className="text-sm text-muted-foreground py-8 text-center">
               No shopping areas listed yet.
             </p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {profile.shopping.map((area) => (
-                <div
-                  key={area.name}
-                  className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow p-5 flex flex-col gap-2"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="font-semibold text-sm">{area.name}</h3>
-                    <ShoppingBag className="size-4 text-muted-foreground shrink-0" />
+              {enriched.shopping.map((area) => {
+                const hasImages = area.images && area.images.length > 0;
+                return (
+                  <div
+                    key={area.name}
+                    className={`bg-card rounded-xl border shadow-sm hover:shadow-md transition-shadow ${hasImages ? "overflow-hidden" : "p-5"} flex flex-col gap-0`}
+                  >
+                    {hasImages && (
+                      <ImageCarousel images={area.images!} alt={area.name} />
+                    )}
+                    <div className={`flex flex-col gap-2 ${hasImages ? "p-5" : ""}`}>
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="font-semibold text-sm">{area.name}</h3>
+                        <ShoppingBag className="size-4 text-muted-foreground shrink-0" />
+                      </div>
+                      <Badge variant="secondary" className="w-fit text-xs">
+                        {area.type}
+                      </Badge>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {area.description}
+                      </p>
+                    </div>
                   </div>
-                  <Badge variant="secondary" className="w-fit text-xs">
-                    {area.type}
-                  </Badge>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {area.description}
-                  </p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </TabsContent>
