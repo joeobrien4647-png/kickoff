@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { matches, stops, travelers } from "@/lib/schema";
 import { asc } from "drizzle-orm";
 import { MatchesView } from "@/components/matches/matches-view";
+import { WatchGuide } from "@/components/matches/watch-guide";
 
 export default function MatchesPage() {
   const allMatches = db.select().from(matches).all();
@@ -30,6 +31,12 @@ export default function MatchesPage() {
         travelers={allTravelers}
         stats={stats}
       />
+
+      {/* Separator */}
+      <div className="border-t border-border" />
+
+      {/* Where to Watch guide */}
+      <WatchGuide />
     </div>
   );
 }

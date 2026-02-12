@@ -25,6 +25,8 @@ import { HeroCountdown } from "@/components/hero-countdown";
 import { TripCountdown } from "@/components/trip-countdown";
 import { CurrencyConverter } from "@/components/currency-converter";
 import { WhatsAppLink } from "@/components/whatsapp-link";
+import { TripShareCard } from "@/components/trip-share-card";
+import { PreTripTimeline } from "@/components/pre-trip-timeline";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -372,6 +374,9 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </section>
+
+          {/* ── Pre-Trip Countdown Checklist ────────────────────────── */}
+          <PreTripTimeline tripStartDate="2026-06-11" />
         </div>
 
         {/* ── Sidebar ───────────────────────────────────────────────── */}
@@ -408,6 +413,37 @@ export default function HomePage() {
 
           {/* WhatsApp group link */}
           <WhatsAppLink />
+
+          {/* Share trip card */}
+          <TripShareCard
+            stops={allStops.map((s) => ({
+              city: s.city,
+              arriveDate: s.arriveDate,
+              departDate: s.departDate,
+            }))}
+            matches={allMatches.map((m) => ({
+              homeTeam: m.homeTeam,
+              awayTeam: m.awayTeam,
+              matchDate: m.matchDate,
+              venue: m.venue,
+              city: m.city,
+              attending: m.attending ? 1 : 0,
+            }))}
+            travelers={allTravelers.map((t) => ({
+              name: t.name,
+              emoji: t.emoji,
+            }))}
+            totalMiles={totalMiles}
+            totalSpent={expenseTotal.total}
+            perPersonSpent={
+              allTravelers.length > 0
+                ? expenseTotal.total / allTravelers.length
+                : 0
+            }
+            packingProgress={`${packingStats.packed ?? 0}/${packingStats.total}`}
+            checklistProgress={`${logisticsStats.done ?? 0}/${logisticsStats.total}`}
+            ticketsPurchased={purchasedCount}
+          />
 
           {/* Who's Paying? spinner */}
           {allTravelers.length > 1 && (

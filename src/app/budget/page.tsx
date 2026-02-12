@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { expenses, expenseSplits, travelers, stops } from "@/lib/schema";
 import { asc } from "drizzle-orm";
 import { BudgetView } from "@/components/budget/budget-view";
+import { TripForecast } from "@/components/budget/trip-forecast";
 
 export default async function BudgetPage() {
   const allExpenses = db.select().from(expenses).all();
@@ -44,6 +45,12 @@ export default async function BudgetPage() {
         totalSpent={totalSpent}
         perPerson={perPerson}
         categoryBreakdown={categoryBreakdown}
+      />
+
+      <TripForecast
+        travelers={allTravelers}
+        totalSpentSoFar={totalSpent}
+        expenseCount={allExpenses.length}
       />
     </div>
   );
