@@ -9,9 +9,28 @@ import {
   Bed,
   MapPin,
   DollarSign,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -38,9 +57,68 @@ export function KeyDecisions({
 }: KeyDecisionsProps) {
   const router = useRouter();
   const [voting, setVoting] = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [question, setQuestion] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [options, setOptions] = useState(["", ""]);
 
   const openDecisions = decisions.filter((d) => d.status === "open");
   const decidedDecisions = decisions.filter((d) => d.status === "decided");
+
+  function resetForm() {
+    setQuestion("");
+    setDescription("");
+    setCategory("");
+    setOptions(["", ""]);
+  }
+
+  function addOption() {
+    if (options.length < 4) setOptions([...options, ""]);
+  }
+
+  function removeOption(index: number) {
+    if (options.length > 2) setOptions(options.filter((_, i) => i !== index));
+  }
+
+  function updateOption(index: number, value: string) {
+    setOptions(options.map((o, i) => (i === index ? value : o)));
+  }
+
+  async function handleCreate(e: React.FormEvent) {
+    e.preventDefault();
+    const filledOptions = options.filter((o) => o.trim());
+    if (!question.trim() || !category || filledOptions.length < 2) return;
+
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/decisions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: question.trim(),
+          description: description.trim() || undefined,
+          category,
+          options: filledOptions.map((text) => text.trim()),
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to create decision");
+      }
+      toast.success("Decision created!");
+      resetForm();
+      setFormOpen(false);
+      router.refresh();
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create decision"
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   async function handleVote(decisionId: string, optionText: string) {
     setVoting(`${decisionId}:${optionText}`);
@@ -161,6 +239,16 @@ export function KeyDecisions({
             {openDecisions.length} open
           </Badge>
         )}
+        <button
+          onClick={() => setFormOpen(true)}
+          className={cn(
+            "size-6 rounded-full flex items-center justify-center transition-colors",
+            "bg-wc-gold/15 text-wc-gold hover:bg-wc-gold/25",
+            openDecisions.length === 0 && "ml-auto"
+          )}
+        >
+          <Plus className="size-3.5" />
+        </button>
       </div>
 
       {/* Open decisions */}
@@ -271,6 +359,116 @@ export function KeyDecisions({
           </CardContent>
         </Card>
       )}
+
+      {/* Add Decision Sheet */}
+      <Sheet open={formOpen} onOpenChange={setFormOpen}>
+        <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto">
+          <SheetHeader>
+            <SheetTitle>Add a Decision</SheetTitle>
+            <SheetDescription>
+              Pose a question for the group to vote on.
+            </SheetDescription>
+          </SheetHeader>
+
+          <form onSubmit={handleCreate} className="space-y-4 p-4">
+            {/* Question */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Question</label>
+              <Input
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="e.g. Which route through Virginia?"
+                required
+              />
+            </div>
+
+            {/* Description */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">
+                Description{" "}
+                <span className="text-muted-foreground font-normal">
+                  (optional)
+                </span>
+              </label>
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Context or why this matters"
+                rows={2}
+              />
+            </div>
+
+            {/* Category */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Category</label>
+              <Select value={category} onValueChange={setCategory}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Pick a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(CATEGORY_CONFIG).map(([value, cfg]) => (
+                    <SelectItem key={value} value={value}>
+                      {cfg.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Options */}
+            <div className="space-y-1.5">
+              <label className="text-sm font-medium">Options</label>
+              <div className="space-y-2">
+                {options.map((opt, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <Input
+                      value={opt}
+                      onChange={(e) => updateOption(i, e.target.value)}
+                      placeholder={`Option ${i + 1}`}
+                      required
+                    />
+                    {options.length > 2 && (
+                      <button
+                        type="button"
+                        onClick={() => removeOption(i)}
+                        className="text-muted-foreground hover:text-destructive transition-colors shrink-0"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
+              {options.length < 4 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={addOption}
+                  className="mt-1 text-xs"
+                >
+                  <Plus className="size-3 mr-1" />
+                  Add Option
+                </Button>
+              )}
+            </div>
+
+            {/* Submit */}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={
+                submitting ||
+                !question.trim() ||
+                !category ||
+                options.filter((o) => o.trim()).length < 2
+              }
+            >
+              {submitting ? "Creating..." : "Create Decision"}
+            </Button>
+          </form>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 }

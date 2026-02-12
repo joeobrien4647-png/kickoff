@@ -1935,6 +1935,401 @@ export const CITY_PROFILES: Record<string, CityProfile> = {
   },
 
   // ══════════════════════════════════════════════════════════════════════
+  //  NASHVILLE
+  // ══════════════════════════════════════════════════════════════════════
+  Nashville: {
+    overview:
+      "Jonny's dream stop — and he's absolutely right. Nashville is one of those cities that grabs you by the ears and doesn't let go. Every door on Broadway hides a live band. Every kitchen hides a cast-iron skillet of hot chicken that'll rearrange your understanding of spice. The honky-tonks run noon to 3 AM, the neon never dims, and the Southern hospitality is so thick you'll wonder if everyone's putting it on (they're not). No World Cup matches here — this is a pure fun stop. Three days of live music, whiskey, hot chicken, and late nights in Music City. For three British lads, it doesn't get better than this.",
+    neighborhoods: [
+      {
+        name: "Broadway / Downtown",
+        description:
+          "The legendary Lower Broadway strip — wall-to-wall honky-tonks, neon signs, live music pouring out of every door, and the Ryman Auditorium presiding over it all.",
+        vibe: "Electric",
+      },
+      {
+        name: "East Nashville",
+        description:
+          "The cool side of the river — craft cocktail bars, vinyl shops, indie restaurants, and a locals-first vibe that feels miles from the Broadway chaos.",
+        vibe: "Hipster",
+      },
+      {
+        name: "The Gulch",
+        description:
+          "Nashville's sleek, walkable pocket south of Broadway — boutique hotels, trendy restaurants, the famous 'What Lifts You' wings mural, and rooftop bars.",
+        vibe: "Trendy",
+      },
+      {
+        name: "Midtown / Music Row",
+        description:
+          "Where the music industry actually lives — recording studios, Vanderbilt University, and a strip of bars and restaurants along Elliston Place and Division Street.",
+        vibe: "Local",
+      },
+    ],
+    restaurants: [
+      {
+        name: "Hattie B's Hot Chicken",
+        cuisine: "Nashville Hot Chicken",
+        priceRange: "$",
+        neighborhood: "Midtown",
+        oneLiner:
+          "The hot chicken institution with the perpetual queue. Worth every minute of the wait. Start at Medium if you value your dignity.",
+        mustOrder: "Half bird, Medium or Hot, with pimento mac and banana pudding",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Prince's Hot Chicken Shack",
+        cuisine: "Nashville Hot Chicken",
+        priceRange: "$",
+        neighborhood: "Ewing Drive",
+        oneLiner:
+          "The original. The one that started it all in the 1940s. A pilgrimage site for hot chicken devotees. The 'Hot' here is genuinely dangerous.",
+        mustOrder: "Quarter dark, Medium heat — respect the OG on your first visit",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Bolton's Spicy Chicken & Fish",
+        cuisine: "Nashville Hot Chicken / Fish",
+        priceRange: "$",
+        neighborhood: "East Nashville",
+        oneLiner:
+          "The local favourite that tourists sleep on. The hot fish is arguably better than the chicken — and that's saying something.",
+        mustOrder: "Hot fish sandwich with white bread and pickles",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Martin's Bar-B-Que Joint",
+        cuisine: "BBQ",
+        priceRange: "$$",
+        neighborhood: "Downtown",
+        oneLiner:
+          "Whole-hog BBQ cooked over hickory in a massive pit. The pulled pork and cornbread are perfection. Get here before the lunch rush.",
+        mustOrder: "Redneck Taco (pulled pork on cornbread) and the whole-hog plate",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Biscuit Love",
+        cuisine: "Southern Brunch",
+        priceRange: "$$",
+        neighborhood: "The Gulch",
+        oneLiner:
+          "Started as a food truck, now a Nashville brunch institution. The Bonuts alone are worth the trip — fried biscuit dough with lemon mascarpone.",
+        mustOrder: "The East Nasty (fried chicken biscuit) and a Bonut",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Assembly Food Hall",
+        cuisine: "Food Hall (everything)",
+        priceRange: "$$",
+        neighborhood: "Downtown / 5th + Broadway",
+        oneLiner:
+          "Massive food hall overlooking Broadway with 30+ vendors, rooftop bars, and live music. Decision fatigue in the best way.",
+        mustOrder: "Hop around — Prince's has an outpost here, plus tacos, sushi, and BBQ",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Pancake Pantry",
+        cuisine: "Breakfast / Brunch",
+        priceRange: "$",
+        neighborhood: "Hillsboro Village",
+        oneLiner:
+          "Nashville's breakfast queue since 1961. 23 varieties of pancakes and a line that wraps around the building on weekends.",
+        mustOrder: "Sweet potato pancakes with cinnamon cream — non-negotiable",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Peg Leg Porker",
+        cuisine: "BBQ",
+        priceRange: "$$",
+        neighborhood: "The Gulch",
+        oneLiner:
+          "Award-winning dry-rubbed ribs and a whiskey selection that'd make a Scotsman weep. Unpretentious and brilliant.",
+        mustOrder: "Dry-rubbed ribs with smoked wings and the BBQ nachos",
+        matchDayFriendly: true,
+      },
+      {
+        name: "The Catbird Seat",
+        cuisine: "Fine Dining / Tasting Menu",
+        priceRange: "$$$",
+        neighborhood: "Midtown",
+        oneLiner:
+          "Nashville's most acclaimed restaurant — 22 seats around an open kitchen, multi-course tasting menu, and chefs who perform like musicians.",
+        mustOrder: "The tasting menu (it's the only option — and it's extraordinary)",
+        matchDayFriendly: false,
+      },
+      {
+        name: "Loveless Cafe",
+        cuisine: "Southern Comfort",
+        priceRange: "$$",
+        neighborhood: "Highway 100 (20 min from downtown)",
+        oneLiner:
+          "Country ham, scratch biscuits, and preserves since 1951. A bit of a drive but the real deal — no Nashville trip is complete without it.",
+        mustOrder: "Country ham breakfast with biscuits and homemade preserves",
+        matchDayFriendly: false,
+      },
+      {
+        name: "Party Fowl",
+        cuisine: "Nashville Hot Chicken / Craft Beer",
+        priceRange: "$$",
+        neighborhood: "The Gulch",
+        oneLiner:
+          "Hot chicken in every form imaginable — tacos, sliders, waffles — plus a huge craft beer list and a solid patio.",
+        mustOrder: "Hot chicken and waffles with a local beer flight",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Monell's Dining & Catering",
+        cuisine: "Southern Family-Style",
+        priceRange: "$$",
+        neighborhood: "Germantown",
+        oneLiner:
+          "Communal tables, pass-the-dish Southern cooking. You sit with strangers and leave as friends. The skillet-fried chicken is legendary.",
+        mustOrder: "Whatever's on the table — fried chicken, cornbread, greens, and sweet tea",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Mas Tacos Por Favor",
+        cuisine: "Mexican Street Food",
+        priceRange: "$",
+        neighborhood: "East Nashville",
+        oneLiner:
+          "Cash-only taco shack in a converted gas station. The elote and fried chicken tacos have a cult following for good reason.",
+        mustOrder: "Fried chicken tacos and the elote (Mexican street corn)",
+        matchDayFriendly: true,
+      },
+      {
+        name: "Woolworth on 5th",
+        cuisine: "Southern / Historic",
+        priceRange: "$$",
+        neighborhood: "Downtown",
+        oneLiner:
+          "A restored 1930s Woolworth lunch counter with civil rights history, Southern plates, and live jazz in the basement bar.",
+        mustOrder: "Meat-and-three plate with the daily special and sweet tea",
+        matchDayFriendly: true,
+      },
+    ],
+    attractions: [
+      {
+        name: "Ryman Auditorium",
+        category: "landmark",
+        description:
+          "The Mother Church of Country Music — a former tabernacle turned concert hall where Johnny Cash, Dolly, and Hank Williams made history. Even the backstage tour gives you chills.",
+        duration: "1-2 hours",
+        cost: "$$",
+        tip: "Book a show if anything's on — the acoustics are sacred. Otherwise, the daytime tour lets you stand on the stage and strum a guitar.",
+      },
+      {
+        name: "Country Music Hall of Fame & Museum",
+        category: "museum",
+        description:
+          "The Smithsonian of country music — three floors of costumes, instruments, recordings, and stories from Hank to Taylor Swift.",
+        duration: "2-3 hours",
+        cost: "$$",
+        tip: "Even if you don't love country, the craftsmanship and storytelling are incredible. The RCA Studio B combo ticket is the best value.",
+      },
+      {
+        name: "The Parthenon",
+        category: "landmark",
+        description:
+          "A full-scale replica of the Athens Parthenon, complete with a 42-foot gilded Athena statue inside. Gloriously absurd and genuinely impressive.",
+        duration: "1-1.5 hours",
+        cost: "$",
+        tip: "Go at golden hour for photos. Inside, the Athena statue is jaw-dropping. The fact that this exists in Tennessee is peak America.",
+      },
+      {
+        name: "Broadway Honky-Tonks",
+        category: "activity",
+        description:
+          "Lower Broadway is a mile-long strip of honky-tonks with free live music pouring out of every door from 10 AM to 3 AM. Bar-hop your way through the most concentrated live music strip on earth.",
+        duration: "2-6 hours (you won't want to leave)",
+        cost: "free",
+        tip: "No cover charge at most honky-tonks. Tip the bands — they're playing for tips, not a salary. $5-10 per set is the norm. Afternoons are less chaotic.",
+      },
+      {
+        name: "Centennial Park",
+        category: "park",
+        description:
+          "Nashville's urban park — home to the Parthenon, a one-mile walking trail, a lake, and summer festivals. A green oasis minutes from Broadway.",
+        duration: "1-2 hours",
+        cost: "free",
+        tip: "Combine with the Parthenon visit. Good morning jog spot. The sunflower garden in June is lovely.",
+      },
+      {
+        name: "Johnny Cash Museum",
+        category: "museum",
+        description:
+          "The Man in Black's life in artifacts — handwritten lyrics, stage costumes, guitars, and personal letters. Small but powerful.",
+        duration: "1-1.5 hours",
+        cost: "$$",
+        tip: "The attached Patsy Cline Museum upstairs is included with combo tickets. Both are worth it.",
+      },
+      {
+        name: "RCA Studio B",
+        category: "landmark",
+        description:
+          "The studio where Elvis, Dolly Parton, and the Everly Brothers recorded. You stand in the exact room where 'Are You Lonesome Tonight' was cut.",
+        duration: "1 hour (guided tour)",
+        cost: "$$",
+        tip: "Only accessible via Country Music Hall of Fame tours — book the combo ticket. The guide will play the original recordings in the room. Goosebumps guaranteed.",
+      },
+      {
+        name: "Printers Alley",
+        category: "landmark",
+        description:
+          "A narrow alley off Church Street with a storied past — speakeasies during Prohibition, blues clubs in the '60s, and live music venues today.",
+        duration: "30-60 min",
+        cost: "free",
+        tip: "Best at night when the neon signs glow. Skull's Rainbow Room inside is a supper club with burlesque and jazz — very Nashville.",
+      },
+      {
+        name: "John Seigenthaler Pedestrian Bridge",
+        category: "viewpoint",
+        description:
+          "A converted railroad bridge spanning the Cumberland River with postcard-perfect views of the Nashville skyline. The most Instagrammed spot in the city.",
+        duration: "20-30 min",
+        cost: "free",
+        tip: "Walk it at sunset for the best skyline photos. Connects downtown to East Nashville — perfect way to start an East Nash evening.",
+      },
+      {
+        name: "Shelby Bottoms Greenway",
+        category: "park",
+        description:
+          "A sprawling 960-acre nature area along the Cumberland River with paved trails, bird watching, and a needed escape from the Broadway madness.",
+        duration: "1-3 hours",
+        cost: "free",
+        tip: "Rent bikes from the BCycle stations and ride the greenway. The nature center has free maps. Great hangover cure.",
+      },
+    ],
+    nightlife: [
+      {
+        name: "Tootsie's Orchid Lounge",
+        type: "live_music",
+        neighborhood: "Broadway",
+        oneLiner:
+          "The most famous honky-tonk in the world — where Willie Nelson was discovered. Three floors of live music and purple everything.",
+        priceRange: "$",
+      },
+      {
+        name: "Robert's Western World",
+        type: "live_music",
+        neighborhood: "Broadway",
+        oneLiner:
+          "The real deal on Broadway — genuine country, Brazilbilly house band, cold beer, and a fried bologna sandwich at 1 AM.",
+        priceRange: "$",
+      },
+      {
+        name: "The Stage on Broadway",
+        type: "live_music",
+        neighborhood: "Broadway",
+        oneLiner:
+          "Multi-level honky-tonk with a rooftop overlooking all of Lower Broad. The party floor for when you want volume and energy.",
+        priceRange: "$",
+      },
+      {
+        name: "L.A. Jackson",
+        type: "rooftop",
+        neighborhood: "The Gulch",
+        oneLiner:
+          "Rooftop bar atop the Thompson Hotel with skyline views, craft cocktails, and a scene that's more LA than Nashville. Dress up slightly.",
+        priceRange: "$$$",
+      },
+      {
+        name: "Rare Bird",
+        type: "rooftop",
+        neighborhood: "The Gulch",
+        oneLiner:
+          "Noelle Hotel's rooftop bar with a retro-glam vibe, creative cocktails, and a view of the Ryman. More intimate than L.A. Jackson.",
+        priceRange: "$$$",
+      },
+      {
+        name: "The 5 Spot",
+        type: "live_music",
+        neighborhood: "East Nashville",
+        oneLiner:
+          "East Nashville's living room — funk, soul, R&B, and Monday night dance parties. The antidote to Broadway's country-only diet.",
+        priceRange: "$",
+      },
+      {
+        name: "The Basement / Basement East",
+        type: "live_music",
+        neighborhood: "East Nashville",
+        oneLiner:
+          "Where Nashville's indie and rock scene lives. The 'Be A Good Neighbor' mural is iconic. Check the calendar — you might catch someone before they're famous.",
+        priceRange: "$$",
+      },
+      {
+        name: "Southern Grist Brewing Company",
+        type: "brewery",
+        neighborhood: "East Nashville",
+        oneLiner:
+          "Nashville's best craft brewery — bold fruited sours, hazy IPAs, and a taproom with food trucks parked outside. A proper pint after Broadway madness.",
+        priceRange: "$$",
+      },
+    ],
+    shopping: [
+      {
+        name: "Broadway Souvenir Strip",
+        type: "Souvenirs, boots & Western wear",
+        description:
+          "Wall-to-wall boot shops, hat stores, and souvenir emporiums. Boot Country and Nashville Cowboy are the biggest. Buy the hat — you'll regret it if you don't.",
+      },
+      {
+        name: "The Gulch Shopping",
+        type: "Boutique fashion & lifestyle",
+        description:
+          "Trendy boutiques, Judith Bright jewelry, and the famous 'What Lifts You' angel wings mural for obligatory photos.",
+      },
+      {
+        name: "12South",
+        type: "Local boutiques & vintage",
+        description:
+          "Nashville's cutest shopping street — Draper James (Reese Witherspoon's brand), Imogene + Willie jeans, White's Mercantile, and excellent coffee at Frothy Monkey.",
+      },
+      {
+        name: "Marathon Village",
+        type: "Artisan & craft",
+        description:
+          "A converted 1881 auto factory housing local artisans — Olive & Sinclair chocolate, Batch Nashville gifts, Nelson's Green Brier Distillery, and Third Man Records (Jack White's label).",
+      },
+    ],
+    localTips: [
+      "Tipping culture: 20% at sit-down restaurants, $1-2 per drink at bars. British lads — this is non-negotiable in America. Budget for it.",
+      "June in Nashville is HOT — 32-35°C with humidity that hits like a wall. Hydrate aggressively. Alternate between air-conditioned honky-tonks and outdoor activities.",
+      "Broadway timing matters: afternoons (12-5 PM) are fun and manageable. After 8 PM it becomes absolute chaos — brilliant chaos, but plan accordingly.",
+      "Hot chicken spice levels are real. 'Medium' at Prince's or Hattie B's is hotter than anything in the UK. Start one level below where your ego tells you. You can always go up.",
+      "Cowboy boots and hats: buy them. Wear them. You're in Nashville. Nobody will judge you — they'll respect it. Boot shops on Broadway will fit you properly.",
+      "Pedal taverns (party bikes) clog Broadway and are full of hen parties. Funny to watch, not worth riding. Spend that money on live music and whiskey instead.",
+      "Uber/Lyft from East Nashville or The Gulch to Broadway is 5-10 minutes, $8-12. Walking Broadway itself is easy — everything is on one strip. Don't drive and park.",
+      "Many Broadway honky-tonks have no cover charge but bands play for tips. Carry cash — $5-10 per band is expected. Some smaller venues off Broadway do charge $5-10 cover.",
+    ],
+    gettingAround: {
+      summary:
+        "Nashville's core is compact enough to walk, especially Broadway and The Gulch. East Nashville and Midtown require Uber/Lyft. No useful public transit for visitors.",
+      toStadium:
+        "No World Cup matches in Nashville — but Broadway is walkable from downtown hotels. Lyft/Uber for East Nashville and The Gulch. Most of the action is on Lower Broadway, which is best on foot.",
+      apps: ["Uber", "Lyft", "BCycle (bike share)", "Bird / Lime scooters"],
+      tips: [
+        "Broadway is a straight line — walk it end to end. Rideshare surge pricing on weekend nights is brutal; walk if you're already downtown.",
+        "East Nashville is a quick Uber over the Pedestrian Bridge, or a 15-minute walk across the bridge itself.",
+        "BCycle bike share stations are scattered downtown — great for reaching Shelby Bottoms or Centennial Park.",
+        "The Gulch is a 10-minute walk south of Broadway. No need for a car between these two neighborhoods.",
+      ],
+    },
+    matchDayGuide: {
+      arriveEarlyTip:
+        "No matches in Nashville, but Broadway's honky-tonks open by 10 AM, and the earlier you start, the better spots you'll get. Brunch at Biscuit Love, then hit Broadway by noon for the best balance of energy and elbow room.",
+      nearStadium: [
+        "The George Jones — big screens, multiple floors, and a rooftop for watching matches with a beer in hand.",
+        "Tootsie's Orchid Lounge — iconic honky-tonk with TVs on the upper floors. Grab a spot and watch the match surrounded by neon and live music.",
+        "Assembly Food Hall — 30+ food vendors and big screens on the rooftop. Best spot to watch a match if you also want to eat your way through Nashville.",
+        "Tin Roof Broadway — sports bar meets live music venue. Good screens, good crowd, good wings.",
+      ],
+      afterParty:
+        "After watching matches on the big screens, keep the night rolling on Broadway — Robert's Western World for authentic country, then The Stage rooftop for the energy. Or cross the Pedestrian Bridge to East Nashville for craft cocktails at The Fox and a show at The 5 Spot.",
+    },
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
   //  MIAMI
   // ══════════════════════════════════════════════════════════════════════
   Miami: {

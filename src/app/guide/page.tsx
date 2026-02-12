@@ -19,6 +19,7 @@ export default async function GuidePage() {
     philadelphia: "Philadelphia",
     "washington-dc": "Washington DC",
     atlanta: "Atlanta",
+    nashville: "Nashville",
     miami: "Miami",
   };
 

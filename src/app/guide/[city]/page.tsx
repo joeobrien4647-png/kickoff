@@ -12,6 +12,7 @@ const SLUG_TO_KEY: Record<string, string> = {
   philadelphia: "Philadelphia",
   "washington-dc": "Washington DC",
   atlanta: "Atlanta",
+  nashville: "Nashville",
   miami: "Miami",
 };
 
@@ -21,6 +22,7 @@ const SLUG_TO_STATE: Record<string, string> = {
   philadelphia: "PA",
   "washington-dc": "DC",
   atlanta: "GA",
+  nashville: "TN",
   miami: "FL",
 };
 

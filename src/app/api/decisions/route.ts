@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { decisions } from "@/lib/schema";
 import { getSession } from "@/lib/auth";
+import { generateId } from "@/lib/ulid";
 import { now } from "@/lib/dates";
 import { logActivity } from "@/lib/activity";
-import { asc, eq } from "drizzle-orm";
+import { asc, eq, count } from "drizzle-orm";
 
 export function GET() {
   const all = db
@@ -21,8 +22,77 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await req.json();
-  const { decisionId, optionText } = body;
 
+  // Route: create new decision (has question + options array)
+  if (body.question && body.options) {
+    return handleCreate(body, session.travelerName);
+  }
+
+  // Route: vote on existing decision (has decisionId + optionText)
+  if (body.decisionId && body.optionText) {
+    return handleVote(body.decisionId, body.optionText, session.travelerName);
+  }
+
+  return NextResponse.json({ error: "Invalid request" }, { status: 400 });
+}
+
+type DecisionCategory = "route" | "transport" | "accommodation" | "activity" | "budget";
+
+function handleCreate(
+  body: { question: string; description?: string; category: string; options: string[] },
+  actor: string
+) {
+  const { question, description, category, options } = body;
+
+  if (!question?.trim() || !category || !options || options.length < 2) {
+    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  }
+
+  const validCategories: DecisionCategory[] = ["route", "transport", "accommodation", "activity", "budget"];
+  if (!validCategories.includes(category as DecisionCategory)) {
+    return NextResponse.json({ error: "Invalid category" }, { status: 400 });
+  }
+  const typedCategory = category as DecisionCategory;
+
+  // Determine next sort order
+  const result = db
+    .select({ total: count() })
+    .from(decisions)
+    .get();
+  const sortOrder = (result?.total ?? 0) + 1;
+
+  const id = generateId();
+  const optionsJson = JSON.stringify(
+    options.map((text: string) => ({ text: text.trim(), votes: [] }))
+  );
+  const timestamp = now();
+
+  db.insert(decisions)
+    .values({
+      id,
+      question: question.trim(),
+      description: description?.trim() || null,
+      category: typedCategory,
+      options: optionsJson,
+      status: "open",
+      sortOrder,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+    })
+    .run();
+
+  logActivity(
+    "created",
+    "decision",
+    id,
+    `Created decision: ${question.trim()}`,
+    actor
+  );
+
+  return NextResponse.json({ ok: true, id });
+}
+
+function handleVote(decisionId: string, optionText: string, voterName: string) {
   // Find the decision
   const decision = db
     .select()
@@ -37,7 +107,6 @@ export async function POST(req: Request) {
     text: string;
     votes: string[];
   }[];
-  const voterName = session.travelerName;
 
   for (const opt of options) {
     // Remove voter from all options first (switch vote)
