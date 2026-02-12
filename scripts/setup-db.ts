@@ -278,6 +278,32 @@ try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_away_score INTEGER"); }
 
 console.log("  Tables ready.\n");
 
+// ============ MIGRATIONS (populate new tables on existing databases) ============
+const decisionsCount = (sqlite.prepare("SELECT count(*) as c FROM decisions").get() as { c: number }).c;
+if (decisionsCount === 0) {
+  const tripExists = (sqlite.prepare("SELECT count(*) as c FROM trip_settings").get() as { c: number }).c;
+  if (tripExists > 0) {
+    console.log("Populating decisions table...");
+    const ts = new Date().toISOString();
+    const decisions = [
+      { q: "How do we get from DC to Nashville?", desc: "It's a 9+ hour drive. Flying is ~$110pp but adds airport logistics. Car needs to get there either way.", cat: "transport", opts: JSON.stringify([{text:"Fly (~$110pp, 1.5h)",votes:[]},{text:"Drive (9h 40m, scenic route)",votes:[]},{text:"One drives the car, two fly",votes:[]}]), status: "open", decided: null, sort: 1 },
+      { q: "How do we get from Nashville to Miami?", desc: "Even longer than DC→Nashville. 11+ hours of driving. Could fly but car still needs to get to Miami for the return flight.", cat: "transport", opts: JSON.stringify([{text:"Drive — split over 2 days with an overnight stop",votes:[]},{text:"Drive straight through (11h 30m, take turns)",votes:[]},{text:"One drives, two fly (~$100pp)",votes:[]}]), status: "open", decided: null, sort: 2 },
+      { q: "Key West overnight trip?", desc: "Greg found an Airstream motorhome on Airbnb (~$130/night, 3 beds). It's a 3.5hr drive from Miami each way.", cat: "activity", opts: JSON.stringify([{text:"Yes — book the Airstream, stay overnight",votes:["Greg"]},{text:"Yes — but day trip only (7hr round trip)",votes:[]},{text:"Skip it — not enough time",votes:[]}]), status: "open", decided: null, sort: 3 },
+      { q: "NYC: where do we stay?", desc: "Manhattan is pricier but walkable. Brooklyn is cheaper with better food scene. Both have good transit to MetLife Stadium.", cat: "accommodation", opts: JSON.stringify([{text:"Manhattan — Times Square area",votes:[]},{text:"Manhattan — Lower East Side / East Village",votes:[]},{text:"Brooklyn — Williamsburg",votes:[]},{text:"Brooklyn — Downtown",votes:[]}]), status: "open", decided: null, sort: 4 },
+      { q: "Match tickets: what's the plan?", desc: "FIFA ballot was unsuccessful for all 3 of us. Resale prices are $1000+. Last-minute sales phase is our best hope.", cat: "budget", opts: JSON.stringify([{text:"Keep trying — last-minute sales + check daily",votes:[]},{text:"Set a max budget ($500pp) and buy whatever we can",votes:[]},{text:"Give up on tickets — watch at fan parks/sports bars",votes:[]},{text:"Must get Scotland v Haiti — skip others if needed",votes:[]}]), status: "open", decided: null, sort: 5 },
+      { q: "Daily budget per person?", desc: "Flights and free accommodation (Lisa's, Greg's sister) are sorted. This is for food, drinks, activities, transport.", cat: "budget", opts: JSON.stringify([{text:"$100/day — budget mode",votes:[]},{text:"$150/day — comfortable",votes:[]},{text:"$200/day — treat ourselves",votes:[]},{text:"No budget — YOLO it's the World Cup",votes:[]}]), status: "open", decided: null, sort: 6 },
+      { q: "Nashville: route confirmed?", desc: "The group prefers Nashville over Atlanta. Confirming this means we commit to Nashville as stop 5.", cat: "route", opts: JSON.stringify([{text:"Yes — Nashville is locked in",votes:["Joe","Jonny","Greg"]},{text:"Reconsider — maybe Atlanta is better for matches",votes:[]}]), status: "decided", decided: "Yes — Nashville is locked in", sort: 0 },
+    ];
+    const insert = sqlite.prepare("INSERT INTO decisions (id, question, description, category, options, status, decided_option, sort_order, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    let i = 0;
+    for (const d of decisions) {
+      const id = `dec_${Date.now()}_${i++}`;
+      insert.run(id, d.q, d.desc, d.cat, d.opts, d.status, d.decided, d.sort, ts, ts);
+    }
+    console.log(`  ${decisions.length} decisions added.\n`);
+  }
+}
+
 // ============ CHECK IF SEEDED ============
 const count = (sqlite.prepare("SELECT count(*) as c FROM trip_settings").get() as { c: number }).c;
 if (count > 0) {
