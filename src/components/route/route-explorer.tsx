@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { RouteMapWrapper } from "@/components/map/route-map-wrapper";
+import { FavoriteButton, RouteVoteSummary, useRouteVote } from "@/components/route/route-vote";
 import type { RouteScenario } from "@/lib/route-scenarios";
 
 const CITY_COLORS: Record<string, string> = {
@@ -24,10 +25,12 @@ const CITY_COLORS: Record<string, string> = {
 
 interface RouteExplorerProps {
   scenarios: RouteScenario[];
+  currentUser?: string;
 }
 
-export function RouteExplorer({ scenarios }: RouteExplorerProps) {
+export function RouteExplorer({ scenarios, currentUser = "" }: RouteExplorerProps) {
   const [selected, setSelected] = useState<RouteScenario>(scenarios[0]);
+  const { myVote, toggleVote } = useRouteVote(currentUser);
 
   return (
     <div className="space-y-4">
@@ -53,12 +56,21 @@ export function RouteExplorer({ scenarios }: RouteExplorerProps) {
               onClick={() => setSelected(scenario)}
             >
               <CardContent className="space-y-2">
-                {/* Name + Tagline */}
-                <div>
-                  <p className="text-sm font-bold">{scenario.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {scenario.tagline}
-                  </p>
+                {/* Name + Tagline + Favorite */}
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="text-sm font-bold">{scenario.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {scenario.tagline}
+                    </p>
+                  </div>
+                  {currentUser && (
+                    <FavoriteButton
+                      scenarioId={scenario.id}
+                      isActive={myVote === scenario.id}
+                      onToggle={toggleVote}
+                    />
+                  )}
                 </div>
 
                 {/* Stats Row */}
@@ -162,6 +174,11 @@ export function RouteExplorer({ scenarios }: RouteExplorerProps) {
           <p className="text-[10px] text-muted-foreground">Estimates based on $0.15/mi gas, Amtrak Northeast Corridor fares, one-way flight averages. Excludes tolls and parking.</p>
         </CardContent>
       </Card>
+
+      {/* ---- Vote Summary ---- */}
+      {currentUser && (
+        <RouteVoteSummary scenarios={scenarios} currentUser={currentUser} />
+      )}
     </div>
   );
 }

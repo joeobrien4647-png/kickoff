@@ -5,7 +5,15 @@ import { RouteOverview } from "@/components/route/route-overview";
 import { RouteExplorer } from "@/components/route/route-explorer";
 import { RouteMap } from "@/components/route/route-map";
 import { KeyDecisions } from "@/components/route/key-decisions";
+import { RouteComparison } from "@/components/route/route-comparison";
 import { ROUTE_SCENARIOS } from "@/lib/route-scenarios";
+import { ScenicDetours } from "@/components/route/scenic-detours";
+import { SCENIC_DETOURS } from "@/lib/scenic-detours";
+import { HighwayGuide } from "@/components/route/highway-guide";
+import { HIGHWAY_EATS, ROADSIDE_ATTRACTIONS } from "@/lib/highway-eats";
+import { LegDetails } from "@/components/route/leg-details";
+import { LEG_DETAILS } from "@/lib/route-details";
+import { Navigation } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import type { Stop, Accommodation, Match } from "@/lib/schema";
 
@@ -112,7 +120,9 @@ export default async function RoutePage() {
         </p>
       </section>
 
-      <RouteExplorer scenarios={ROUTE_SCENARIOS} />
+      <RouteExplorer scenarios={ROUTE_SCENARIOS} currentUser={session?.travelerName ?? ""} />
+
+      <RouteComparison scenarios={ROUTE_SCENARIOS} />
 
       <KeyDecisions
         decisions={allDecisions}
@@ -131,6 +141,21 @@ export default async function RoutePage() {
           drive: parseDrive(stop.driveFromPrev) ?? undefined,
         }))}
       />
+
+      <ScenicDetours detours={SCENIC_DETOURS} />
+
+      <HighwayGuide eats={HIGHWAY_EATS} attractions={ROADSIDE_ATTRACTIONS} />
+
+      <section className="space-y-3">
+        <h2 className="text-lg font-semibold flex items-center gap-2">
+          <Navigation className="size-5 text-wc-blue" />
+          Leg by Leg
+        </h2>
+        <p className="text-sm text-muted-foreground">
+          Pit stops, highway info, and timing for every drive.
+        </p>
+        <LegDetails legs={LEG_DETAILS} />
+      </section>
 
       <RouteOverview
         routeStops={routeStops}
