@@ -11,6 +11,7 @@ import {
   MapPin,
   Phone,
   DollarSign,
+  Navigation,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -261,7 +262,28 @@ export function AccommodationsView({
                               <span className="flex items-center gap-1 text-xs text-muted-foreground">
                                 <MapPin className="size-3" />
                                 <span className="truncate max-w-[200px]">{acc.address}</span>
+                                <a
+                                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(acc.address)}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-flex items-center gap-0.5 text-wc-teal hover:underline shrink-0"
+                                >
+                                  <Navigation className="size-3" />
+                                </a>
                               </span>
+                            )}
+                            {!acc.address && acc.name && (
+                              <a
+                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(acc.name + ", " + (getStop(acc.stopId)?.city ?? ""))}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex items-center gap-1 text-xs text-wc-teal hover:underline"
+                              >
+                                <Navigation className="size-3" />
+                                Navigate
+                              </a>
                             )}
                             {acc.contact && (
                               <span className="flex items-center gap-1 text-xs text-muted-foreground">

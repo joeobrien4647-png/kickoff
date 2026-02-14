@@ -3,6 +3,7 @@ import { matches, stops, travelers } from "@/lib/schema";
 import { asc } from "drizzle-orm";
 import { MatchesView } from "@/components/matches/matches-view";
 import { WatchGuide } from "@/components/matches/watch-guide";
+import { BroadcastGuideSection } from "@/components/matches/broadcast-guide-section";
 
 export default function MatchesPage() {
   const allMatches = db.select().from(matches).all();
@@ -35,7 +36,13 @@ export default function MatchesPage() {
       {/* Separator */}
       <div className="border-t border-border" />
 
-      {/* Where to Watch guide */}
+      {/* How to Watch — channels & streaming */}
+      <BroadcastGuideSection />
+
+      {/* Separator */}
+      <div className="border-t border-border" />
+
+      {/* Where to Watch — bars & fan zones */}
       <WatchGuide />
     </div>
   );

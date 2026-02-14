@@ -11,6 +11,7 @@ import { DayTimeline } from "@/components/days/day-timeline";
 import { MatchesToday } from "@/components/days/matches-today";
 import { IdeasPreview } from "@/components/days/ideas-preview";
 import { CityGuideCard } from "@/components/city-guide-card";
+import { MorningBriefing } from "@/components/days/morning-briefing";
 import type { Stop } from "@/lib/schema";
 
 interface DayPageProps {
@@ -132,6 +133,36 @@ export default async function DayPage({ params }: DayPageProps) {
           plannedCount={dayItems.filter((i) => i.type !== "travel").length}
           ideaCount={stopIdeas.length}
           accommodationConfirmed={accommodation ? accommodation.confirmed : null}
+        />
+
+        {/* Section 1c: Morning Briefing */}
+        <MorningBriefing
+          date={date}
+          dayNumber={num}
+          city={currentStop?.city ?? null}
+          accommodation={
+            accommodation
+              ? { name: accommodation.name, address: accommodation.address ?? null }
+              : null
+          }
+          matches={dayMatches.map((m) => ({
+            homeTeam: m.homeTeam,
+            awayTeam: m.awayTeam,
+            kickoff: m.kickoff,
+            venue: m.venue,
+            city: m.city,
+            attending: m.attending,
+          }))}
+          driveInfo={driveInfo}
+          fromCity={prevStop?.city ?? null}
+          toCity={currentStop?.city ?? null}
+          plannedItems={dayItems
+            .filter((i) => i.type !== "travel")
+            .map((i) => ({
+              title: i.title,
+              time: i.startTime ?? null,
+              type: i.type,
+            }))}
         />
 
         {/* Section 2: Accommodation */}

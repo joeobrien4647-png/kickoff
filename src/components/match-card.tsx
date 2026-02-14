@@ -17,6 +17,7 @@ import { formatTime } from "@/lib/dates";
 import { countryFlag, TICKET_STATUS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { MatchDayTimeline } from "@/components/matches/match-day-timeline";
+import { BroadcastBadge } from "@/components/matches/broadcast-badge";
 import type { Match, Stop } from "@/lib/schema";
 
 // ── Ticket badge config ─────────────────────────────────────────────
@@ -168,6 +169,16 @@ export function MatchCard({ match, nearby, compact, stop }: MatchCardProps) {
             {match.awayTeam}
           </span>
         </div>
+      </div>
+
+      {/* ── Broadcast info ──────────────────────────────────────── */}
+      <div className={cn("border-t border-border", compact ? "px-3 py-1.5" : "px-4 py-1.5")}>
+        <BroadcastBadge
+          round={match.round}
+          homeTeam={match.homeTeam}
+          awayTeam={match.awayTeam}
+          kickoff={match.kickoff}
+        />
       </div>
 
       {/* ── Bottom bar: venue + ticket status ────────────────────── */}

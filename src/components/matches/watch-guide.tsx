@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Tv, MapPin, Users, Star, CalendarCheck } from "lucide-react";
+import { Tv, MapPin, Users, Star, CalendarCheck, Navigation } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -51,8 +51,12 @@ const ATMOSPHERE_CONFIG: Record<
   family: { label: "Family", className: "text-wc-blue" },
 };
 
+function mapsUrl(name: string, city: string) {
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(name + ", " + city)}`;
+}
+
 // ── Single spot card ────────────────────────────────────────────────
-function SpotCard({ spot }: { spot: WatchSpot }) {
+function SpotCard({ spot, city }: { spot: WatchSpot; city: string }) {
   const type = TYPE_CONFIG[spot.type];
   const atmo = ATMOSPHERE_CONFIG[spot.atmosphere];
 
@@ -101,6 +105,15 @@ function SpotCard({ spot }: { spot: WatchSpot }) {
               <span className="text-wc-coral font-medium">Reserve</span>
             </span>
           )}
+          <a
+            href={mapsUrl(spot.name, city)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1 text-[11px] text-wc-teal hover:underline ml-auto"
+          >
+            <Navigation className="size-3" />
+            <span className="font-medium">Navigate</span>
+          </a>
         </div>
       </div>
 
@@ -175,7 +188,7 @@ export function WatchGuide() {
               {/* Spot cards */}
               <div className="space-y-3">
                 {citySpots.map((spot) => (
-                  <SpotCard key={spot.name} spot={spot} />
+                  <SpotCard key={spot.name} spot={spot} city={city} />
                 ))}
               </div>
             </TabsContent>
