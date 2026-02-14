@@ -412,3 +412,220 @@ export const WATCH_SPOT_CITIES = [
   "Nashville",
   "Miami",
 ] as const;
+
+// ── Watch Party Spots ──────────────────────────────────────────────
+// Curated picks for the watch-party-finder component.
+// More structured than the general watch guide — includes address,
+// directions link, food notes, and reservation details.
+
+export type WatchPartySpot = {
+  name: string;
+  city: string;
+  type: "sports_bar" | "pub" | "rooftop" | "fan_zone" | "restaurant";
+  address: string;
+  screens: string;
+  atmosphere: string;
+  foodNote: string;
+  reservationTip: string;
+  mapsUrl: string;
+};
+
+export const WATCH_PARTY_SPOTS: WatchPartySpot[] = [
+  // ── Boston ──
+  {
+    name: "McGreevy's",
+    city: "Boston",
+    type: "sports_bar",
+    address: "911 Boylston St, Boston, MA 02115",
+    screens: "20+ TVs with surround sound on every floor",
+    atmosphere: "Rowdy, passionate, proper sports bar energy. Named after the 1894 original.",
+    foodNote: "Solid pub grub \u2014 burgers, wings, and a strong craft beer list.",
+    reservationTip: "Book 2+ weeks ahead for World Cup. Walk-ins possible for early group stage matches.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=McGreevys+Boston",
+  },
+  {
+    name: "The Banshee",
+    city: "Boston",
+    type: "pub",
+    address: "934 Commonwealth Ave, Boston, MA 02215",
+    screens: "8 TVs \u2014 every one tuned to football",
+    atmosphere: "Authentic Irish pub. The expat crowd makes it feel like watching in the UK.",
+    foodNote: "Classic pub fare \u2014 fish & chips, shepherd\u2019s pie, and proper pints of Guinness.",
+    reservationTip: "No reservations \u2014 first come, first served. Arrive 90 min early for England matches.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=The+Banshee+Boston",
+  },
+  {
+    name: "Tony C's",
+    city: "Boston",
+    type: "rooftop",
+    address: "450 Seaport Blvd, Boston, MA 02210",
+    screens: "Giant projector + 30 TVs including rooftop screens",
+    atmosphere: "Upscale Seaport vibes with a roof deck. Summer World Cup perfection.",
+    foodNote: "Elevated bar food \u2014 wagyu sliders, lobster mac, craft cocktails.",
+    reservationTip: "Reserve the rooftop section for groups. Book ASAP \u2014 the deck sells out fast in summer.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Tony+Cs+Seaport+Boston",
+  },
+
+  // ── New York ──
+  {
+    name: "Smithfield Hall",
+    city: "New York",
+    type: "sports_bar",
+    address: "138 W 25th St, New York, NY 10001",
+    screens: "20+ TVs + giant projector wall \u2014 purpose-built for football",
+    atmosphere: "NYC\u2019s #1 soccer bar. Scarves everywhere, chanting guaranteed. Electric for big matches.",
+    foodNote: "Solid bar menu \u2014 wings, nachos, burgers. Drink specials during matches.",
+    reservationTip: "Reserve weeks ahead for England matches. Email them directly for large groups.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Smithfield+Hall+NYC",
+  },
+  {
+    name: "Legends",
+    city: "New York",
+    type: "sports_bar",
+    address: "6 W 33rd St, New York, NY 10001",
+    screens: "40+ TVs across 3 floors \u2014 a cathedral of screens",
+    atmosphere: "Massive, loud, every angle covered. The Football Factory downstairs is for proper fans.",
+    foodNote: "Full menu including brunch for early kickoffs. Decent nachos and pitchers.",
+    reservationTip: "Book the Football Factory section specifically. Walk-ins fill up fast on match days.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Legends+Bar+33rd+St+NYC",
+  },
+  {
+    name: "Banter",
+    city: "New York",
+    type: "pub",
+    address: "132 Havemeyer St, Brooklyn, NY 11211",
+    screens: "10 TVs \u2014 intimate but intense",
+    atmosphere: "Gritty Williamsburg soccer bar. Scarves on the walls, songs in the air, zero pretension.",
+    foodNote: "Basic bar snacks. It\u2019s about the football, not the food. CASH ONLY.",
+    reservationTip: "No reservations. Arrive early. Hit an ATM first \u2014 they don\u2019t take cards.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Banter+Bar+Williamsburg+Brooklyn",
+  },
+
+  // ── Philadelphia ──
+  {
+    name: "Fado Irish Pub",
+    city: "Philadelphia",
+    type: "pub",
+    address: "1500 Locust St, Philadelphia, PA 19102",
+    screens: "15+ TVs with dedicated football audio",
+    atmosphere: "Authentic Irish interior shipped from Ireland. Sons of Ben territory. World Cup HQ.",
+    foodNote: "Full Irish menu \u2014 bangers & mash, fish & chips, Guinness beef stew.",
+    reservationTip: "Reserve for any knockout stage match. Group bookings available \u2014 call ahead.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Fado+Irish+Pub+Philadelphia",
+  },
+  {
+    name: "Misconduct Tavern",
+    city: "Philadelphia",
+    type: "sports_bar",
+    address: "1511 Locust St, Philadelphia, PA 19102",
+    screens: "20+ TVs across 3 floors + rooftop",
+    atmosphere: "High-energy madhouse during tournaments. Three floors of chaos. Rooftop in summer.",
+    foodNote: "Bar classics \u2014 wings, burgers, loaded fries. Good happy hour deals.",
+    reservationTip: "The rooftop books up fast for summer. Reserve a section for groups of 6+.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Misconduct+Tavern+Philadelphia",
+  },
+
+  // ── Washington DC ──
+  {
+    name: "Lucky Bar",
+    city: "Washington DC",
+    type: "sports_bar",
+    address: "1221 Connecticut Ave NW, Washington, DC 20036",
+    screens: "15+ TVs + projector \u2014 every supporters\u2019 group calls this home",
+    atmosphere: "THE soccer bar in DC. American Outlaws, DC United fans, and football purists converge here.",
+    foodNote: "Standard bar food. It\u2019s about the atmosphere, not the cuisine.",
+    reservationTip: "No reservations \u2014 get there 2 hours early for big matches. Standing room only by kickoff.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Lucky+Bar+Washington+DC",
+  },
+  {
+    name: "The Queen Vic",
+    city: "Washington DC",
+    type: "pub",
+    address: "1206 H St NE, Washington, DC 20002",
+    screens: "8 TVs \u2014 cozy but perfectly placed",
+    atmosphere: "A proper British pub. Fish & chips, Sunday roasts, and it feels like home.",
+    foodNote: "Best English breakfast in DC. Proper pints. Sunday roasts that\u2019ll make you weep.",
+    reservationTip: "Book for England matches \u2014 the British expat crowd fills this place. Call ahead.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=The+Queen+Vic+Washington+DC",
+  },
+  {
+    name: "Public Bar",
+    city: "Washington DC",
+    type: "rooftop",
+    address: "1214 18th St NW, Washington, DC 20036",
+    screens: "20+ TVs + rooftop screen with outdoor seating",
+    atmosphere: "Multi-level bar with rooftop. Dupont Circle crowd goes hard during tournaments.",
+    foodNote: "Brunch, burgers, tacos \u2014 solid all-day menu. Great cocktails.",
+    reservationTip: "The rooftop is summer World Cup perfection. Reserve a section if possible.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Public+Bar+Dupont+Circle+DC",
+  },
+
+  // ── Nashville ──
+  {
+    name: "The George Jones",
+    city: "Nashville",
+    type: "rooftop",
+    address: "128 2nd Ave N, Nashville, TN 37201",
+    screens: "Rooftop projector + 15 TVs across four floors",
+    atmosphere: "Honky-tonk meets World Cup. Rooftop views of Broadway. Peak road trip energy.",
+    foodNote: "Southern bar food \u2014 hot chicken sliders, BBQ nachos, cold beer.",
+    reservationTip: "Book the rooftop for sunset kickoffs. Call ahead for groups of 4+.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=George+Jones+Nashville",
+  },
+  {
+    name: "Assembly Food Hall",
+    city: "Nashville",
+    type: "fan_zone",
+    address: "5055 Broadway Pl, Nashville, TN 37203",
+    screens: "Giant screen + 10 TVs in the central hall",
+    atmosphere: "Massive food hall energy. 30+ vendors, full bar, big screens. Family-friendly.",
+    foodNote: "Hot chicken from Prince\u2019s, tacos, BBQ, ramen \u2014 whatever you\u2019re craving.",
+    reservationTip: "No reservations needed \u2014 just turn up. Grab a seat near the big screen early.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Assembly+Food+Hall+Nashville",
+  },
+
+  // ── Miami ──
+  {
+    name: "Fritz & Franz Bierhaus",
+    city: "Miami",
+    type: "restaurant",
+    address: "60 Merrick Way, Coral Gables, FL 33134",
+    screens: "Outdoor projector + 12 TVs in the beer hall",
+    atmosphere: "German beer hall meets Miami sun. Communal tables, litre steins, football on the big screen.",
+    foodNote: "Bratwurst, schnitzel, pretzels, and litres of Paulaner. Beer garden heaven.",
+    reservationTip: "Reserve a long table in the biergarten for groups. Fills up fast for big matches.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Fritz+Franz+Bierhaus+Coral+Gables",
+  },
+  {
+    name: "Fado Irish Pub",
+    city: "Miami",
+    type: "pub",
+    address: "900 S Miami Ave, Miami, FL 33130",
+    screens: "20+ TVs with dedicated football audio setup",
+    atmosphere: "Reliable football atmosphere with proper pints. The Brickell outpost delivers.",
+    foodNote: "Full Irish pub menu. Solid fish & chips and a good selection of draught beers.",
+    reservationTip: "Reserve for knockout matches. Walk-in for group stage but arrive 1hr early.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=Fado+Irish+Pub+Brickell+Miami",
+  },
+  {
+    name: "The Wharf Miami",
+    city: "Miami",
+    type: "fan_zone",
+    address: "114 SW North River Dr, Miami, FL 33130",
+    screens: "Giant outdoor screen on the waterfront",
+    atmosphere: "Open-air riverfront venue. Food trucks, cocktails, tropical sky. The most Miami experience possible.",
+    foodNote: "Rotating food trucks \u2014 tacos, ceviche, sliders. Cocktail bars on-site.",
+    reservationTip: "No reservations \u2014 open-air venue. Arrive early for prime riverfront spots.",
+    mapsUrl: "https://www.google.com/maps/search/?api=1&query=The+Wharf+Miami",
+  },
+];
+
+/** All cities that have watch party spots, in route order */
+export const WATCH_PARTY_CITIES = [
+  "Boston",
+  "New York",
+  "Philadelphia",
+  "Washington DC",
+  "Nashville",
+  "Miami",
+] as const;

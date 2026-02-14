@@ -6,6 +6,7 @@ import { TripForecast } from "@/components/budget/trip-forecast";
 import { DailySpending } from "@/components/budget/daily-spending";
 import { BudgetForecast } from "@/components/budget/budget-forecast";
 import { QuickExpense } from "@/components/budget/quick-expense";
+import { MealPlanner } from "@/components/meal-planner";
 
 export default async function BudgetPage() {
   const allExpenses = db.select().from(expenses).all();
@@ -61,6 +62,8 @@ export default async function BudgetPage() {
         totalSpentSoFar={totalSpent}
         expenseCount={allExpenses.length}
       />
+
+      <MealPlanner />
     </div>
   );
 }

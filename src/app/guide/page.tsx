@@ -10,6 +10,12 @@ import { LaundromatFinder } from "@/components/service-finders/laundromat-finder
 import { LAUNDROMATS } from "@/lib/laundromats";
 import { EssentialStoresFinder } from "@/components/service-finders/essential-stores";
 import { ESSENTIAL_STORES } from "@/lib/essential-stores";
+import { HappyHourFinder } from "@/components/guides/happy-hour-finder";
+import { HAPPY_HOURS } from "@/lib/happy-hours";
+import { TippingGuide } from "@/components/guides/tipping-guide";
+import { DrivingRules } from "@/components/guides/driving-rules";
+import { CultureGuideUK } from "@/components/guides/culture-guide-uk";
+import { MobileGuide } from "@/components/guides/mobile-guide";
 
 export default async function GuidePage() {
   const session = await getSession();
@@ -49,6 +55,16 @@ export default async function GuidePage() {
       <LaundromatFinder laundromats={LAUNDROMATS} />
 
       <EssentialStoresFinder stores={ESSENTIAL_STORES} />
+
+      <HappyHourFinder spots={HAPPY_HOURS} />
+
+      <TippingGuide />
+
+      <DrivingRules />
+
+      <CultureGuideUK />
+
+      <MobileGuide />
     </div>
   );
 }

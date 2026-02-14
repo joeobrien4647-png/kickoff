@@ -390,6 +390,43 @@ sqlite.exec(`
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS cash_logs (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    amount REAL NOT NULL,
+    currency TEXT NOT NULL DEFAULT 'USD',
+    location TEXT,
+    person TEXT NOT NULL,
+    date TEXT NOT NULL,
+    notes TEXT,
+    created_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS shopping_items (
+    id TEXT PRIMARY KEY,
+    stop_id TEXT REFERENCES stops(id),
+    name TEXT NOT NULL,
+    category TEXT NOT NULL DEFAULT 'other',
+    quantity INTEGER NOT NULL DEFAULT 1,
+    checked INTEGER NOT NULL DEFAULT 0,
+    added_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS parking_spots (
+    id TEXT PRIMARY KEY,
+    stop_id TEXT REFERENCES stops(id),
+    location TEXT NOT NULL,
+    address TEXT,
+    level TEXT,
+    spot TEXT,
+    photo TEXT,
+    notes TEXT,
+    added_by TEXT,
+    created_at TEXT NOT NULL
+  );
 `);
 
 // Add actual score columns to matches (may already exist)

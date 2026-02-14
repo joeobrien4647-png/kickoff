@@ -493,6 +493,51 @@ export const meetingPoints = sqliteTable("meeting_points", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// ============ CASH LOGS ============
+// ATM withdrawals and cash tracking
+export const cashLogs = sqliteTable("cash_logs", {
+  id: text("id").primaryKey(),
+  type: text("type", { enum: ["withdrawal", "spend"] }).notNull(),
+  amount: real("amount").notNull(),
+  currency: text("currency").notNull().default("USD"),
+  location: text("location"),
+  person: text("person").notNull(),
+  date: text("date").notNull(),
+  notes: text("notes"),
+  createdAt: text("created_at").notNull(),
+});
+
+// ============ SHOPPING LIST ============
+// Shared shopping list per city
+export const shoppingItems = sqliteTable("shopping_items", {
+  id: text("id").primaryKey(),
+  stopId: text("stop_id").references(() => stops.id),
+  name: text("name").notNull(),
+  category: text("category", {
+    enum: ["groceries", "drinks", "snacks", "supplies", "other"],
+  }).notNull().default("other"),
+  quantity: integer("quantity").notNull().default(1),
+  checked: integer("checked", { mode: "boolean" }).notNull().default(false),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ PARKING SPOTS ============
+// Remember where you parked
+export const parkingSpots = sqliteTable("parking_spots", {
+  id: text("id").primaryKey(),
+  stopId: text("stop_id").references(() => stops.id),
+  location: text("location").notNull(),
+  address: text("address"),
+  level: text("level"),
+  spot: text("spot"),
+  photo: text("photo"), // base64
+  notes: text("notes"),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+});
+
 // ============ TYPE EXPORTS ============
 export type TripSettings = typeof tripSettings.$inferSelect;
 export type Traveler = typeof travelers.$inferSelect;
@@ -521,3 +566,6 @@ export type TollLog = typeof tollLogs.$inferSelect;
 export type Souvenir = typeof souvenirs.$inferSelect;
 export type MatchReview = typeof matchReviews.$inferSelect;
 export type QuickPoll = typeof quickPolls.$inferSelect;
+export type CashLog = typeof cashLogs.$inferSelect;
+export type ShoppingItem = typeof shoppingItems.$inferSelect;
+export type ParkingSpot = typeof parkingSpots.$inferSelect;

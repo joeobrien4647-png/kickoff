@@ -34,6 +34,7 @@ import { Achievements } from "@/components/achievements";
 import { RunningBalance } from "@/components/running-balance";
 import { TripReadiness } from "@/components/trip-readiness";
 import { TimezoneClock } from "@/components/timezone-clock";
+import { DailyWrapUp } from "@/components/daily-wrap-up";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -395,6 +396,9 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </section>
+
+          {/* ── Daily Wrap-Up ────────────────────────────────────────── */}
+          <DailyWrapUp />
 
           {/* ── Pre-Trip Countdown Checklist ────────────────────────── */}
           <PreTripTimeline tripStartDate="2026-06-11" />

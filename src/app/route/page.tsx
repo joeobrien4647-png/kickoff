@@ -25,6 +25,7 @@ import { TollTracker } from "@/components/route/toll-tracker";
 import { StateTracker } from "@/components/route/state-tracker";
 import { SpeedLimitGuide } from "@/components/route/speed-limit-guide";
 import { ParkingGuideView } from "@/components/parking-guide";
+import { ParkingSpotSaver } from "@/components/parking-spot-saver";
 import { DrivingLinksCard } from "@/components/route/driving-links-card";
 import { Navigation } from "lucide-react";
 import { getSession } from "@/lib/auth";
@@ -165,6 +166,8 @@ export default async function RoutePage() {
       <FuelEstimator />
 
       <ParkingGuideView />
+
+      <ParkingSpotSaver currentUser={session?.travelerName ?? ""} stops={allStops} />
 
       <ScenicDetours detours={SCENIC_DETOURS} />
 

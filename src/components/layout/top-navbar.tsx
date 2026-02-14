@@ -35,6 +35,8 @@ import {
   BookOpen,
   Vote,
   Gift,
+  HandCoins,
+  ShoppingCart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -70,12 +72,14 @@ const DIRECT_LINKS = [
 const PLANNING_ITEMS = [
   { href: "/budget", label: "Budget", icon: Wallet },
   { href: "/split", label: "Split & Tip", icon: Scissors },
+  { href: "/settle", label: "Settle Up", icon: HandCoins },
   { href: "/accommodations", label: "Accommodations", icon: Bed },
   { href: "/transport", label: "Transport", icon: Plane },
   { href: "/itinerary", label: "Itinerary", icon: CalendarDays },
   { href: "/ideas", label: "Ideas", icon: Lightbulb },
   { href: "/checklist", label: "Checklist", icon: ClipboardCheck },
   { href: "/packing", label: "Packing", icon: Backpack },
+  { href: "/shopping", label: "Shopping", icon: ShoppingCart },
   { href: "/reservations", label: "Reservations", icon: UtensilsCrossed },
   { href: "/predictions", label: "Predictions", icon: Target },
   { href: "/polls", label: "Polls", icon: Vote },
