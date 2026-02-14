@@ -19,6 +19,9 @@ import { ACCOMMODATION_PICKS } from "@/lib/accommodation-picks";
 import { RoadTripPlaylists } from "@/components/route/road-trip-playlists";
 import { LEG_PLAYLISTS } from "@/lib/road-trip-playlists";
 import { CultureGuide } from "@/components/route/culture-guide";
+import { FuelEstimator } from "@/components/fuel-estimator";
+import { ParkingGuideView } from "@/components/parking-guide";
+import { DrivingLinksCard } from "@/components/route/driving-links-card";
 import { Navigation } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import type { Stop, Accommodation, Match } from "@/lib/schema";
@@ -152,6 +155,10 @@ export default async function RoutePage() {
 
       <AccommodationPicks picks={ACCOMMODATION_PICKS} />
 
+      <FuelEstimator />
+
+      <ParkingGuideView />
+
       <ScenicDetours detours={SCENIC_DETOURS} />
 
       <HighwayGuide eats={HIGHWAY_EATS} attractions={ROADSIDE_ATTRACTIONS} />
@@ -168,6 +175,8 @@ export default async function RoutePage() {
         </p>
         <LegDetails legs={LEG_DETAILS} />
       </section>
+
+      <DrivingLinksCard />
 
       <CultureGuide />
 

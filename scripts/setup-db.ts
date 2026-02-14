@@ -272,6 +272,67 @@ sqlite.exec(`
   );
 `);
 
+sqlite.exec(`
+  CREATE TABLE IF NOT EXISTS reservations (
+    id TEXT PRIMARY KEY,
+    stop_id TEXT REFERENCES stops(id),
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    date TEXT NOT NULL,
+    time TEXT,
+    party_size INTEGER,
+    confirmation_ref TEXT,
+    address TEXT,
+    phone TEXT,
+    url TEXT,
+    notes TEXT,
+    status TEXT NOT NULL DEFAULT 'pending',
+    added_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS journal_entries (
+    id TEXT PRIMARY KEY,
+    date TEXT NOT NULL UNIQUE,
+    stop_id TEXT REFERENCES stops(id),
+    highlight TEXT,
+    best_meal TEXT,
+    funniest_moment TEXT,
+    rating INTEGER,
+    added_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS driving_assignments (
+    id TEXT PRIMARY KEY,
+    from_city TEXT NOT NULL,
+    to_city TEXT NOT NULL,
+    driver_name TEXT NOT NULL,
+    estimated_hours REAL,
+    date TEXT,
+    notes TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS meeting_points (
+    id TEXT PRIMARY KEY,
+    stop_id TEXT REFERENCES stops(id),
+    name TEXT NOT NULL,
+    address TEXT,
+    lat REAL,
+    lng REAL,
+    time TEXT,
+    date TEXT,
+    notes TEXT,
+    added_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+`);
+
 // Add actual score columns to matches (may already exist)
 try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_home_score INTEGER"); } catch {}
 try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_away_score INTEGER"); } catch {}

@@ -31,6 +31,8 @@ import { WhatsAppLink } from "@/components/whatsapp-link";
 import { TripShareCard } from "@/components/trip-share-card";
 import { PreTripTimeline } from "@/components/pre-trip-timeline";
 import { Achievements } from "@/components/achievements";
+import { RunningBalance } from "@/components/running-balance";
+import { TripReadiness } from "@/components/trip-readiness";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -402,6 +404,9 @@ export default function HomePage() {
           {/* Trip countdown */}
           <TripCountdown />
 
+          {/* Trip readiness */}
+          <TripReadiness />
+
           {/* Weather widget for next stop */}
           {nextStop && weatherCoords && (
             <WeatherWidget
@@ -413,6 +418,9 @@ export default function HomePage() {
 
           {/* Currency converter */}
           <CurrencyConverter />
+
+          {/* Running balance */}
+          <RunningBalance />
 
           {/* Activity feed */}
           <section>

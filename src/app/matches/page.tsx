@@ -4,6 +4,7 @@ import { asc } from "drizzle-orm";
 import { MatchesView } from "@/components/matches/matches-view";
 import { WatchGuide } from "@/components/matches/watch-guide";
 import { BroadcastGuideSection } from "@/components/matches/broadcast-guide-section";
+import { CalendarExport } from "@/components/calendar-export";
 
 export default function MatchesPage() {
   const allMatches = db.select().from(matches).all();
@@ -38,6 +39,12 @@ export default function MatchesPage() {
 
       {/* How to Watch — channels & streaming */}
       <BroadcastGuideSection />
+
+      {/* Separator */}
+      <div className="border-t border-border" />
+
+      {/* Calendar Export */}
+      <CalendarExport />
 
       {/* Separator */}
       <div className="border-t border-border" />

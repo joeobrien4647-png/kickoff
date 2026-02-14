@@ -12,6 +12,7 @@ import { MatchesToday } from "@/components/days/matches-today";
 import { IdeasPreview } from "@/components/days/ideas-preview";
 import { CityGuideCard } from "@/components/city-guide-card";
 import { MorningBriefing } from "@/components/days/morning-briefing";
+import { TimeConflicts } from "@/components/days/time-conflicts";
 import type { Stop } from "@/lib/schema";
 
 interface DayPageProps {
@@ -133,6 +134,21 @@ export default async function DayPage({ params }: DayPageProps) {
           plannedCount={dayItems.filter((i) => i.type !== "travel").length}
           ideaCount={stopIdeas.length}
           accommodationConfirmed={accommodation ? accommodation.confirmed : null}
+        />
+
+        {/* Time Conflicts */}
+        <TimeConflicts
+          items={dayItems.map((i) => ({
+            title: i.title,
+            startTime: i.startTime ?? null,
+            endTime: i.endTime ?? null,
+            type: i.type,
+          }))}
+          matches={dayMatches.map((m) => ({
+            homeTeam: m.homeTeam,
+            awayTeam: m.awayTeam,
+            kickoff: m.kickoff ?? "",
+          }))}
         />
 
         {/* Section 1c: Morning Briefing */}

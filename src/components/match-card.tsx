@@ -18,6 +18,8 @@ import { countryFlag, TICKET_STATUS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { MatchDayTimeline } from "@/components/matches/match-day-timeline";
 import { BroadcastBadge } from "@/components/matches/broadcast-badge";
+import { LiveScoreBadge } from "@/components/matches/live-score-badge";
+import { ScoreUpdater } from "@/components/matches/score-updater";
 import type { Match, Stop } from "@/lib/schema";
 
 // ── Ticket badge config ─────────────────────────────────────────────
@@ -155,10 +157,56 @@ export function MatchCard({ match, nearby, compact, stop }: MatchCardProps) {
           </span>
         </div>
 
-        {/* Divider */}
-        <span className="text-xs font-medium text-muted-foreground/50 mx-3 shrink-0">
-          vs
-        </span>
+        {/* Score / Divider */}
+        <div
+          className="flex flex-col items-center gap-1 mx-3 shrink-0"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {match.actualHomeScore !== null ? (
+            <div className="flex items-center gap-1">
+              <LiveScoreBadge
+                matchId={match.id}
+                homeTeam={match.homeTeam}
+                awayTeam={match.awayTeam}
+                matchDate={match.matchDate}
+                kickoff={match.kickoff}
+                homeScore={match.actualHomeScore}
+                awayScore={match.actualAwayScore}
+              />
+              <ScoreUpdater
+                matchId={match.id}
+                homeTeam={match.homeTeam}
+                awayTeam={match.awayTeam}
+                homeScore={match.actualHomeScore}
+                awayScore={match.actualAwayScore}
+              />
+            </div>
+          ) : (
+            <>
+              <span className="text-xs font-medium text-muted-foreground/50">
+                vs
+              </span>
+              <div className="flex items-center gap-1">
+                <LiveScoreBadge
+                  matchId={match.id}
+                  homeTeam={match.homeTeam}
+                  awayTeam={match.awayTeam}
+                  matchDate={match.matchDate}
+                  kickoff={match.kickoff}
+                  homeScore={match.actualHomeScore}
+                  awayScore={match.actualAwayScore}
+                />
+                <ScoreUpdater
+                  matchId={match.id}
+                  homeTeam={match.homeTeam}
+                  awayTeam={match.awayTeam}
+                  homeScore={match.actualHomeScore}
+                  awayScore={match.actualAwayScore}
+                />
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Away team */}
         <div className="flex-1 flex flex-col items-center gap-1 min-w-0">

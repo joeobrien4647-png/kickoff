@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { transports, stops } from "@/lib/schema";
 import { asc } from "drizzle-orm";
 import { TransportView } from "@/components/transport/transport-view";
+import { FlightChecklist } from "@/components/flight-checklist";
 import { ROUTE_STOPS } from "@/lib/constants";
 
 export default function TransportPage() {
@@ -24,6 +25,8 @@ export default function TransportPage() {
       </section>
 
       <TransportView transports={allTransports} cities={cities} />
+
+      <FlightChecklist />
     </div>
   );
 }

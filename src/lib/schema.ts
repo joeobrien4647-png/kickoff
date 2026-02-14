@@ -343,6 +343,77 @@ export const photos = sqliteTable("photos", {
   createdAt: text("created_at").notNull(),
 });
 
+// ============ RESERVATIONS ============
+// Restaurant bookings, activity reservations, etc.
+export const reservations = sqliteTable("reservations", {
+  id: text("id").primaryKey(),
+  stopId: text("stop_id").references(() => stops.id),
+  name: text("name").notNull(),
+  type: text("type", {
+    enum: ["restaurant", "bar", "tour", "activity", "other"],
+  }).notNull(),
+  date: text("date").notNull(),
+  time: text("time"),
+  partySize: integer("party_size"),
+  confirmationRef: text("confirmation_ref"),
+  address: text("address"),
+  phone: text("phone"),
+  url: text("url"),
+  notes: text("notes"),
+  status: text("status", {
+    enum: ["confirmed", "pending", "cancelled"],
+  }).notNull().default("pending"),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ JOURNAL ENTRIES ============
+// End-of-day recaps
+export const journalEntries = sqliteTable("journal_entries", {
+  id: text("id").primaryKey(),
+  date: text("date").notNull().unique(),
+  stopId: text("stop_id").references(() => stops.id),
+  highlight: text("highlight"),
+  bestMeal: text("best_meal"),
+  funniestMoment: text("funniest_moment"),
+  rating: integer("rating"), // 1-5
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ DRIVING ASSIGNMENTS ============
+// Who's driving each leg
+export const drivingAssignments = sqliteTable("driving_assignments", {
+  id: text("id").primaryKey(),
+  fromCity: text("from_city").notNull(),
+  toCity: text("to_city").notNull(),
+  driverName: text("driver_name").notNull(),
+  estimatedHours: real("estimated_hours"),
+  date: text("date"),
+  notes: text("notes"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ MEETING POINTS ============
+// Shared map pins for rendezvous
+export const meetingPoints = sqliteTable("meeting_points", {
+  id: text("id").primaryKey(),
+  stopId: text("stop_id").references(() => stops.id),
+  name: text("name").notNull(),
+  address: text("address"),
+  lat: real("lat"),
+  lng: real("lng"),
+  time: text("time"),
+  date: text("date"),
+  notes: text("notes"),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
 // ============ TYPE EXPORTS ============
 export type TripSettings = typeof tripSettings.$inferSelect;
 export type Traveler = typeof travelers.$inferSelect;
@@ -362,3 +433,7 @@ export type VenueVote = typeof venueVotes.$inferSelect;
 export type Transport = typeof transports.$inferSelect;
 export type Decision = typeof decisions.$inferSelect;
 export type Photo = typeof photos.$inferSelect;
+export type Reservation = typeof reservations.$inferSelect;
+export type JournalEntry = typeof journalEntries.$inferSelect;
+export type DrivingAssignment = typeof drivingAssignments.$inferSelect;
+export type MeetingPoint = typeof meetingPoints.$inferSelect;

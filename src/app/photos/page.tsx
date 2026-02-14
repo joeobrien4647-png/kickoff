@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { photos, stops } from "@/lib/schema";
 import { getSession } from "@/lib/auth";
-import { PhotosView } from "@/components/photos/photos-view";
+import { PhotoWall } from "@/components/photos/photo-wall";
 import { asc, desc } from "drizzle-orm";
 
 export default async function PhotosPage() {
@@ -19,14 +19,14 @@ export default async function PhotosPage() {
     .all();
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 pb-8">
+    <div className="mx-auto max-w-4xl space-y-6 pb-8">
       <section className="pt-4 md:pt-6">
-        <h1 className="text-2xl font-bold">Photo Diary</h1>
+        <h1 className="text-2xl font-bold">Photo Wall</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Capture memories from the road trip.
+          Memories from the road trip, city by city.
         </p>
       </section>
-      <PhotosView
+      <PhotoWall
         photos={allPhotos}
         stops={allStops}
         currentUser={session?.travelerName ?? null}

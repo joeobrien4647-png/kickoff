@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { TopNavbar } from "@/components/layout/top-navbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { QuickAddFAB } from "@/components/quick-add-fab";
 import { PollingProvider } from "@/components/polling-provider";
 
 interface AppShellProps {
@@ -25,6 +26,7 @@ export async function AppShell({ children }: AppShellProps) {
           {children}
         </main>
       </PollingProvider>
+      <QuickAddFAB />
       <BottomNav />
     </div>
   );

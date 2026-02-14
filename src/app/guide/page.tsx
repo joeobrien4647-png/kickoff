@@ -5,6 +5,7 @@ import { stops } from "@/lib/schema";
 import { asc } from "drizzle-orm";
 import { CITY_PROFILES } from "@/lib/city-profiles";
 import { GuideIndexView } from "@/components/guide/guide-index-view";
+import { PriceIndexCard } from "@/components/price-index-card";
 
 export default async function GuidePage() {
   const session = await getSession();
@@ -38,6 +39,8 @@ export default async function GuidePage() {
         </p>
       </section>
       <GuideIndexView cities={cities} stops={allStops} />
+
+      <PriceIndexCard />
     </div>
   );
 }

@@ -230,6 +230,22 @@
   50% { opacity: 1; }
 }
 
+/* Route progress animations */
+@keyframes route-progress-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 oklch(0.60 0.16 185 / 0.5); }
+  50% { box-shadow: 0 0 0 6px oklch(0.60 0.16 185 / 0); }
+}
+@keyframes route-progress-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.route-progress-pulse {
+  animation: route-progress-pulse 2s ease-in-out infinite;
+}
+.route-progress-bounce {
+  animation: route-progress-bounce 1.5s ease-in-out infinite;
+}
+
 /* Print styles */
 @media print {
   body {
