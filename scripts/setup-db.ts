@@ -317,6 +317,65 @@ sqlite.exec(`
     updated_at TEXT NOT NULL
   );
 
+  CREATE TABLE IF NOT EXISTS fuel_logs (
+    id TEXT PRIMARY KEY,
+    stop_id TEXT REFERENCES stops(id),
+    gallons REAL NOT NULL,
+    price_per_gallon REAL NOT NULL,
+    total_cost REAL NOT NULL,
+    station TEXT,
+    odometer INTEGER,
+    date TEXT NOT NULL,
+    added_by TEXT,
+    created_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS toll_logs (
+    id TEXT PRIMARY KEY,
+    from_city TEXT NOT NULL,
+    to_city TEXT NOT NULL,
+    amount REAL NOT NULL,
+    road TEXT,
+    date TEXT NOT NULL,
+    added_by TEXT,
+    created_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS souvenirs (
+    id TEXT PRIMARY KEY,
+    recipient_name TEXT NOT NULL,
+    item TEXT,
+    city TEXT,
+    stop_id TEXT REFERENCES stops(id),
+    purchased INTEGER NOT NULL DEFAULT 0,
+    cost REAL,
+    added_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS match_reviews (
+    id TEXT PRIMARY KEY,
+    match_id TEXT NOT NULL REFERENCES matches(id) ON DELETE CASCADE,
+    atmosphere INTEGER,
+    highlights TEXT,
+    scorers TEXT,
+    mvp TEXT,
+    added_by TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS quick_polls (
+    id TEXT PRIMARY KEY,
+    question TEXT NOT NULL,
+    options TEXT NOT NULL DEFAULT '[]',
+    created_by TEXT NOT NULL,
+    expires_at TEXT,
+    closed INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL
+  );
+
   CREATE TABLE IF NOT EXISTS meeting_points (
     id TEXT PRIMARY KEY,
     stop_id TEXT REFERENCES stops(id),
@@ -336,6 +395,20 @@ sqlite.exec(`
 // Add actual score columns to matches (may already exist)
 try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_home_score INTEGER"); } catch {}
 try { sqlite.exec("ALTER TABLE matches ADD COLUMN actual_away_score INTEGER"); } catch {}
+
+// Add receipt_photo to expenses
+try { sqlite.exec("ALTER TABLE expenses ADD COLUMN receipt_photo TEXT"); } catch {}
+
+// Add accommodation enhancements
+try { sqlite.exec("ALTER TABLE accommodations ADD COLUMN wifi_password TEXT"); } catch {}
+try { sqlite.exec("ALTER TABLE accommodations ADD COLUMN checkin_time TEXT"); } catch {}
+try { sqlite.exec("ALTER TABLE accommodations ADD COLUMN checkout_time TEXT"); } catch {}
+try { sqlite.exec("ALTER TABLE accommodations ADD COLUMN rating INTEGER"); } catch {}
+try { sqlite.exec("ALTER TABLE accommodations ADD COLUMN review TEXT"); } catch {}
+
+// Add city check-in to stops
+try { sqlite.exec("ALTER TABLE stops ADD COLUMN checked_in_at TEXT"); } catch {}
+try { sqlite.exec("ALTER TABLE stops ADD COLUMN checked_in_by TEXT"); } catch {}
 
 console.log("  Tables ready.\n");
 

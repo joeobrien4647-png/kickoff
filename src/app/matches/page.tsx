@@ -5,6 +5,10 @@ import { MatchesView } from "@/components/matches/matches-view";
 import { WatchGuide } from "@/components/matches/watch-guide";
 import { BroadcastGuideSection } from "@/components/matches/broadcast-guide-section";
 import { CalendarExport } from "@/components/calendar-export";
+import { FanZoneFinder } from "@/components/matches/fan-zone-finder";
+import { FAN_ZONES } from "@/lib/fan-zones";
+import { GroupStageTables } from "@/components/matches/group-stage-tables";
+import { ScoreTicker } from "@/components/matches/score-ticker";
 
 export default function MatchesPage() {
   const allMatches = db.select().from(matches).all();
@@ -27,6 +31,9 @@ export default function MatchesPage() {
           All World Cup matches on the East Coast &mdash; plan which to attend.
         </p>
       </section>
+
+      <ScoreTicker matches={allMatches} />
+
       <MatchesView
         matches={allMatches}
         stops={allStops}
@@ -49,8 +56,20 @@ export default function MatchesPage() {
       {/* Separator */}
       <div className="border-t border-border" />
 
+      {/* Group Stage Tables */}
+      <GroupStageTables matches={allMatches} />
+
+      {/* Separator */}
+      <div className="border-t border-border" />
+
       {/* Where to Watch — bars & fan zones */}
       <WatchGuide />
+
+      {/* Separator */}
+      <div className="border-t border-border" />
+
+      {/* Fan Zone Finder */}
+      <FanZoneFinder fanZones={FAN_ZONES} />
     </div>
   );
 }

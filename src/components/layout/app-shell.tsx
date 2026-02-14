@@ -3,6 +3,8 @@ import { TopNavbar } from "@/components/layout/top-navbar";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { QuickAddFAB } from "@/components/quick-add-fab";
 import { PollingProvider } from "@/components/polling-provider";
+import { KeyboardShortcuts } from "@/components/keyboard-shortcuts";
+import { OfflineIndicator } from "@/components/offline-indicator";
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -27,6 +29,8 @@ export async function AppShell({ children }: AppShellProps) {
         </main>
       </PollingProvider>
       <QuickAddFAB />
+      <KeyboardShortcuts />
+      <OfflineIndicator />
       <BottomNav />
     </div>
   );

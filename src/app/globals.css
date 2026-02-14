@@ -246,6 +246,18 @@
   animation: route-progress-bounce 1.5s ease-in-out infinite;
 }
 
+/* Score ticker marquee */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.ticker-track {
+  animation: ticker-scroll 30s linear infinite;
+}
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
 /* Print styles */
 @media print {
   body {

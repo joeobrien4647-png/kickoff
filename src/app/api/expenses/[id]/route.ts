@@ -29,6 +29,7 @@ export async function PATCH(
       "date",
       "stopId",
       "notes",
+      "receiptPhoto",
     ] as const;
 
     const updates: Record<string, unknown> = { updatedAt: now() };

@@ -6,6 +6,10 @@ import { asc } from "drizzle-orm";
 import { CITY_PROFILES } from "@/lib/city-profiles";
 import { GuideIndexView } from "@/components/guide/guide-index-view";
 import { PriceIndexCard } from "@/components/price-index-card";
+import { LaundromatFinder } from "@/components/service-finders/laundromat-finder";
+import { LAUNDROMATS } from "@/lib/laundromats";
+import { EssentialStoresFinder } from "@/components/service-finders/essential-stores";
+import { ESSENTIAL_STORES } from "@/lib/essential-stores";
 
 export default async function GuidePage() {
   const session = await getSession();
@@ -41,6 +45,10 @@ export default async function GuidePage() {
       <GuideIndexView cities={cities} stops={allStops} />
 
       <PriceIndexCard />
+
+      <LaundromatFinder laundromats={LAUNDROMATS} />
+
+      <EssentialStoresFinder stores={ESSENTIAL_STORES} />
     </div>
   );
 }

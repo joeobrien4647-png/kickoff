@@ -2,6 +2,7 @@ import { db } from "@/lib/db";
 import { accommodations, stops } from "@/lib/schema";
 import { asc } from "drizzle-orm";
 import { AccommodationsView } from "@/components/accommodations/accommodations-view";
+import { WifiVault } from "@/components/accommodations/wifi-vault";
 
 export default async function AccommodationsPage() {
   const allAccommodations = db.select().from(accommodations).all();
@@ -19,6 +20,18 @@ export default async function AccommodationsPage() {
       <AccommodationsView
         accommodations={allAccommodations}
         stops={allStops}
+      />
+
+      <WifiVault
+        accommodations={allAccommodations.map((acc) => {
+          const stop = allStops.find((s) => s.id === acc.stopId);
+          return {
+            id: acc.id,
+            name: acc.name,
+            wifiPassword: acc.wifiPassword,
+            city: stop?.city ?? "Unknown",
+          };
+        })}
       />
     </div>
   );

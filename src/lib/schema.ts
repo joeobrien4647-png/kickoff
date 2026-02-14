@@ -33,6 +33,8 @@ export const stops = sqliteTable("stops", {
   lat: real("lat"),
   lng: real("lng"),
   driveFromPrev: text("drive_from_prev"), // JSON: { miles, hours, minutes }
+  checkedInAt: text("checked_in_at"),
+  checkedInBy: text("checked_in_by"),
   notes: text("notes"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
@@ -54,6 +56,11 @@ export const accommodations = sqliteTable("accommodations", {
   nights: integer("nights"),
   confirmed: integer("confirmed", { mode: "boolean" }).notNull().default(false),
   bookingUrl: text("booking_url"),
+  wifiPassword: text("wifi_password"),
+  checkinTime: text("checkin_time"),
+  checkoutTime: text("checkout_time"),
+  rating: integer("rating"), // 1-5
+  review: text("review"),
   notes: text("notes"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
@@ -131,6 +138,7 @@ export const expenses = sqliteTable("expenses", {
   paidBy: text("paid_by").notNull(),
   date: text("date").notNull(),
   stopId: text("stop_id").references(() => stops.id),
+  receiptPhoto: text("receipt_photo"),
   notes: text("notes"),
   createdAt: text("created_at").notNull(),
   updatedAt: text("updated_at").notNull(),
@@ -397,6 +405,77 @@ export const drivingAssignments = sqliteTable("driving_assignments", {
   updatedAt: text("updated_at").notNull(),
 });
 
+// ============ FUEL LOGS ============
+// Track actual gas purchases
+export const fuelLogs = sqliteTable("fuel_logs", {
+  id: text("id").primaryKey(),
+  stopId: text("stop_id").references(() => stops.id),
+  gallons: real("gallons").notNull(),
+  pricePerGallon: real("price_per_gallon").notNull(),
+  totalCost: real("total_cost").notNull(),
+  station: text("station"),
+  odometer: integer("odometer"),
+  date: text("date").notNull(),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+});
+
+// ============ TOLL LOGS ============
+// Track toll costs along the route
+export const tollLogs = sqliteTable("toll_logs", {
+  id: text("id").primaryKey(),
+  fromCity: text("from_city").notNull(),
+  toCity: text("to_city").notNull(),
+  amount: real("amount").notNull(),
+  road: text("road"),
+  date: text("date").notNull(),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+});
+
+// ============ SOUVENIRS ============
+// Track who you need to buy presents for
+export const souvenirs = sqliteTable("souvenirs", {
+  id: text("id").primaryKey(),
+  recipientName: text("recipient_name").notNull(),
+  item: text("item"),
+  city: text("city"),
+  stopId: text("stop_id").references(() => stops.id),
+  purchased: integer("purchased", { mode: "boolean" }).notNull().default(false),
+  cost: real("cost"),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ MATCH REVIEWS ============
+// Post-match notes and ratings
+export const matchReviews = sqliteTable("match_reviews", {
+  id: text("id").primaryKey(),
+  matchId: text("match_id")
+    .notNull()
+    .references(() => matches.id, { onDelete: "cascade" }),
+  atmosphere: integer("atmosphere"), // 1-5
+  highlights: text("highlights"),
+  scorers: text("scorers"), // JSON: string[]
+  mvp: text("mvp"),
+  addedBy: text("added_by"),
+  createdAt: text("created_at").notNull(),
+  updatedAt: text("updated_at").notNull(),
+});
+
+// ============ QUICK POLLS ============
+// Instant group votes
+export const quickPolls = sqliteTable("quick_polls", {
+  id: text("id").primaryKey(),
+  question: text("question").notNull(),
+  options: text("options").notNull(), // JSON: [{text: string, votes: string[]}]
+  createdBy: text("created_by").notNull(),
+  expiresAt: text("expires_at"),
+  closed: integer("closed", { mode: "boolean" }).notNull().default(false),
+  createdAt: text("created_at").notNull(),
+});
+
 // ============ MEETING POINTS ============
 // Shared map pins for rendezvous
 export const meetingPoints = sqliteTable("meeting_points", {
@@ -437,3 +516,8 @@ export type Reservation = typeof reservations.$inferSelect;
 export type JournalEntry = typeof journalEntries.$inferSelect;
 export type DrivingAssignment = typeof drivingAssignments.$inferSelect;
 export type MeetingPoint = typeof meetingPoints.$inferSelect;
+export type FuelLog = typeof fuelLogs.$inferSelect;
+export type TollLog = typeof tollLogs.$inferSelect;
+export type Souvenir = typeof souvenirs.$inferSelect;
+export type MatchReview = typeof matchReviews.$inferSelect;
+export type QuickPoll = typeof quickPolls.$inferSelect;

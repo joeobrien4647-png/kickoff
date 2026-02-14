@@ -33,6 +33,7 @@ import { PreTripTimeline } from "@/components/pre-trip-timeline";
 import { Achievements } from "@/components/achievements";
 import { RunningBalance } from "@/components/running-balance";
 import { TripReadiness } from "@/components/trip-readiness";
+import { TimezoneClock } from "@/components/timezone-clock";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -406,6 +407,9 @@ export default function HomePage() {
 
           {/* Trip readiness */}
           <TripReadiness />
+
+          {/* Timezone Clock */}
+          <TimezoneClock />
 
           {/* Weather widget for next stop */}
           {nextStop && weatherCoords && (

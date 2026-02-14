@@ -1,6 +1,8 @@
 import { db } from "@/lib/db";
 import { tripSettings, travelers } from "@/lib/schema";
 import { SettingsView } from "@/components/settings/settings-view";
+import { DataExport } from "@/components/data-export";
+import { PowerAdapterGuide } from "@/components/power-adapter-guide";
 
 export default function SettingsPage() {
   const trip = db.select().from(tripSettings).all()[0] ?? null;
@@ -15,6 +17,10 @@ export default function SettingsPage() {
         </p>
       </section>
       <SettingsView trip={trip} travelers={allTravelers} />
+
+      <DataExport />
+
+      <PowerAdapterGuide />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import {
 import { countryFlag } from "@/lib/constants";
 import { Badge } from "@/components/ui/badge";
 import { PrintActions } from "@/components/print-actions";
+import Link from "next/link";
 import type { Stop } from "@/lib/schema";
 
 function stopForDate(date: string, allStops: Stop[]): Stop | null {
@@ -50,6 +51,28 @@ export default function PrintPage() {
     <div className="mx-auto max-w-4xl px-6 py-8 print:max-w-none print:px-0">
       {/* Non-printing action bar */}
       <PrintActions />
+
+      {/* Print sub-pages */}
+      <nav className="flex flex-wrap gap-2 mb-6 print:hidden">
+        <Link
+          href="/print/packing"
+          className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+        >
+          Packing Checklist
+        </Link>
+        <Link
+          href="/print/schedule"
+          className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+        >
+          Day-by-Day Schedule
+        </Link>
+        <Link
+          href="/print/contacts"
+          className="rounded-md border border-border px-3 py-1.5 text-sm hover:bg-muted transition-colors"
+        >
+          Emergency Contacts
+        </Link>
+      </nav>
 
       {/* Trip Header */}
       <header className="text-center mb-8 print:mb-4">

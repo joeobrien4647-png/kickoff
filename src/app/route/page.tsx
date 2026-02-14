@@ -20,10 +20,15 @@ import { RoadTripPlaylists } from "@/components/route/road-trip-playlists";
 import { LEG_PLAYLISTS } from "@/lib/road-trip-playlists";
 import { CultureGuide } from "@/components/route/culture-guide";
 import { FuelEstimator } from "@/components/fuel-estimator";
+import { FuelLogTracker } from "@/components/route/fuel-log";
+import { TollTracker } from "@/components/route/toll-tracker";
+import { StateTracker } from "@/components/route/state-tracker";
+import { SpeedLimitGuide } from "@/components/route/speed-limit-guide";
 import { ParkingGuideView } from "@/components/parking-guide";
 import { DrivingLinksCard } from "@/components/route/driving-links-card";
 import { Navigation } from "lucide-react";
 import { getSession } from "@/lib/auth";
+import { fuelLogs, tollLogs } from "@/lib/schema";
 import type { Stop, Accommodation, Match } from "@/lib/schema";
 
 /** Drive info stored as JSON in the driveFromPrev column */
@@ -81,6 +86,8 @@ export default async function RoutePage() {
 
   const allDecisions = db.select().from(decisionsTable).orderBy(asc(decisionsTable.sortOrder)).all();
   const allTravelers = db.select().from(travelers).all();
+  const allFuelLogs = db.select().from(fuelLogs).all();
+  const allTollLogs = db.select().from(tollLogs).all();
   const session = await getSession();
 
   const ideaCountMap = new Map(ideaCounts.map((r) => [r.stopId, r.count]));
@@ -160,6 +167,14 @@ export default async function RoutePage() {
       <ParkingGuideView />
 
       <ScenicDetours detours={SCENIC_DETOURS} />
+
+      <SpeedLimitGuide />
+
+      <StateTracker />
+
+      <FuelLogTracker logs={allFuelLogs} currentUser={session?.travelerName ?? ""} />
+
+      <TollTracker logs={allTollLogs} currentUser={session?.travelerName ?? ""} />
 
       <HighwayGuide eats={HIGHWAY_EATS} attractions={ROADSIDE_ATTRACTIONS} />
 

@@ -30,6 +30,11 @@ export async function PATCH(
       "confirmed",
       "bookingUrl",
       "notes",
+      "wifiPassword",
+      "checkinTime",
+      "checkoutTime",
+      "rating",
+      "review",
     ] as const;
 
     const updates: Record<string, unknown> = { updatedAt: now() };

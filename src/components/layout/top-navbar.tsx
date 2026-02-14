@@ -33,6 +33,8 @@ import {
   Scissors,
   UtensilsCrossed,
   BookOpen,
+  Vote,
+  Gift,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -76,6 +78,7 @@ const PLANNING_ITEMS = [
   { href: "/packing", label: "Packing", icon: Backpack },
   { href: "/reservations", label: "Reservations", icon: UtensilsCrossed },
   { href: "/predictions", label: "Predictions", icon: Target },
+  { href: "/polls", label: "Polls", icon: Vote },
 ] as const;
 
 const FUN_ITEMS = [
@@ -91,6 +94,8 @@ const MORE_ITEMS = [
   { href: "/playlist", label: "Playlist", icon: Music },
   { href: "/photos", label: "Photos", icon: Camera },
   { href: "/journal", label: "Journal", icon: BookOpen },
+  { href: "/blog", label: "Trip Blog", icon: BookOpen },
+  { href: "/souvenirs", label: "Souvenirs", icon: Gift },
   { href: "/print", label: "Print Itinerary", icon: Printer },
   { href: "/notes", label: "Notes", icon: StickyNote },
   { href: "/settings", label: "Settings", icon: Settings },
