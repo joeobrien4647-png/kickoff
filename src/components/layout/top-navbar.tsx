@@ -25,6 +25,11 @@ import {
   Compass,
   Target,
   Shield,
+  Zap,
+  Gamepad2,
+  DollarSign,
+  Lock,
+  HelpCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -67,7 +72,15 @@ const PLANNING_ITEMS = [
   { href: "/predictions", label: "Predictions", icon: Target },
 ] as const;
 
+const FUN_ITEMS = [
+  { href: "/trivia", label: "Trivia Quiz", icon: Trophy },
+  { href: "/games", label: "Car Games", icon: Gamepad2 },
+  { href: "/challenges", label: "Challenges", icon: Zap },
+  { href: "/bets", label: "Side Bets", icon: DollarSign },
+] as const;
+
 const MORE_ITEMS = [
+  { href: "/vault", label: "Travel Vault", icon: Lock },
   { href: "/emergency", label: "Emergency Info", icon: Shield },
   { href: "/playlist", label: "Playlist", icon: Music },
   { href: "/photos", label: "Photos", icon: Camera },
@@ -106,6 +119,9 @@ export function TopNavbar({ travelerName }: TopNavbarProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const planningIsActive = PLANNING_ITEMS.some((item) =>
+    isActive(pathname, item.href),
+  );
+  const funIsActive = FUN_ITEMS.some((item) =>
     isActive(pathname, item.href),
   );
   const moreIsActive = MORE_ITEMS.some((item) =>
@@ -162,6 +178,41 @@ export function TopNavbar({ travelerName }: TopNavbarProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" sideOffset={12}>
               {PLANNING_ITEMS.map(({ href, label, icon: Icon }) => (
+                <DropdownMenuItem key={href} asChild>
+                  <Link
+                    href={href}
+                    className={cn(
+                      "flex items-center gap-2",
+                      isActive(pathname, href) &&
+                        "text-foreground font-medium",
+                    )}
+                  >
+                    <Icon className="size-4" />
+                    {label}
+                  </Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* Fun dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              className={cn(
+                "flex items-center gap-1 px-3 py-2 text-sm font-medium transition-colors outline-none",
+                funIsActive
+                  ? "text-foreground font-semibold"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Fun
+              <ChevronDown className="size-3.5" />
+              {funIsActive && (
+                <span className="absolute inset-x-3 -bottom-[9px] h-0.5 rounded-full bg-wc-teal" />
+              )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start" sideOffset={12}>
+              {FUN_ITEMS.map(({ href, label, icon: Icon }) => (
                 <DropdownMenuItem key={href} asChild>
                   <Link
                     href={href}
@@ -284,6 +335,31 @@ export function TopNavbar({ travelerName }: TopNavbarProps) {
                     Planning
                   </p>
                   {PLANNING_ITEMS.map(({ href, label, icon: Icon }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setMobileOpen(false)}
+                      className={cn(
+                        "flex items-center gap-3 rounded-md px-3 py-3 text-sm font-medium transition-colors",
+                        isActive(pathname, href)
+                          ? "bg-accent text-accent-foreground font-medium"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground",
+                      )}
+                    >
+                      <Icon className="size-4" />
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+
+                <Separator className="mx-2" />
+
+                {/* Fun section */}
+                <div className="px-2 py-3">
+                  <p className="px-3 pb-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                    Fun
+                  </p>
+                  {FUN_ITEMS.map(({ href, label, icon: Icon }) => (
                     <Link
                       key={href}
                       href={href}
