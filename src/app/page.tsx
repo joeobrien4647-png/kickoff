@@ -11,6 +11,9 @@ import {
   travelers,
   expenses,
   ideas,
+  decisions,
+  photos,
+  transports,
 } from "@/lib/schema";
 import { asc, sql } from "drizzle-orm";
 import { getCityIdentity, ROUTE_STOPS } from "@/lib/constants";
@@ -27,6 +30,7 @@ import { CurrencyConverter } from "@/components/currency-converter";
 import { WhatsAppLink } from "@/components/whatsapp-link";
 import { TripShareCard } from "@/components/trip-share-card";
 import { PreTripTimeline } from "@/components/pre-trip-timeline";
+import { Achievements } from "@/components/achievements";
 
 // ---------------------------------------------------------------------------
 // SVG progress ring (36x36, radius 15.9, strokeWidth 3)
@@ -164,6 +168,20 @@ export default function HomePage() {
   const ideasCount = db
     .select({ total: sql<number>`count(*)` })
     .from(ideas)
+    .get()!;
+
+  // Achievement stats
+  const expenseCount = db
+    .select({ total: sql<number>`count(*)` })
+    .from(expenses)
+    .get()!;
+  const photosCount = db
+    .select({ total: sql<number>`count(*)` })
+    .from(photos)
+    .get()!;
+  const flightsCount = db
+    .select({ total: sql<number>`count(*)` })
+    .from(transports)
     .get()!;
 
   // Next match (closest future match)
@@ -466,6 +484,26 @@ export default function HomePage() {
             totalIdeas={ideasCount.total}
             packingProgress={packingPct}
             daysUntil={remaining}
+          />
+
+          {/* Achievements */}
+          <Achievements
+            stats={{
+              totalMiles,
+              statesVisited: allStops.length,
+              flightsPlanned: flightsCount.total,
+              matchesAttending: attendingCount,
+              ticketsPurchased: purchasedCount,
+              predictionsCorrect: 0,
+              decisionsVoted: 0,
+              ideasCreated: ideasCount.total,
+              photosUploaded: photosCount.total,
+              packingProgress: packingPct,
+              checklistProgress: logisticsPct,
+              expensesLogged: expenseCount.total,
+              activeTravelers: allTravelers.length,
+              daysUntilTrip: remaining,
+            }}
           />
         </aside>
       </div>

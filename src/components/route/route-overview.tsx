@@ -28,19 +28,19 @@ function parseDrive(raw: string | null): DriveInfo | null {
 
 const ROUTE_ALTERNATIVES = [
   {
-    label: "DC to Atlanta",
+    label: "DC to Nashville",
     detail:
-      "9.5 hours driving. Consider internal flight (~$100-150pp, 2hrs).",
+      "8.5 hours driving via I-81/I-40. Consider flying (~$100-150pp, 1.5hrs) to save a full day.",
   },
   {
-    label: "Atlanta to Miami",
+    label: "Nashville to Miami",
     detail:
-      "10 hours driving. Consider internal flight (~$80-120pp, 2hrs).",
+      "13 hours driving via I-24/I-75. Consider flying (~$80-130pp, 2.5hrs) or splitting with an overnight in Atlanta.",
   },
   {
     label: "Alternative",
     detail:
-      "Skip Atlanta, fly DC to Miami directly (~$120-180pp).",
+      "Skip Nashville, fly DC to Miami directly (~$120-180pp). Saves 2 days but misses Music City.",
   },
 ];
 

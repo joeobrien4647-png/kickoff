@@ -13,6 +13,12 @@ import { HighwayGuide } from "@/components/route/highway-guide";
 import { HIGHWAY_EATS, ROADSIDE_ATTRACTIONS } from "@/lib/highway-eats";
 import { LegDetails } from "@/components/route/leg-details";
 import { LEG_DETAILS } from "@/lib/route-details";
+import { DeparturePlanner } from "@/components/route/departure-planner";
+import { AccommodationPicks } from "@/components/route/accommodation-picks";
+import { ACCOMMODATION_PICKS } from "@/lib/accommodation-picks";
+import { RoadTripPlaylists } from "@/components/route/road-trip-playlists";
+import { LEG_PLAYLISTS } from "@/lib/road-trip-playlists";
+import { CultureGuide } from "@/components/route/culture-guide";
 import { Navigation } from "lucide-react";
 import { getSession } from "@/lib/auth";
 import type { Stop, Accommodation, Match } from "@/lib/schema";
@@ -142,9 +148,15 @@ export default async function RoutePage() {
         }))}
       />
 
+      <DeparturePlanner />
+
+      <AccommodationPicks picks={ACCOMMODATION_PICKS} />
+
       <ScenicDetours detours={SCENIC_DETOURS} />
 
       <HighwayGuide eats={HIGHWAY_EATS} attractions={ROADSIDE_ATTRACTIONS} />
+
+      <RoadTripPlaylists playlists={LEG_PLAYLISTS} />
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold flex items-center gap-2">
@@ -156,6 +168,8 @@ export default async function RoutePage() {
         </p>
         <LegDetails legs={LEG_DETAILS} />
       </section>
+
+      <CultureGuide />
 
       <RouteOverview
         routeStops={routeStops}
